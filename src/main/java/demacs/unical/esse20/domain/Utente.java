@@ -42,8 +42,8 @@ public class Utente{
     @Column(nullable = false)
     private Date data_nascita;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private Set<Evento> eventi_organizzati = new HashSet<>();
+    //@OneToMany(mappedBy = "organizzatore", fetch = FetchType.LAZY)
+    //private Set<Evento> eventi_organizzati = new HashSet<>();
 
 
 

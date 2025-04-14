@@ -14,6 +14,16 @@ import lombok.ToString;
 @ToString
 public class Evento {
 
+    public Evento(String descrizione, Long location_id, String nome, Long posti, boolean b_riutilizzabile, boolean b_nominativo) {
+        this.descrizione = descrizione;
+        this.location_id = location_id;
+        //this.organizzatore = organizzatore;
+        this.nome = nome;
+        this.posti = posti;
+        this.b_riutilizzabile = b_riutilizzabile;
+        this.b_nominativo = b_nominativo;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,10 +32,10 @@ public class Evento {
     private String descrizione;
 
     @Column(nullable = false)
-    private Long location_id;
+    private Long location_id; //sostituire
 
-    @OneToOne(mappedBy = "evento", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Utente organizzatore;
+    //@ManyToOne(fetch = FetchType.LAZY)
+    //private Utente organizzatore;
 
     @Column(nullable = false)
     private String nome;

@@ -40,13 +40,13 @@ public class Ordine {
     @Column(nullable = false)
     private Date data_pagamento;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ordine_id", orphanRemoval = true,fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ordine", orphanRemoval = true,fetch = FetchType.LAZY)
     Set<Biglietto> biglietti = new HashSet<>();
 
     public boolean addBiglietto(Biglietto biglietto) {
         try {
             biglietti.add(biglietto);
-            biglietto.setOrdine_id(this);
+            biglietto.setOrdine(this);
 
             return true;
         }catch (Exception e) {

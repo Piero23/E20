@@ -25,7 +25,7 @@ public class Biglietto {
         this.nome = nome;
         this.cognome = cognome;
         this.data_nascita = data_nascita;
-        this.ordine_id = ordine_id;
+        this.ordine = ordine_id;
     }
 
     public Biglietto(Long id_evento, String email, boolean e_valido, String nome, String cognome, Date data_nascita) {
@@ -61,7 +61,7 @@ public class Biglietto {
 
     @ManyToOne(fetch = FetchType.LAZY)
     //@JoinColumn(name = "fk_biglietto_ordine", referencedColumnName = "id")
-    private Ordine ordine_id;
+    private Ordine ordine;
 
     //Immagine
 

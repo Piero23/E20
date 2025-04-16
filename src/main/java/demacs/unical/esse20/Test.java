@@ -31,7 +31,7 @@ public class Test implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        EventoService a = new EventoService(ordineDao);
+        EventoService a = new EventoService(ordineDao, utenteDao);
 
         a.stampa();
 

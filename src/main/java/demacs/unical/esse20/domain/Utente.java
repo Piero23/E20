@@ -42,9 +42,8 @@ public class Utente{
     @Column(nullable = false)
     private Date data_nascita;
 
-    //@OneToMany(mappedBy = "organizzatore", fetch = FetchType.LAZY)
-    //private Set<Evento> eventi_organizzati = new HashSet<>();
-
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "organizzatore")
+    private Set<Evento> eventi_organizzati = new HashSet<>();
 
 
     /*
@@ -55,8 +54,6 @@ public class Utente{
             inverseJoinColumns = @JoinColumn(name = "amico_id")
     )
     private Set<Utente> amici = new HashSet<>();
-
      */
-
 
 }

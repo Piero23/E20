@@ -18,7 +18,7 @@ import java.util.Set;
 @ToString
 public class Biglietto {
 
-    public Biglietto(Long id_evento, String email, boolean e_valido, String nome, String cognome, Date data_nascita, Long ordine_id) {
+    public Biglietto(Long id_evento, String email, boolean e_valido, String nome, String cognome, Date data_nascita, Ordine ordine_id) {
         this.id_evento = id_evento;
         this.email = email;
         this.e_valido = e_valido;
@@ -28,27 +28,40 @@ public class Biglietto {
         this.ordine_id = ordine_id;
     }
 
+    public Biglietto(Long id_evento, String email, boolean e_valido, String nome, String cognome, Date data_nascita) {
+        this.id_evento = id_evento;
+        this.email = email;
+        this.e_valido = e_valido;
+        this.nome = nome;
+        this.cognome = cognome;
+        this.data_nascita = data_nascita;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_evento;
+    private Long id;
 
     @Column(nullable = false)
+    private Long id_evento;
+
+    @Column
     private String email;
 
     @Column(nullable = false)
     private boolean e_valido;
 
-    @Column(nullable = false)
+    @Column
     private String nome;
 
-    @Column(nullable = false)
+    @Column
     private String cognome;
 
-    @Column(nullable = false)
+    @Column
     private Date data_nascita;
 
-    @Column(nullable = false)
-    private Long ordine_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    //@JoinColumn(name = "fk_biglietto_ordine", referencedColumnName = "id")
+    private Ordine ordine_id;
 
     //Immagine
 

@@ -1,4 +1,4 @@
-package demacs.unical.esse20;
+package demacs.unical.esse20.dao;
 
 import demacs.unical.esse20.domain.Location;
 import org.springframework.data.jpa.repository.JpaRepository;

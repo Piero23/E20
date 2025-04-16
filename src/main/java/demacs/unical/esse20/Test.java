@@ -1,48 +1,39 @@
 package demacs.unical.esse20;
 
-import demacs.unical.esse20.domain.Evento;
+import demacs.unical.esse20.dao.BigliettoDAO;
+import demacs.unical.esse20.dao.OrdineDao;
+import demacs.unical.esse20.dao.UtenteDao;
+import demacs.unical.esse20.domain.Biglietto;
+import demacs.unical.esse20.domain.Ordine;
 import demacs.unical.esse20.domain.Utente;
+import org.apache.catalina.User;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import javax.swing.text.html.Option;
 import java.util.Date;
-import java.util.Optional;
 
 @Component
 public class Test implements CommandLineRunner {
 
 
-    private final EventoDao eventoDao;
+    private final UtenteDao utenteDao;
     UtenteDao userDao ;
+    OrdineDao ordineDao ;
+    BigliettoDAO bigliettoDao ;
 
-    public Test (UtenteDao userDao, EventoDao eventoDao) {
+    public Test (UtenteDao userDao, OrdineDao ordineDao, BigliettoDAO bigliettoDao, UtenteDao utenteDao) {
         this.userDao = userDao;
-        this.eventoDao = eventoDao;
+        this.ordineDao = ordineDao;
+        this.bigliettoDao = bigliettoDao;
+        this.utenteDao = utenteDao;
     }
 
     @Override
     public void run(String... args) throws Exception {
-        Utente u= new Utente("ebrei", "cancello", true, "pass", new Date());
 
-        Evento e= new Evento("desc", 123412L, "event", 5L, false, false);
+        EventoService a = new EventoService(ordineDao);
 
-        try{
-            eventoDao.save(e);
-            userDao.save(u);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        a.stampa();
 
-        eventoDao.findAll().forEach(System.out::println);
-
-        /*Optional<Evento> evento = eventoDao.findById(1L);
-
-        if(evento.isPresent()){
-            //System.out.println(utente.get().getAmici());
-        } else System.out.println("AAA");
-
-
-         */
     }
 }

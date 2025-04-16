@@ -14,9 +14,9 @@ import lombok.ToString;
 @ToString
 public class Evento {
 
-    public Evento(String descrizione, Long location_id, String nome,Utente organizzatore, Long posti, boolean b_riutilizzabile, boolean b_nominativo) {
+    public Evento(String descrizione, Location location , String nome, String organizzatore, Long posti, boolean b_riutilizzabile, boolean b_nominativo) {
         this.descrizione = descrizione;
-        this.location_id = location_id;
+        this.location = location;
         this.organizzatore = organizzatore;
         this.nome = nome;
         this.posti = posti;
@@ -28,22 +28,21 @@ public class Evento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false,length = 500)
     private String descrizione;
 
-    @Column(nullable = false)
-    private Long location_id;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    private Utente organizzatore;
+    @JoinColumn(nullable = false)
+    private Location location;
+
+    @Column(nullable = false, length = 36)
+    private String organizzatore;
 
     @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false)
+    @Column
     private Long posti;
-
-    //Immagine
 
     @Column(nullable = false)
     private boolean b_riutilizzabile;

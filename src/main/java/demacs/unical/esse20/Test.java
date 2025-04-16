@@ -1,37 +1,29 @@
 package demacs.unical.esse20;
 
-import demacs.unical.esse20.dao.BigliettoDAO;
-import demacs.unical.esse20.dao.OrdineDao;
-import demacs.unical.esse20.dao.UtenteDao;
-import demacs.unical.esse20.domain.Biglietto;
-import demacs.unical.esse20.domain.Ordine;
-import demacs.unical.esse20.domain.Utente;
-import org.apache.catalina.User;
+import demacs.unical.esse20.dao.EventoDao;
+import demacs.unical.esse20.dao.LocationDao;
+import demacs.unical.esse20.dao.PreferitiDao;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 @Component
 public class Test implements CommandLineRunner {
 
 
-    private final UtenteDao utenteDao;
-    UtenteDao userDao ;
-    OrdineDao ordineDao ;
-    BigliettoDAO bigliettoDao ;
+    EventoDao eventoDao;
+    LocationDao locationDao;
+    PreferitiDao preferitiDao;
 
-    public Test (UtenteDao userDao, OrdineDao ordineDao, BigliettoDAO bigliettoDao, UtenteDao utenteDao) {
-        this.userDao = userDao;
-        this.ordineDao = ordineDao;
-        this.bigliettoDao = bigliettoDao;
-        this.utenteDao = utenteDao;
+    public Test (EventoDao eventoDao, LocationDao locationDao, PreferitiDao preferitiDao) {
+        this.eventoDao = eventoDao;
+        this.locationDao = locationDao;
+        this.preferitiDao = preferitiDao;
     }
 
     @Override
     public void run(String... args) throws Exception {
 
-        EventoService a = new EventoService(ordineDao, utenteDao);
+        EventoService a = new EventoService(eventoDao,locationDao,preferitiDao);
 
         a.stampa();
 

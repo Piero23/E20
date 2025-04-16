@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.*;
 
@@ -16,8 +17,8 @@ import java.util.*;
 @ToString
 public class Ordine {
 
-    public Ordine(Utente utente, Long biglietti_comprati, float importo, Date data_pagamento) {
-        this.utente = utente;
+    public Ordine(Long utente_id, int biglietti_comprati, double importo, Date data_pagamento) {
+        this.utente_id = utente_id;
         this.biglietti_comprati = biglietti_comprati;
         this.importo = importo;
         this.data_pagamento = data_pagamento;
@@ -25,17 +26,18 @@ public class Ordine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "id_utente")
-    private Utente utente;
+    @UuidGenerator
+    @Column(length = 36)
+    private String id;
 
     @Column(nullable = false)
-    private Long biglietti_comprati;
+    private Long utente_id;
 
     @Column(nullable = false)
-    private float importo;
+    private int biglietti_comprati;
+
+    @Column(nullable = false)
+    private double importo;
 
     @Column(nullable = false)
     private Date data_pagamento;

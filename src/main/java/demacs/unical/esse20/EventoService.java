@@ -1,11 +1,10 @@
 package demacs.unical.esse20;
 
 
+import demacs.unical.esse20.dao.BigliettoDAO;
 import demacs.unical.esse20.dao.OrdineDao;
-import demacs.unical.esse20.dao.UtenteDao;
 import demacs.unical.esse20.domain.Biglietto;
 import demacs.unical.esse20.domain.Ordine;
-import demacs.unical.esse20.domain.Utente;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,25 +16,15 @@ import java.util.Date;
 public class EventoService {
 
     private final OrdineDao ordineDao;
-    private final UtenteDao utenteDao;
+    private final BigliettoDAO bigliettoDao;
 
     @Transactional(readOnly = true)
     public void stampa() {
-
-        Utente u = new Utente("Us","adofuigjoaed",true,"cia",new Date(10,10,10));
-
-        utenteDao.save(u);
-
-
-
-        Ordine ordine =  new Ordine(u, 5L, 10.5F, new Date());
+        Ordine ordine =  new Ordine(1L, 5, 10.5F, new Date(10,10,10));
 
         Biglietto b = new Biglietto(2L,"AAAAAAAAAAAAAAAAAAAAAAAAAAAAA",true,"cia","caa",new Date(10,10,10));
 
         ordine.addBiglietto(b);
 
-        ordineDao.save(ordine);
     }
-
-
 }

@@ -42,11 +42,7 @@ public class Utente{
     @Column(nullable = false)
     private Date data_nascita;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "organizzatore")
-    private Set<Evento> eventi_organizzati = new HashSet<>();
 
-
-    /*
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "utente_amici",
@@ -54,6 +50,13 @@ public class Utente{
             inverseJoinColumns = @JoinColumn(name = "amico_id")
     )
     private Set<Utente> amici = new HashSet<>();
-     */
+
+    // Metodo helper per amicizia bidirezionale
+    public boolean addAmico(Utente utente) {
+        if (this.amici.contains(utente)) return false;
+        this.amici.add(utente);
+        utente.getAmici().add(this);
+        return true;
+    }
 
 }

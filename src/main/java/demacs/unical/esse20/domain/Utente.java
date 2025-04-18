@@ -33,19 +33,4 @@ public class Utente {
 
     @Column(nullable = false)
     private Date data_nascita;
-
-    /*@OneToMany(fetch = FetchType.LAZY)
-    private Set<Evento> eventi_organizzati = new HashSet<>();
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "utente_amici",
-            joinColumns = @JoinColumn(name = "utente_id"),
-            inverseJoinColumns = @JoinColumn(name = "amico_id")
-    )
-    private Set<Utente> amici = new HashSet<>();
-
-     */
-
-
 }

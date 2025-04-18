@@ -2,9 +2,8 @@ package demacs.unical.esse20.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.sql.results.graph.Fetch;
+import org.hibernate.annotations.UuidGenerator;
 
-import java.sql.Blob;
 import java.util.*;
 
 @Entity
@@ -13,21 +12,14 @@ import java.util.*;
 @Getter
 @NoArgsConstructor
 @ToString
-public class Utente{
-
-    public Utente(String username, String email, boolean organizzatore, String password, Date data_nascita) {
-        this.username = username;
-        this.email = email;
-        this.organizzatore = organizzatore;
-        this.password = password;
-        this.data_nascita = data_nascita;
-    }
+public class Utente {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @UuidGenerator
+    @Column(updatable = false, nullable = false, unique = true)
+    private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false, unique = true)
@@ -41,19 +33,4 @@ public class Utente{
 
     @Column(nullable = false)
     private Date data_nascita;
-
-    /*@OneToMany(fetch = FetchType.LAZY)
-    private Set<Evento> eventi_organizzati = new HashSet<>();
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "utente_amici",
-            joinColumns = @JoinColumn(name = "utente_id"),
-            inverseJoinColumns = @JoinColumn(name = "amico_id")
-    )
-    private Set<Utente> amici = new HashSet<>();
-
-     */
-
-
 }

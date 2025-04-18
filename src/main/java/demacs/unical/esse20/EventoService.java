@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Service
@@ -22,7 +23,7 @@ public class EventoService {
     @Transactional(readOnly = true)
     public void stampa() {
 
-        Utente u = new Utente("Us","adofuigjoaed",true,"cia",new Date(10,10,10));
+        Utente u = new Utente("Us","adofuigjoaed",true,"cia", LocalDate.of(10, 10, 10));
 
         utenteDao.save(u);
 

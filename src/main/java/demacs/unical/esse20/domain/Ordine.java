@@ -1,5 +1,6 @@
 package demacs.unical.esse20.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +18,8 @@ import java.util.*;
 @ToString
 public class Ordine {
 
-    public Ordine(Long utente_id, int biglietti_comprati, double importo, Date data_pagamento) {
-        this.utente_id = utente_id;
+    public Ordine(String utenteId, int biglietti_comprati, double importo, Date data_pagamento) {
+        this.utenteId = utenteId;
         this.biglietti_comprati = biglietti_comprati;
         this.importo = importo;
         this.data_pagamento = data_pagamento;
@@ -30,8 +31,8 @@ public class Ordine {
     @Column(length = 36)
     private String id;
 
-    @Column(nullable = false)
-    private Long utente_id;
+    @Column(nullable = false, length = 36)
+    private String utenteId;
 
     @Column(nullable = false)
     private int biglietti_comprati;

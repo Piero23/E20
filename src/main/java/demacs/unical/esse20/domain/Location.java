@@ -1,5 +1,7 @@
 package demacs.unical.esse20.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,8 +41,8 @@ public class Location {
     @Column(nullable = false)
     String position;
 
-
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "location", orphanRemoval = true,fetch = FetchType.LAZY)
-    Set<Evento> eventi = new HashSet();
+    Set<Evento> eventi = new HashSet<>();
 
 }

@@ -32,21 +32,16 @@ public class EventoService {
     @Transactional(readOnly = true)
     public void stampa() {
 
+
         /*
-        Location location = new Location("Filo dsfsef", "BOrdedfsdfdsllo" , false ,"Univfdsfdsfdersità della calabria li vicino");
-
-
         Evento evento = new Evento("MI piace tantffffissimo la paaaaallee",location,"adaffffda","123456789012345678901234567890123456",35L,true,true);
-
         eventoDao.save(evento);
-
 
         TODO aggiungere data ad evento
          */
 
-        Preferiti preferiti = new Preferiti("123456789012345678901234567890123456",eventoDao.findById(1L).get(),true);
 
-        preferitiDao.save(preferiti);
+
 
     }
 

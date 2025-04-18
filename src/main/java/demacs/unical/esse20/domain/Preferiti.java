@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
                 )
         })
 @NoArgsConstructor
+
 public class Preferiti {
 
     public Preferiti(String utente_id, Evento evento, boolean status) {

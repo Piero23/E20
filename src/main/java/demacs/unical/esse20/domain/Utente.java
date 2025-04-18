@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.sql.results.graph.Fetch;
+import org.hibernate.validator.constraints.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Blob;
@@ -17,7 +18,8 @@ import java.util.*;
 @Getter
 @NoArgsConstructor
 @ToString
-public class Utente{
+@RequiredArgsConstructor
+public class Utente {
 
     public Utente(String username, String email, boolean organizzatore, String password, LocalDate data_nascita) {
         this.username = username;
@@ -42,7 +44,7 @@ public class Utente{
     @Column(nullable = false)
     private boolean organizzatore;
 
-    @Column(length = 500, nullable = false)
+    @Column(length = 500, unique = true, nullable = false)
     @Size(min = 8, max = 32, message = "La password deve contenere almeno 8 massimo 32 caratteri.")
     private String password;
 

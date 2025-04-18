@@ -36,4 +36,5 @@ public class Test implements CommandLineRunner {
         a.stampa();
 
     }
+
 }

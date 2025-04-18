@@ -69,4 +69,5 @@ public class Biglietto {
     // @OneToMany(fetch = FetchType.LAZY)
     // private Set<Evento> eventi = new HashSet<>();
 
+
 }

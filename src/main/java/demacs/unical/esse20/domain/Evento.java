@@ -50,4 +50,5 @@ public class Evento {
 
     @Column(nullable = false)
     private boolean b_nominativo;
+
 }

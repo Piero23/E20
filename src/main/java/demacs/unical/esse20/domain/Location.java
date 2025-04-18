@@ -27,4 +27,5 @@ public class Location {
     @Column(nullable = false)
     String position;
 
+
 }

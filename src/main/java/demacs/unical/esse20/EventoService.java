@@ -1,18 +1,12 @@
 package demacs.unical.esse20;
 
 
-import demacs.unical.esse20.dao.EventoDao;
-import demacs.unical.esse20.dao.LocationDao;
-import demacs.unical.esse20.dao.PreferitiDao;
-import demacs.unical.esse20.domain.Evento;
-import demacs.unical.esse20.domain.Location;
-import demacs.unical.esse20.domain.Preferiti;
-import lombok.AllArgsConstructor;
+import demacs.unical.esse20.data.dao.EventoDao;
+import demacs.unical.esse20.data.dao.LocationDao;
+import demacs.unical.esse20.data.dao.PreferitiDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor

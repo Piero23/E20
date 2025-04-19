@@ -1,7 +1,6 @@
-package demacs.unical.esse20.domain;
+package demacs.unical.esse20.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,7 @@ import java.util.Set;
 @Setter
 @Getter
 @NoArgsConstructor
-public class Location {
+public class Location extends DomainObject<Long> {
 
 
     @Id
@@ -46,3 +45,5 @@ public class Location {
     Set<Evento> eventi = new HashSet<>();
 
 }
+
+

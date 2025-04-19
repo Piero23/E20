@@ -1,11 +1,12 @@
-package demacs.unical.esse20.domain;
+package demacs.unical.esse20.data.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.Date;
 
 @Entity
 @Table(name = "evento")
@@ -13,7 +14,7 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @ToString
-public class Evento {
+public class Evento extends DomainObject<Long> {
 
     public Evento(String descrizione, Location location , String nome, String organizzatore, Long posti, boolean b_riutilizzabile, boolean b_nominativo) {
         this.descrizione = descrizione;
@@ -50,4 +51,7 @@ public class Evento {
 
     @Column(nullable = false)
     private boolean b_nominativo;
+
+    @Column(nullable = false)
+    private Date data;
 }

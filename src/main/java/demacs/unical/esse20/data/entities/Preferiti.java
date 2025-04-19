@@ -1,9 +1,10 @@
-package demacs.unical.esse20.domain;
+package demacs.unical.esse20.data.entities;
 
 import jakarta.persistence.*;
-import jdk.jfr.Event;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "preferiti",
@@ -14,8 +15,9 @@ import lombok.NoArgsConstructor;
                 )
         })
 @NoArgsConstructor
-
-public class Preferiti {
+@Getter
+@Setter
+public class Preferiti extends DomainObject<Long> {
 
     public Preferiti(String utente_id, Evento evento, boolean status) {
         this.utente_id = utente_id;
@@ -27,11 +29,14 @@ public class Preferiti {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //@Size(min = 36, max = 36)
     @Column(length = 36 ,nullable = false)
     private String utente_id;
 
+
+    //TODO FIX
     @ManyToOne
-    @JoinColumn
+    @JoinColumn()
     private Evento evento;
 
     // Privato/Condiviso [0,1]

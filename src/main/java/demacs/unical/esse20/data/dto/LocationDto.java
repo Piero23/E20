@@ -1,8 +1,10 @@
-package demacs.unical.esse20.dto;
+package demacs.unical.esse20.data.dto;
 
-import demacs.unical.esse20.domain.Location;
+import demacs.unical.esse20.data.entities.Location;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Date;
 
 @Getter
 @Setter
@@ -27,4 +29,5 @@ public class LocationDto {
     private boolean chiuso;
 
     private String position;
+
 }

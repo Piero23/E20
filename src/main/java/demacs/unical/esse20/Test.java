@@ -1,8 +1,8 @@
 package demacs.unical.esse20;
 
-import demacs.unical.esse20.dao.EventoDao;
-import demacs.unical.esse20.dao.LocationDao;
-import demacs.unical.esse20.dao.PreferitiDao;
+import demacs.unical.esse20.data.dao.EventoDao;
+import demacs.unical.esse20.data.dao.LocationDao;
+import demacs.unical.esse20.data.dao.PreferitiDao;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 

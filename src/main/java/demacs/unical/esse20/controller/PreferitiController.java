@@ -1,8 +1,11 @@
 package demacs.unical.esse20.controller;
 
+import demacs.unical.esse20.data.dao.EventoDao;
 import demacs.unical.esse20.data.dao.PreferitiDao;
 import demacs.unical.esse20.data.dto.PreferitiDto;
+import demacs.unical.esse20.data.entities.Evento;
 import demacs.unical.esse20.data.entities.Preferiti;
+import demacs.unical.esse20.service.PreferitiService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,44 +17,26 @@ import org.springframework.web.server.ResponseStatusException;
 @AllArgsConstructor
 public class PreferitiController {
 
-    private final PreferitiDao preferitiDao;
 
+    private final PreferitiService preferitiService;
 
     @GetMapping(value="/{id}")
-    private ResponseEntity<PreferitiDto> findById(@PathVariable("id") Long id){
-        if(preferitiDao.findById(id).isPresent())
-            return ResponseEntity.status(HttpStatus.OK).body(new PreferitiDto(preferitiDao.findById(id).get()));
-        else
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    private ResponseEntity<?> findById(@PathVariable("id") Long id){
+        return new ResponseEntity<>(preferitiService.getById(id), HttpStatus.OK);
     }
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Preferiti> createEvento(@RequestBody Preferiti preferiti) {
-        return new ResponseEntity<>(preferitiDao.save(preferiti), HttpStatus.CREATED);
+    public ResponseEntity<?> createPreferito(@RequestBody PreferitiDto preferiti) {
+        preferitiService.save(preferiti);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
-
 
     @DeleteMapping(path="/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteEvento(@PathVariable("id") Long id) {
-        preferitiDao.deleteById(id);
+    public void deletePreferito(@PathVariable("id") Long id) {
+        preferitiService.delete(id);
     }
-
-
-
-    @PutMapping(path="/{id}", consumes = "application/json")
-    public ResponseEntity<Preferiti> replacePerson(@PathVariable("id") Long id, @RequestBody Preferiti preferiti) {
-
-        preferitiDao.findById(id).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Location non trovata")
-        );
-        preferiti.setId(id);
-
-        return new ResponseEntity<>(preferitiDao.save(preferiti), HttpStatus.OK);
-    }
-
 }
 
 /* Post API

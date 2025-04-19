@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Date;
 
@@ -34,7 +36,8 @@ public class Evento extends DomainObject<Long> {
     private String descrizione;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @JoinColumn
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Location location;
 
     @Column(nullable = false, length = 36)

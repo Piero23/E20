@@ -3,6 +3,7 @@ package demacs.unical.esse20;
 import demacs.unical.esse20.data.dao.EventoDao;
 import demacs.unical.esse20.data.dao.LocationDao;
 import demacs.unical.esse20.data.dao.PreferitiDao;
+import demacs.unical.esse20.service.EventoService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -23,9 +24,6 @@ public class Test implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        EventoService a = new EventoService(eventoDao,locationDao,preferitiDao);
-
-        a.stampa();
 
     }
 }

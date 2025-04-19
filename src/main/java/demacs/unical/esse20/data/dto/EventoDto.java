@@ -3,12 +3,14 @@ package demacs.unical.esse20.data.dto;
 import demacs.unical.esse20.data.dao.EventoDao;
 import demacs.unical.esse20.data.entities.Evento;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class EventoDto {
 
     private Long id;
@@ -30,7 +32,9 @@ public class EventoDto {
         this.setPosti(evento.getPosti());
         this.setB_riutilizzabile(evento.isB_riutilizzabile());
         this.setB_nominativo(evento.isB_nominativo());
-        location = new LocationDto(evento.getLocation());
         this.setData(evento.getData());
+
+        try {location = new LocationDto(evento.getLocation());}
+        catch (Exception e){location = null;}
     }
 }

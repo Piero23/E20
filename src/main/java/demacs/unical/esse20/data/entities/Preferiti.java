@@ -34,9 +34,9 @@ public class Preferiti extends DomainObject<Long> {
     private String utente_id;
 
 
-    //TODO FIX
-    @ManyToOne
-    @JoinColumn()
+    //TODO FIX ELIMINA L'OGGETTO QUANDO SCHIATTA EVENTO
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(nullable = false)
     private Evento evento;
 
     // Privato/Condiviso [0,1]

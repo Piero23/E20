@@ -41,7 +41,7 @@ public class Location extends DomainObject<Long> {
     String position;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "location", orphanRemoval = true,fetch = FetchType.LAZY)
+    @OneToMany( mappedBy = "location",fetch = FetchType.LAZY)
     Set<Evento> eventi = new HashSet<>();
 
 }

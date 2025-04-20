@@ -4,10 +4,15 @@ package demacs.unical.esse20.service;
 import demacs.unical.esse20.dao.OrdineDao;
 import demacs.unical.esse20.domain.Biglietto;
 import demacs.unical.esse20.domain.Ordine;
+import demacs.unical.esse20.dto.BigliettoDto;
+import demacs.unical.esse20.dto.OrdineDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -32,8 +37,48 @@ public class OrdineService {
     }
 
     @Transactional
-    public void saveBiglietti(Ordine o, Set<Biglietto> b) {
-        o.getBiglietti().addAll(b);
-        ordineDao.save(o);
+    public List<Ordine> findAll() {
+        return ordineDao.findAll();
     }
+
+    @Transactional
+    public void saveOrdine(OrdineDto ordine, List<BigliettoDto> biglietti) {
+        Ordine newOrdine = new Ordine();
+        newOrdine.setUtenteId(ordine.utenteId());
+        newOrdine.setBiglietti_comprati(ordine.bigliettiComprati());
+        newOrdine.setImporto(ordine.importo());
+        newOrdine.setData_pagamento(ordine.dataPagamento());
+
+        Set<Biglietto> newBiglietti = new HashSet<>();
+        for(BigliettoDto bigliettoDto : biglietti){
+            Biglietto newBiglietto = new Biglietto();
+
+            newBiglietto.setOrdine(newOrdine);
+            newBiglietto.setEmail(bigliettoDto.email());
+            newBiglietto.setNome(bigliettoDto.nome());
+            newBiglietto.setCognome(bigliettoDto.cognome());
+            newBiglietto.setData_nascita(bigliettoDto.dataNascita());
+            newBiglietto.setE_valido(bigliettoDto.eValido());
+            newBiglietto.setId_evento(bigliettoDto.idEvento());
+            newBiglietti.add(newBiglietto);
+        }
+
+        newOrdine.getBiglietti().addAll(newBiglietti);
+        ordineDao.save(newOrdine);
+    }
+
+    @Transactional
+    public Ordine findById(String id) {
+        if (ordineDao.findById(id).isPresent()){
+            return ordineDao.findById(id).get();
+        }
+        return null;
+    }
+
+    @Transactional
+    public List<Ordine> findAllByUtente(String utente) {
+        return ordineDao.findAllByUtenteId(utente);
+    }
+
+
 }

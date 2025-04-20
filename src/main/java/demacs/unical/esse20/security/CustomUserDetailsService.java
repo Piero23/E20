@@ -3,7 +3,6 @@ package demacs.unical.esse20.security;
 import demacs.unical.esse20.dao.UtenteDao;
 import demacs.unical.esse20.domain.Ruolo;
 import demacs.unical.esse20.domain.Utente;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

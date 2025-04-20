@@ -18,7 +18,6 @@ import java.util.Date;
 /*
  * Questo service contiene tutte le Utilities per poter utilizzare correttamte i Token JWT
  */
-
 @Service
 public class JwtTokenService {
 

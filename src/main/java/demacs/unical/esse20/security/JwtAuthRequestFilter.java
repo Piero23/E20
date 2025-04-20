@@ -1,6 +1,5 @@
 package demacs.unical.esse20.security;
 
-import demacs.unical.esse20.dao.UtenteDao;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

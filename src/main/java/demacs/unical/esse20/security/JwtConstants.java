@@ -1,7 +1,5 @@
 package demacs.unical.esse20.security;
 
-import com.nimbusds.jose.JWSAlgorithm;
-
 public class JwtConstants {
 
     public static final String JWS_ALGORITHM_TAG = "HS256";

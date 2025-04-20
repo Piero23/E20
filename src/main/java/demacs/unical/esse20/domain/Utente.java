@@ -4,11 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.sql.results.graph.Fetch;
-import org.hibernate.validator.constraints.UUID;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.sql.Blob;
+import org.hibernate.annotations.UuidGenerator;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -30,11 +26,12 @@ public class Utente {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @UuidGenerator
+    @Column(nullable = false)
+    private String id;
 
     @Column(length = 20, nullable = false)
-    @Size(min = 4, max = 20, message = "Lo username deve contenere almeno 8 massimo 20 caratteri.")
+    @Size(min = 4, max = 20, message = "Lo username deve contenere almeno 4 massimo 20 caratteri.")
     private String username;
 
     @Column(nullable = false, unique = true)
@@ -46,6 +43,7 @@ public class Utente {
 
     @Column(length = 500, unique = true, nullable = false)
     @Size(min = 8, max = 32, message = "La password deve contenere almeno 8 massimo 32 caratteri.")
+    @ToString.Exclude
     private String password;
 
     @Column(nullable = false)
@@ -53,16 +51,4 @@ public class Utente {
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "organizzatore")
     private Set<Evento> eventi_organizzati = new HashSet<>();
-
-
-    /*
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "utente_amici",
-            joinColumns = @JoinColumn(name = "utente_id"),
-            inverseJoinColumns = @JoinColumn(name = "amico_id")
-    )
-    private Set<Utente> amici = new HashSet<>();
-     */
-
 }

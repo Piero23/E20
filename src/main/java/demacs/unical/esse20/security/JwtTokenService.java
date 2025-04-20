@@ -3,10 +3,13 @@ package demacs.unical.esse20.security;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jwt.JWTClaimsSet;
+
 import com.nimbusds.jwt.SignedJWT;
+import com.nimbusds.jwt.JWTClaimsSet;
+
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
+
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;

@@ -1,22 +1,25 @@
 package demacs.unical.esse20.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
+
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.Email;
 import org.hibernate.annotations.UuidGenerator;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-@Table(name = "utenti")
+@Table(name = "utente")
 @Getter
 @Setter
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class Utente {
 
     @Id
@@ -28,16 +31,15 @@ public class Utente {
     @Size(min = 4, max = 20, message = "Lo username deve contenere almeno 8 massimo 20 caratteri.")
     private String username;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = false)
     @Email
     private String email;
 
     @Column(unique = true, nullable = false)
-    @Size(min = 8, max = 32, message = "La password deve contenere almeno 8 massimo 32 caratteri.")
     private String password;
 
-    @Column(name = "data_di_nascita", nullable = false)
-    private LocalDate dataDiNascita;
+    @Column(name = "data_nascita", nullable = false)
+    private LocalDate dataNascita;
 
     @Enumerated(EnumType.STRING)
     private Ruolo ruolo;

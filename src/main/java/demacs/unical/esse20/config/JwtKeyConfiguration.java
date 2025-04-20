@@ -1,12 +1,14 @@
 package demacs.unical.esse20.config;
 
 import demacs.unical.esse20.security.JwtConstants;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;

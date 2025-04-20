@@ -3,12 +3,15 @@ package demacs.unical.esse20.security;
 import demacs.unical.esse20.dao.UtenteDao;
 import demacs.unical.esse20.domain.Ruolo;
 import demacs.unical.esse20.domain.Utente;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Utente utenteCercato = utenteDao.findbyUsername(username)
+        Utente utenteCercato = utenteDao.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username non trovato"));
 
         return new User(utenteCercato.getUsername(),

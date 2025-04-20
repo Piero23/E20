@@ -75,6 +75,12 @@
 			<version>10.2</version>
 		</dependency>
 
+		<!-- Per lavorare con i file di tipo JSON -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20231013</version>
+		</dependency>
 	</dependencies>
 
 	<build>

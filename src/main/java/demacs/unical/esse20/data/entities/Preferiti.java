@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "preferiti",
@@ -34,9 +36,9 @@ public class Preferiti extends DomainObject<Long> {
     private String utente_id;
 
 
-    //TODO FIX ELIMINA L'OGGETTO QUANDO SCHIATTA EVENTO
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Evento evento;
 
     // Privato/Condiviso [0,1]

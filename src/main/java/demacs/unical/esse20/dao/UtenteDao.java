@@ -1,15 +1,15 @@
 package demacs.unical.esse20.dao;
 
 import demacs.unical.esse20.domain.Utente;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public interface UtenteDao extends CrudRepository<Utente, UUID> {
+public interface UtenteDao extends JpaRepository<Utente, UUID> {
 
-    Optional<Utente> findbyUsername(String username);
+    Optional<Utente> findByUsername(String username);
 
-    Optional<Utente> findbyEmail(String email);
+    Optional<Utente> findByEmail(String email);
 
 }

@@ -17,7 +17,6 @@ import org.springframework.web.server.ResponseStatusException;
 @AllArgsConstructor
 public class PreferitiController {
 
-
     private final PreferitiService preferitiService;
 
     @GetMapping(value="/{id}")

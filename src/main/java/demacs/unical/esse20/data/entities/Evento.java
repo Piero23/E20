@@ -1,6 +1,7 @@
 package demacs.unical.esse20.data.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,6 +41,7 @@ public class Evento extends DomainObject<Long> {
     @OnDelete(action = OnDeleteAction.SET_NULL)
     private Location location;
 
+    @Size(min = 36, max = 36)
     @Column(nullable = false, length = 36)
     private String organizzatore;
 

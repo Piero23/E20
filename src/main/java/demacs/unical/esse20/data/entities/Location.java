@@ -2,6 +2,7 @@ package demacs.unical.esse20.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,9 +29,11 @@ public class Location extends DomainObject<Long> {
         this.position = position;
     }
 
+    @Size(min = 5, max = 50)
     @Column(nullable = false)
     String nome;
 
+    @Size(min = 20, max = 400)
     @Column(nullable = false)
     String descrizione;
 

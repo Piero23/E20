@@ -31,7 +31,7 @@ public class Preferiti extends DomainObject<Long> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //@Size(min = 36, max = 36)
+    @Size(min = 36, max = 36)
     @Column(length = 36 ,nullable = false)
     private String utente_id;
 

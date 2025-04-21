@@ -13,32 +13,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Map;
+
 
 @RequestMapping("/evento")
 @RestController
 @AllArgsConstructor
-public class EventoController /*extends BaseController<Evento,Long, EventoDto>*/ {
-
-    private final EventoDao eventoDao;
-
-    private final LocationDao locationDao;
+public class EventoController {
 
     private final EventoService eventoService;
 
-
     @GetMapping(value="/{id}")
-    private ResponseEntity<EventoBasicDto> findById(@PathVariable("id") Long id){
-        /*
-        if(eventoDao.findById(id).isPresent())
-            return ResponseEntity.status(HttpStatus.OK).body(new EventoDto(eventoDao.findById(id).get()));
-        else
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    private ResponseEntity<?> findById(@PathVariable("id") Long id,@RequestParam Map<String, String> allParams){
 
-         */
+            if (!allParams.isEmpty() && allParams.containsKey("locationFormat") && allParams.size() == 1)
+                if (allParams.get("locationFormat").equals("true"))
+                    return new ResponseEntity<>(eventoService.getByIdWithLocation(id), HttpStatus.OK);
+
+            else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
 
         return new ResponseEntity<>(eventoService.getByIdNoLocation(id), HttpStatus.OK);
     }
-
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
@@ -47,7 +43,7 @@ public class EventoController /*extends BaseController<Evento,Long, EventoDto>*/
     }
 
     @DeleteMapping(path="/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     public void deleteEvento(@PathVariable("id") Long id) {
         eventoService.delete(id);
     }
@@ -58,6 +54,7 @@ public class EventoController /*extends BaseController<Evento,Long, EventoDto>*/
     }
 
 }
+
 /*
 {
     "descrizione": "Bla Bla Bla Bla Bla Bla Bla Bla Bla",

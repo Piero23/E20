@@ -1,5 +1,6 @@
 package demacs.unical.esse20.service;
 
+import demacs.unical.esse20.ContentNotFoundException;
 import demacs.unical.esse20.data.dao.EventoDao;
 import demacs.unical.esse20.data.dao.PreferitiDao;
 import demacs.unical.esse20.data.dto.PreferitiDto;
@@ -19,7 +20,7 @@ public class PreferitiService {
 
     public PreferitiDto getById(Long id){
         return new PreferitiDto(preferitiDao.findById(id).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND)
+                new ContentNotFoundException("preferiti with id " + id + " not found")
         ));
     }
 
@@ -29,7 +30,7 @@ public class PreferitiService {
                 new Preferiti(
                         preferitiDto.getUtente_id(),
                         eventoDao.findById(preferitiDto.getEvento_id())
-                                .orElseThrow( () ->new ResponseStatusException(HttpStatus.NOT_FOUND)),
+                                .orElseThrow( () ->new ContentNotFoundException("evento with id " + preferitiDto.getEvento_id() + " not found")),
                         preferitiDto.isStatus()
                 )
         );
@@ -39,7 +40,7 @@ public class PreferitiService {
     public void delete(Long id){
 
         if(preferitiDao.findById(id).isEmpty())
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+            throw new ContentNotFoundException("preferiti with id "+ id + "not found");
 
         preferitiDao.deleteById(id);
     }

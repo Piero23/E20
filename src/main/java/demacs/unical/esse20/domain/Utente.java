@@ -4,38 +4,35 @@ import jakarta.persistence.*;
 
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Email;
+import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
 @Table(name = "utente")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Utente {
 
     @Id
     @GeneratedValue
     @UuidGenerator
+    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
     @Column(nullable = false, unique = true, length = 20)
     @Size(min = 4, max = 20, message = "Lo username deve contenere almeno 8 massimo 20 caratteri.")
     private String username;
 
-    @Column(nullable = false, unique = false)
+    @Column(nullable = false, unique = true)
     @Email
     private String email;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String password;
 
     @Column(name = "data_nascita", nullable = false)
@@ -43,5 +40,8 @@ public class Utente {
 
     @Enumerated(EnumType.STRING)
     private Ruolo ruolo;
+
+    @Enumerated(EnumType.STRING)
+    private AuthProvider authProvider;
 
 }

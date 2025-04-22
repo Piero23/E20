@@ -2,11 +2,13 @@ package demacs.unical.esse20.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 @Data
 @NoArgsConstructor
-@ToString
+@AllArgsConstructor
+@Builder
 public class UtenteBasicDto {
 
     private String id;
@@ -20,4 +22,6 @@ public class UtenteBasicDto {
     private String dataNascita;
 
     private String ruolo;
+
+    private String authProvider;
 }

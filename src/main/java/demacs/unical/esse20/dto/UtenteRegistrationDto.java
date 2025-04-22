@@ -2,11 +2,14 @@ package demacs.unical.esse20.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 
 @Data
 @NoArgsConstructor
-@ToString
+@AllArgsConstructor
+@Builder
 public class UtenteRegistrationDto {
 
     private String username;

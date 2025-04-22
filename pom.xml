@@ -75,6 +75,12 @@
 			<version>10.2</version>
 		</dependency>
 
+		<!-- Per Poter effettuare Autenticazioni tramite OAuth2 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency>
+
 		<!-- Per lavorare con i file di tipo JSON -->
 		<dependency>
 			<groupId>org.json</groupId>

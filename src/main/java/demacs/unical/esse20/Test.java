@@ -2,9 +2,15 @@ package demacs.unical.esse20;
 
 import demacs.unical.esse20.dao.BigliettoDao;
 import demacs.unical.esse20.dao.OrdineDao;
+import demacs.unical.esse20.service.BigliettoService;
 import demacs.unical.esse20.service.OrdineService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import javax.mail.PasswordAuthentication;
+import javax.mail.Provider;
+import javax.mail.Session;
+import java.util.Properties;
 
 @Component
 public class Test implements CommandLineRunner {
@@ -20,10 +26,6 @@ public class Test implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
-        OrdineService a = new OrdineService(ordineDao);
-
-        a.test();
 
 
     }

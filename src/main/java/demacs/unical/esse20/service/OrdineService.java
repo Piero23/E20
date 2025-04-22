@@ -42,7 +42,7 @@ public class OrdineService {
     }
 
     @Transactional
-    public void saveOrdine(OrdineDto ordine, List<BigliettoDto> biglietti) {
+    public Ordine saveOrdine(OrdineDto ordine, List<BigliettoDto> biglietti) {
         Ordine newOrdine = new Ordine();
         newOrdine.setUtenteId(ordine.utenteId());
         newOrdine.setBiglietti_comprati(ordine.bigliettiComprati());
@@ -65,6 +65,7 @@ public class OrdineService {
 
         newOrdine.getBiglietti().addAll(newBiglietti);
         ordineDao.save(newOrdine);
+        return newOrdine;
     }
 
     @Transactional

@@ -12,6 +12,8 @@ import demacs.unical.esse20.service.OrdineService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +29,8 @@ public class OrdineController {
 
     OrdineService ordineService;
     BigliettoService bigliettoService;
+
+    private final JavaMailSender javaMailSender;
 
     @GetMapping
     private ResponseEntity<List<Ordine>> findAll(){
@@ -55,7 +59,16 @@ public class OrdineController {
 
     @PostMapping(value="/save")
     private ResponseEntity<String> createOrdine(@RequestBody OrdineRequest ordineRequest){
-        ordineService.saveOrdine(ordineRequest.ordine(), ordineRequest.biglietti());
+        Ordine ordine=ordineService.saveOrdine(ordineRequest.ordine(), ordineRequest.biglietti());
+
+        //dispatch email con biglietto
+        /*
+        for(Biglietto b: bigliettoService.findAllByOrdine(ordine){
+            //send email to ordine.getUtenteId()
+            //containing bigliettoService.getQrCode(b.getId)
+        }
+         */
+
         return new ResponseEntity<>("Ordine Creato Correttamente", HttpStatus.OK);
     }
 

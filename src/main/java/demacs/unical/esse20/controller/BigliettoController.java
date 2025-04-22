@@ -1,5 +1,6 @@
 package demacs.unical.esse20.controller;
 
+import demacs.unical.esse20.service.BigliettoService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,17 +22,15 @@ import java.util.Map;
 @AllArgsConstructor
 public class BigliettoController {
 
+    private final BigliettoService bigliettoService;
+
     @GetMapping(value="/{id}")
     private ResponseEntity<Map<String, String>> getQrCode(@PathVariable String id) throws URISyntaxException {
         //ritorna l'id del biglietto,
         //implementare la validazione allo scan
 
-        String qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + URLEncoder.encode(id, StandardCharsets.UTF_8);
-        byte[] imageBytes = new RestTemplate().getForObject(qrUrl, byte[].class);
-
-        String base64 = Base64.getEncoder().encodeToString(imageBytes);
         Map<String, String> response = new HashMap<>();
-        response.put("imageBase64", base64);
+        response.put("imageBase64", bigliettoService.getQrCode(id));
         return ResponseEntity.ok(response);
     }
 }

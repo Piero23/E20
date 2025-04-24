@@ -1,0 +1,96 @@
+package demacs.unical.esse20.service;
+
+import demacs.unical.esse20.data.dao.UtenteDAO;
+import demacs.unical.esse20.data.dto.UtenteDTO;
+import demacs.unical.esse20.data.dto.UtenteRegistrationDTO;
+import demacs.unical.esse20.data.model.Utente;
+import jakarta.validation.Valid;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+@Service
+public class UtenteService {
+    private final UtenteDAO utenteDAO;
+
+    public UtenteService(UtenteDAO utenteDAO) {
+        this.utenteDAO = utenteDAO;
+    }
+
+    public List<UtenteDTO> getAllUtenti() {
+        return utenteDAO.findAll().stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public UtenteDTO getUtenteById(UUID id) {
+        return utenteDAO.findById(id)
+                .map(this::toDto)
+                .orElseThrow(() -> new RuntimeException("Utente non trovato."));
+    }
+
+    public UtenteDTO createUtente(UtenteDTO utenteDTO) {
+        Utente utente = Utente.builder()
+                .username(utenteDTO.getUsername())
+                .email(utenteDTO.getEmail())
+                .organizzatore(utenteDTO.isOrganizzatore())
+                .password("criptata") // TODO
+                .dataNascita(utenteDTO.getData_nascita())
+                .build();
+        return toDto(utenteDAO.save(utente));
+    }
+
+    public UtenteDTO registerUtente(UtenteRegistrationDTO dto) {
+        if (utenteDAO.findByEmail(dto.getEmail()).isPresent()) {
+            throw new RuntimeException("Esiste già un utente con questa email.");
+        }
+
+        if (utenteDAO.findByUsername(dto.getUsername()).isPresent()) {
+            throw new RuntimeException("Esiste già un utente con questo username.");
+        }
+
+        Utente u = Utente.builder()
+                .username(dto.getUsername())
+                .email(dto.getEmail())
+                .password(dto.getPassword())
+                .dataNascita(dto.getDataNascita())
+                .organizzatore(dto.isOrganizzatore())
+                .build();
+
+        return toDto(utenteDAO.save(u));
+
+
+    }
+
+    public void deleteUtenteById(UUID id) {
+        Utente utente = utenteDAO.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utente non trovato."));
+        utenteDAO.delete(utente);
+    }
+
+    public UtenteDTO updateUtenteById(UUID id, @Valid UtenteDTO utenteDTO) {
+        Utente utente = utenteDAO.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utente non trovato."));
+
+        utente.setUsername(utenteDTO.getUsername());
+        utente.setEmail(utenteDTO.getEmail());
+        utente.setOrganizzatore(utenteDTO.isOrganizzatore());
+        utente.setDataNascita(utenteDTO.getData_nascita());
+
+        return toDto(utenteDAO.save(utente));
+    }
+
+    private UtenteDTO toDto(Utente utente) {
+    return UtenteDTO.builder()
+        .id(utente.getId())
+        .username(utente.getUsername())
+        .email(utente.getEmail())
+        .organizzatore(utente.isOrganizzatore())
+        .data_nascita(utente.getDataNascita())
+        .build();
+    }
+
+
+}

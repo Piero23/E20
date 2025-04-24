@@ -12,6 +12,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +26,8 @@ public class BigliettoService {
     }
 
     @Transactional
-    public String getQrCode(String id){
-        String qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + URLEncoder.encode(id, StandardCharsets.UTF_8);
+    public String getQrCode(UUID id){
+        String qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + URLEncoder.encode(id.toString(), StandardCharsets.UTF_8);
         byte[] imageBytes = new RestTemplate().getForObject(qrUrl, byte[].class);
 
         return Base64.getEncoder().encodeToString(imageBytes);

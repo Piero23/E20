@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/biglietto")
@@ -25,7 +26,7 @@ public class BigliettoController {
     private final BigliettoService bigliettoService;
 
     @GetMapping(value="/{id}")
-    private ResponseEntity<Map<String, String>> getQrCode(@PathVariable String id) throws URISyntaxException {
+    private ResponseEntity<Map<String, String>> getQrCode(@PathVariable UUID id) throws URISyntaxException {
         //ritorna l'id del biglietto,
         //implementare la validazione allo scan
 

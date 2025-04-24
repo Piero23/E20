@@ -10,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -69,7 +66,7 @@ public class OrdineService {
     }
 
     @Transactional
-    public Ordine findById(String id) {
+    public Ordine findById(UUID id) {
         if (ordineDao.findById(id).isPresent()){
             return ordineDao.findById(id).get();
         }
@@ -77,7 +74,7 @@ public class OrdineService {
     }
 
     @Transactional
-    public List<Ordine> findAllByUtente(String utente) {
+    public List<Ordine> findAllByUtente(UUID utente) {
         return ordineDao.findAllByUtenteId(utente);
     }
 

@@ -7,10 +7,6 @@ import demacs.unical.esse20.service.OrdineService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import javax.mail.PasswordAuthentication;
-import javax.mail.Provider;
-import javax.mail.Session;
-import java.util.Properties;
 
 @Component
 public class Test implements CommandLineRunner {

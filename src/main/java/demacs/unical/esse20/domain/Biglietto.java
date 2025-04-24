@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.UuidGenerator;
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Table(name = "biglietto",uniqueConstraints = {
@@ -35,7 +36,7 @@ public class Biglietto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @UuidGenerator
     @Column(length = 36)
-    private String id;
+    private UUID id;
 
     @Column(nullable = false)
     private Long id_evento;

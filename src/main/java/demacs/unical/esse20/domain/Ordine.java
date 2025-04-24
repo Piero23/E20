@@ -18,7 +18,7 @@ import java.util.*;
 @ToString
 public class Ordine {
 
-    public Ordine(String utenteId, int biglietti_comprati, double importo, Date data_pagamento) {
+    public Ordine(UUID utenteId, int biglietti_comprati, double importo, Date data_pagamento) {
         this.utenteId = utenteId;
         this.biglietti_comprati = biglietti_comprati;
         this.importo = importo;
@@ -29,10 +29,10 @@ public class Ordine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @UuidGenerator
     @Column(length = 36)
-    private String id;
+    private UUID id;
 
     @Column(nullable = false, length = 36)
-    private String utenteId;
+    private UUID utenteId;
 
     @Column(nullable = false)
     private int biglietti_comprati;

@@ -4,7 +4,6 @@ import demacs.unical.esse20.data.dto.UtenteDTO;
 import demacs.unical.esse20.data.dto.UtenteRegistrationDTO;
 import demacs.unical.esse20.service.UtenteService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

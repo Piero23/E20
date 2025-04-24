@@ -3,7 +3,6 @@ package demacs.unical.esse20.data.model;
 import demacs.unical.esse20.domain.Evento;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import java.time.LocalDate;

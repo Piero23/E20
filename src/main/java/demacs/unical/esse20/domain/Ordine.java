@@ -18,8 +18,7 @@ import java.util.*;
 @ToString
 public class Ordine {
 
-    public Ordine(UUID utenteId, int biglietti_comprati, double importo, Date data_pagamento) {
-        this.utenteId = utenteId;
+    public Ordine(int biglietti_comprati, double importo, Date data_pagamento) {
         this.biglietti_comprati = biglietti_comprati;
         this.importo = importo;
         this.data_pagamento = data_pagamento;

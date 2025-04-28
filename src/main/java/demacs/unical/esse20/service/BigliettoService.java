@@ -27,7 +27,7 @@ public class BigliettoService {
 
     @Transactional
     public String getQrCode(UUID id){
-        String qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + URLEncoder.encode(id.toString(), StandardCharsets.UTF_8);
+        String qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=" + URLEncoder.encode(id.toString(), StandardCharsets.UTF_8);
         byte[] imageBytes = new RestTemplate().getForObject(qrUrl, byte[].class);
 
         return Base64.getEncoder().encodeToString(imageBytes);

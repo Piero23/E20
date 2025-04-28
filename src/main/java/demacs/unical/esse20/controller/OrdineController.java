@@ -56,10 +56,11 @@ public class OrdineController {
     private ResponseEntity<String> createOrdine(@RequestBody OrdineRequest ordineRequest){
         Ordine ordine=ordineService.saveOrdine(ordineRequest.ordine(), ordineRequest.biglietti());
 
+        //ottenere mail utente acquirente
+        //mailService.sendMail(mail utente acquirente, ordine);
+
         for(Biglietto b: bigliettoService.findAllByOrdine(ordine)){
-            String subject = "Ecco Il Tuo Biglietto!";
-            String body = "Ciao! Ecco il tuo biglietto!";
-            mailService.sendMail(b.getEmail(), subject, body, bigliettoService.getQrCode(b.getId()));
+            mailService.sendQrCodeMail(b.getEmail(), bigliettoService.getQrCode(b.getId()));
         }
 
 

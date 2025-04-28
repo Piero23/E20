@@ -27,6 +27,4 @@ public class UtenteRegistrationDTO {
 
     @NotNull(message = "La data di nascita è obbligatoria.")
     private LocalDate dataNascita;
-
-    private boolean organizzatore; // Forse no?
 }

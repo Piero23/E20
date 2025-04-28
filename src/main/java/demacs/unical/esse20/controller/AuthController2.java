@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
-public class AuthController {
+public class AuthController2 {
     private final AuthenticationManager authenticationManager;
 
-    public AuthController(AuthenticationManager authenticationManager) {
+    public AuthController2(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 

@@ -27,10 +27,6 @@ public class UtenteDTO {
     @Email(message = "L'email non è valida.")
     private String email;
 
-    private boolean organizzatore;
-
-    // private String password; excluded for security reasons
-
     @NotNull(message = "La data di nascita è obbligatoria.")
     private LocalDate data_nascita;
 }

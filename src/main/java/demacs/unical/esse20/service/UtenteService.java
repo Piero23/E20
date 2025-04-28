@@ -21,25 +21,14 @@ public class UtenteService {
 
     public List<UtenteDTO> getAllUtenti() {
         return utenteDAO.findAll().stream()
-                .map(this::toDto)
+                .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
     public UtenteDTO getUtenteById(UUID id) {
         return utenteDAO.findById(id)
-                .map(this::toDto)
+                .map(this::toDTO)
                 .orElseThrow(() -> new RuntimeException("Utente non trovato."));
-    }
-
-    public UtenteDTO createUtente(UtenteDTO utenteDTO) {
-        Utente utente = Utente.builder()
-                .username(utenteDTO.getUsername())
-                .email(utenteDTO.getEmail())
-                .organizzatore(utenteDTO.isOrganizzatore())
-                .password("criptata") // TODO
-                .dataNascita(utenteDTO.getData_nascita())
-                .build();
-        return toDto(utenteDAO.save(utente));
     }
 
     public UtenteDTO registerUtente(UtenteRegistrationDTO dto) {
@@ -56,10 +45,9 @@ public class UtenteService {
                 .email(dto.getEmail())
                 .password(dto.getPassword())
                 .dataNascita(dto.getDataNascita())
-                .organizzatore(dto.isOrganizzatore())
                 .build();
 
-        return toDto(utenteDAO.save(u));
+        return toDTO(utenteDAO.save(u));
 
 
     }
@@ -76,18 +64,16 @@ public class UtenteService {
 
         utente.setUsername(utenteDTO.getUsername());
         utente.setEmail(utenteDTO.getEmail());
-        utente.setOrganizzatore(utenteDTO.isOrganizzatore());
         utente.setDataNascita(utenteDTO.getData_nascita());
 
-        return toDto(utenteDAO.save(utente));
+        return toDTO(utenteDAO.save(utente));
     }
 
-    private UtenteDTO toDto(Utente utente) {
+    private UtenteDTO toDTO(Utente utente) {
     return UtenteDTO.builder()
         .id(utente.getId())
         .username(utente.getUsername())
         .email(utente.getEmail())
-        .organizzatore(utente.isOrganizzatore())
         .data_nascita(utente.getDataNascita())
         .build();
     }

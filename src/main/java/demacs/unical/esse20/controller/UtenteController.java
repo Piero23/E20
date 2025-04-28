@@ -29,10 +29,6 @@ public class UtenteController {
         return ResponseEntity.ok(utenteService.getUtenteById(id));
     }
 
-    @PostMapping
-    public ResponseEntity<UtenteDTO> createUtente(@Valid @RequestBody UtenteDTO utenteDTO) {
-        return ResponseEntity.ok(utenteService.createUtente(utenteDTO));
-    }
 
     @PostMapping("/register")
     public ResponseEntity<UtenteDTO> register(@Valid @RequestBody UtenteRegistrationDTO utenteDTO) {

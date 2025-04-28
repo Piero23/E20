@@ -11,6 +11,8 @@ import demacs.unical.esse20.service.BigliettoService;
 import demacs.unical.esse20.service.MailService;
 import demacs.unical.esse20.service.OrdineService;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -23,6 +25,8 @@ import java.util.*;
 @AllArgsConstructor
 public class OrdineController {
 
+    private static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
+
     OrdineService ordineService;
     BigliettoService bigliettoService;
     MailService mailService;
@@ -34,6 +38,7 @@ public class OrdineController {
 
     @GetMapping(value="/{id}")
     private ResponseEntity<Ordine> findById(@PathVariable("id") UUID id){
+        logger.info("Ricevuta richiesta di ricerca ordine tramite ID Ordine");
         if (ordineService.findById(id)!=null)
             return ResponseEntity.ok(ordineService.findById(id));
         return ResponseEntity.notFound().build();
@@ -41,11 +46,13 @@ public class OrdineController {
 
     @GetMapping(value="/utente")
     private ResponseEntity<List<Ordine>> findAllByUtente(@RequestParam("utente") UUID utente){
-         return ResponseEntity.ok(ordineService.findAllByUtente(utente));
+        logger.info("Ricevuta richiesta di ricerca Ordini tramite ID Utente");
+        return ResponseEntity.ok(ordineService.findAllByUtente(utente));
     }
 
     @GetMapping(value="/biglietti")
     private ResponseEntity<List<Biglietto>> findAllBigliettiByOrdine(@RequestParam("ordine") UUID ordine){
+        logger.info("Ricevuta richiesta di ricerca Biglietti tramite ID Ordine");
         if (ordineService.findById(ordine)!=null)
             return ResponseEntity.ok(bigliettoService.findAllByOrdine(ordineService.findById(ordine)));
             //non so se si potrebbe spostare tutta la funzione nell'ordine service o se è più pulito così
@@ -54,6 +61,7 @@ public class OrdineController {
 
     @PutMapping(value="/save")
     private ResponseEntity<String> createOrdine(@RequestBody OrdineRequest ordineRequest){
+        logger.info("Inizio Salvataggio Ordine");
         Ordine ordine=ordineService.saveOrdine(ordineRequest.ordine(), ordineRequest.biglietti());
 
         //ottenere mail utente acquirente
@@ -62,8 +70,7 @@ public class OrdineController {
         for(Biglietto b: bigliettoService.findAllByOrdine(ordine)){
             mailService.sendQrCodeMail(b.getEmail(), bigliettoService.getQrCode(b.getId()));
         }
-
-
+        logger.info("Ordine {} Salvato", ordine.getId());
         return new ResponseEntity<>("Ordine Creato Correttamente", HttpStatus.OK);
     }
 

@@ -252,17 +252,94 @@ Caused by: org.postgresql.util.PSQLException: ERROR: column "utente_id" of relat
 	... 37 common frames omitted
 
 2025-04-28T18:47:01.402+02:00  INFO 9180 --- [esse20] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-04-28T18:47:01.662+02:00  INFO 9180 --- [esse20] [main] demacs.unical.esse20.PaymentController   : Chiave API di Stripe inizializzata.
+2025-04-28T18:47:01.662+02:00  INFO 9180 --- [esse20] [main] demacs.unical.esse20.controller.PaymentController   : Chiave API di Stripe inizializzata.
 2025-04-28T18:47:01.698+02:00  WARN 9180 --- [esse20] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
 2025-04-28T18:47:02.403+02:00  INFO 9180 --- [esse20] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8082 (http) with context path '/'
 2025-04-28T18:47:02.421+02:00  INFO 9180 --- [esse20] [main] demacs.unical.esse20.Esse20Application   : Started Esse20Application in 5.577 seconds (process running for 6.367)
 2025-04-28T18:47:20.449+02:00  INFO 9180 --- [esse20] [http-nio-8082-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
 2025-04-28T18:47:20.451+02:00  INFO 9180 --- [esse20] [http-nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2025-04-28T18:47:20.453+02:00  INFO 9180 --- [esse20] [http-nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
-2025-04-28T18:47:20.580+02:00  INFO 9180 --- [esse20] [http-nio-8082-exec-1] demacs.unical.esse20.PaymentController   : Richiesta di creazione sessione di checkout ricevuta.
-2025-04-28T18:47:22.355+02:00  INFO 9180 --- [esse20] [http-nio-8082-exec-1] demacs.unical.esse20.PaymentController   : Sessione di checkout creata con ID: cs_test_a16U5wbRHKoAkwuEIVN29dppI6HrlmP3JoHQNqpQRWaldDxTx90tYgyKSK
+2025-04-28T18:47:20.580+02:00  INFO 9180 --- [esse20] [http-nio-8082-exec-1] demacs.unical.esse20.controller.PaymentController   : Richiesta di creazione sessione di checkout ricevuta.
+2025-04-28T18:47:22.355+02:00  INFO 9180 --- [esse20] [http-nio-8082-exec-1] demacs.unical.esse20.controller.PaymentController   : Sessione di checkout creata con ID: cs_test_a16U5wbRHKoAkwuEIVN29dppI6HrlmP3JoHQNqpQRWaldDxTx90tYgyKSK
 2025-04-28T18:47:55.746+02:00  INFO 9180 --- [esse20] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
 2025-04-28T18:47:55.899+02:00  INFO 9180 --- [esse20] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
 2025-04-28T18:47:55.903+02:00  INFO 9180 --- [esse20] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2025-04-28T18:47:55.904+02:00  INFO 9180 --- [esse20] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2025-04-28T18:47:55.908+02:00  INFO 9180 --- [esse20] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-04-28T19:12:01.621+02:00  INFO 37668 --- [esse20] [main] demacs.unical.esse20.Esse20Application   : Starting Esse20Application using Java 23.0.1 with PID 37668 (C:\Users\Domenico Gaudio\Desktop\e20\target\classes started by Domenico Gaudio in C:\Users\Domenico Gaudio\Desktop\e20)
+2025-04-28T19:12:01.623+02:00  INFO 37668 --- [esse20] [main] demacs.unical.esse20.Esse20Application   : No active profile set, falling back to 1 default profile: "default"
+2025-04-28T19:12:02.320+02:00  INFO 37668 --- [esse20] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-28T19:12:02.369+02:00  INFO 37668 --- [esse20] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 41 ms. Found 2 JPA repository interfaces.
+2025-04-28T19:12:02.810+02:00  INFO 37668 --- [esse20] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-04-28T19:12:02.822+02:00  INFO 37668 --- [esse20] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-04-28T19:12:02.823+02:00  INFO 37668 --- [esse20] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.39]
+2025-04-28T19:12:02.892+02:00  INFO 37668 --- [esse20] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-04-28T19:12:02.893+02:00  INFO 37668 --- [esse20] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1228 ms
+2025-04-28T19:12:03.040+02:00  INFO 37668 --- [esse20] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-28T19:12:03.102+02:00  INFO 37668 --- [esse20] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.11.Final
+2025-04-28T19:12:03.135+02:00  INFO 37668 --- [esse20] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-04-28T19:12:03.409+02:00  INFO 37668 --- [esse20] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-04-28T19:12:03.441+02:00  INFO 37668 --- [esse20] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-04-28T19:12:03.571+02:00  INFO 37668 --- [esse20] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7e4ac598
+2025-04-28T19:12:03.573+02:00  INFO 37668 --- [esse20] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-04-28T19:12:03.611+02:00  WARN 37668 --- [esse20] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-28T19:12:03.631+02:00  INFO 37668 --- [esse20] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.4
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-04-28T19:12:04.398+02:00  INFO 37668 --- [esse20] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-28T19:12:04.538+02:00  INFO 37668 --- [esse20] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-28T19:12:04.832+02:00  WARN 37668 --- [esse20] [main] jakarta.mail                             : expected resource not found: /META-INF/javamail.default.address.map
+2025-04-28T19:12:04.857+02:00  WARN 37668 --- [esse20] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'paymentController': Injection of autowired dependencies failed
+2025-04-28T19:12:04.858+02:00  INFO 37668 --- [esse20] [main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-04-28T19:12:04.859+02:00  INFO 37668 --- [esse20] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-04-28T19:12:04.863+02:00  INFO 37668 --- [esse20] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-04-28T19:12:04.865+02:00  INFO 37668 --- [esse20] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2025-04-28T19:12:04.874+02:00  INFO 37668 --- [esse20] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-04-28T19:12:04.888+02:00 ERROR 37668 --- [esse20] [main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'paymentController': Injection of autowired dependencies failed
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:515) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1445) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:523) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:347) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1155) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1121) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1056) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:987) ~[spring-context-6.2.5.jar:6.2.5]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627) ~[spring-context-6.2.5.jar:6.2.5]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.4.4.jar:3.4.4]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752) ~[spring-boot-3.4.4.jar:3.4.4]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.4.4.jar:3.4.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.4.4.jar:3.4.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361) ~[spring-boot-3.4.4.jar:3.4.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350) ~[spring-boot-3.4.4.jar:3.4.4]
+	at demacs.unical.esse20.Esse20Application.main(Esse20Application.java:13) ~[classes/:na]
+Caused by: org.springframework.util.PlaceholderResolutionException: Could not resolve placeholder 'stripe.api.secret' in value "${stripe.api.secret}"
+	at org.springframework.util.PlaceholderResolutionException.withValue(PlaceholderResolutionException.java:81) ~[spring-core-6.2.5.jar:6.2.5]
+	at org.springframework.util.PlaceholderParser$ParsedValue.resolve(PlaceholderParser.java:423) ~[spring-core-6.2.5.jar:6.2.5]
+	at org.springframework.util.PlaceholderParser.replacePlaceholders(PlaceholderParser.java:128) ~[spring-core-6.2.5.jar:6.2.5]
+	at org.springframework.util.PropertyPlaceholderHelper.parseStringValue(PropertyPlaceholderHelper.java:118) ~[spring-core-6.2.5.jar:6.2.5]
+	at org.springframework.util.PropertyPlaceholderHelper.replacePlaceholders(PropertyPlaceholderHelper.java:114) ~[spring-core-6.2.5.jar:6.2.5]
+	at org.springframework.core.env.AbstractPropertyResolver.doResolvePlaceholders(AbstractPropertyResolver.java:255) ~[spring-core-6.2.5.jar:6.2.5]
+	at org.springframework.core.env.AbstractPropertyResolver.resolveRequiredPlaceholders(AbstractPropertyResolver.java:226) ~[spring-core-6.2.5.jar:6.2.5]
+	at org.springframework.context.support.PropertySourcesPlaceholderConfigurer.lambda$processProperties$0(PropertySourcesPlaceholderConfigurer.java:201) ~[spring-context-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveEmbeddedValue(AbstractBeanFactory.java:971) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1577) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1555) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:785) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:768) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:146) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:509) ~[spring-beans-6.2.5.jar:6.2.5]
+	... 19 common frames omitted
+

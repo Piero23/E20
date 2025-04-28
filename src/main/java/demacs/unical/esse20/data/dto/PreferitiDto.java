@@ -13,12 +13,10 @@ public class PreferitiDto {
     long id;
     String utente_id;
     long evento_id;
-    boolean status;
 
     public PreferitiDto(Preferiti preferiti) {
         this.id = preferiti.getId();
         this.utente_id = preferiti.getUtente_id();
         this.evento_id = preferiti.getEvento().getId();
-        this.status = preferiti.isStatus();
     }
 }

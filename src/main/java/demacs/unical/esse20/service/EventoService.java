@@ -9,6 +9,9 @@ import demacs.unical.esse20.data.dto.EventoDto;
 import demacs.unical.esse20.data.entities.Evento;
 import demacs.unical.esse20.data.entities.Location;
 import lombok.AllArgsConstructor;
+import org.hibernate.Hibernate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,6 +23,17 @@ public class EventoService {
 
     EventoDao eventoDao;
     LocationDao locationDao;
+
+
+    public Page<EventoBasicDto> getPagable(Pageable pageable){
+        Page<Evento> eventos = eventoDao.findAll(pageable);
+
+        Page<EventoBasicDto> basic = eventos.map(evento -> new EventoBasicDto(evento));
+
+
+        return basic;
+    }
+
 
     public EventoBasicDto getByIdNoLocation(Long id){
         return new EventoBasicDto(eventoDao.findById(id).orElseThrow(() ->

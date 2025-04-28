@@ -30,8 +30,7 @@ public class PreferitiService {
                 new Preferiti(
                         preferitiDto.getUtente_id(),
                         eventoDao.findById(preferitiDto.getEvento_id())
-                                .orElseThrow( () ->new ContentNotFoundException("evento with id " + preferitiDto.getEvento_id() + " not found")),
-                        preferitiDto.isStatus()
+                                .orElseThrow( () ->new ContentNotFoundException("evento with id " + preferitiDto.getEvento_id() + " not found"))
                 )
         );
 

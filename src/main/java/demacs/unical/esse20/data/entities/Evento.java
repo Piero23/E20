@@ -19,7 +19,7 @@ import java.util.Date;
 @ToString
 public class Evento extends DomainObject<Long> {
 
-    public Evento(String descrizione, Location location , String nome, String organizzatore, Long posti, boolean b_riutilizzabile, boolean b_nominativo) {
+    public Evento(String descrizione, Location location , String nome, String organizzatore, Long posti, boolean b_riutilizzabile, boolean b_nominativo,Double prezzo) {
         this.descrizione = descrizione;
         this.location = location;
         this.organizzatore = organizzatore;
@@ -27,6 +27,7 @@ public class Evento extends DomainObject<Long> {
         this.posti = posti;
         this.b_riutilizzabile = b_riutilizzabile;
         this.b_nominativo = b_nominativo;
+        this.prezzo = prezzo;
     }
 
     @Id
@@ -59,4 +60,7 @@ public class Evento extends DomainObject<Long> {
 
     @Column(nullable = false)
     private Date data;
+
+    @Column(nullable = false)
+    private double prezzo;
 }

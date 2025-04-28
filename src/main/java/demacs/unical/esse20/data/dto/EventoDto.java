@@ -22,6 +22,7 @@ public class EventoDto {
     private boolean b_nominativo;
     private LocationDto location;
     private Date data;
+    private double prezzo;
 
 
     public EventoDto(Evento evento) {
@@ -33,6 +34,7 @@ public class EventoDto {
         this.setB_riutilizzabile(evento.isB_riutilizzabile());
         this.setB_nominativo(evento.isB_nominativo());
         this.setData(evento.getData());
+        this.setPrezzo(evento.getPrezzo());
 
         try {location = new LocationDto(evento.getLocation());}
         catch (Exception e){location = null;}

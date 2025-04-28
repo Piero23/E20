@@ -21,10 +21,9 @@ import org.hibernate.annotations.OnDeleteAction;
 @Setter
 public class Preferiti extends DomainObject<Long> {
 
-    public Preferiti(String utente_id, Evento evento, boolean status) {
+    public Preferiti(String utente_id, Evento evento) {
         this.utente_id = utente_id;
         this.evento = evento;
-        this.status = status;
     }
 
     @Id
@@ -41,7 +40,4 @@ public class Preferiti extends DomainObject<Long> {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Evento evento;
 
-    // Privato/Condiviso [0,1]
-    @Column(nullable = false)
-    private boolean status;
 }

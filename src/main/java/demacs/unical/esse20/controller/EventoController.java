@@ -8,6 +8,8 @@ import demacs.unical.esse20.data.entities.Location;
 import demacs.unical.esse20.data.dto.EventoDto;
 import demacs.unical.esse20.service.EventoService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,13 @@ import java.util.Map;
 public class EventoController {
 
     private final EventoService eventoService;
+
+
+
+    @GetMapping
+    public Page<EventoBasicDto> findAllPagable(Pageable pageable) {
+        return eventoService.getPagable(pageable);
+    }
 
     @GetMapping(value="/{id}")
     private ResponseEntity<?> findById(@PathVariable("id") Long id,@RequestParam Map<String, String> allParams){

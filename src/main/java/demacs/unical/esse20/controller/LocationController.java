@@ -2,11 +2,14 @@ package demacs.unical.esse20.controller;
 
 import demacs.unical.esse20.data.dao.EventoDao;
 import demacs.unical.esse20.data.dao.LocationDao;
+import demacs.unical.esse20.data.dto.EventoBasicDto;
 import demacs.unical.esse20.data.entities.Evento;
 import demacs.unical.esse20.data.entities.Location;
 import demacs.unical.esse20.data.dto.LocationDto;
 import demacs.unical.esse20.service.LocationService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +21,14 @@ import org.springframework.web.server.ResponseStatusException;
 public class LocationController {
 
     private final LocationService locationService;
+
+
+    @GetMapping
+    public Page<LocationDto> findAllPagable(Pageable pageable) {
+        return locationService.getPagable(pageable);
+    }
+
+
 
     @GetMapping(value="/{id}")
     private ResponseEntity<Location> findById(@PathVariable("id") Long id){

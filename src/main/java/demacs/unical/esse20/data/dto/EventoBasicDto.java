@@ -21,6 +21,7 @@ public class EventoBasicDto {
     private boolean b_nominativo;
     private Long locationId;
     private Date data;
+    private double prezzo;
 
     public EventoBasicDto(Evento event) {
         this.id = event.getId();
@@ -29,6 +30,7 @@ public class EventoBasicDto {
         this.organizzatore = event.getOrganizzatore();
         this.posti = event.getPosti();
         this.data = event.getData();
+        this.prezzo = event.getPrezzo();
 
         try {
             this.locationId = event.getLocation().getId();

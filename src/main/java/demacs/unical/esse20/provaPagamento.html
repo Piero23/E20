@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento con Stripe</title>
+    <!-- Carica Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+<h2>Pagamento con Carta di Credito</h2>
+<form id="payment-form">
+    <div id="card-element">
+        <!-- Elemento della carta di credito viene montato qui -->
+    </div>
+    <button type="submit">Paga</button>
+</form>
+
+<script>
+    var stripe = Stripe('pk_test_51RFjSkP6wuNuFoXfdEgqO0PKTJvCNCta3WyrJ8IXtysPeXYM29Ti0G3xVVvTz21xvs624b2qbOshyagBHmmLYhfr00x7woVAmH'); // Usa la tua chiave pubblica
+    var elements = stripe.elements();
+
+    var card = elements.create('card');
+    card.mount('#card-element'); // Assicurati che ci sia un div con id="card-element"
+
+    // Quando il modulo viene inviato, crea un token
+    document.getElementById('payment-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        stripe.createToken(card).then(function(result) {
+            if (result.error) {
+                // Gestisci l'errore
+                console.log(result.error.message);
+            } else {
+                // Invia il token al server
+                var token = result.token.id;
+                fetch('/pagamento', {
+                    method: 'POST',
+                    body: JSON.stringify({ token: token, amount: 10 }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }).then(function(response) {
+                    return response.json();
+                }).then(function(data) {
+                    console.log(data);
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

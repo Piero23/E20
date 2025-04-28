@@ -1,4 +1,4 @@
-package demacs.unical.esse20.dto;
+package demacs.unical.esse20.data.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

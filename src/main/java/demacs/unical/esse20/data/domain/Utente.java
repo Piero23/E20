@@ -1,4 +1,4 @@
-package demacs.unical.esse20.domain;
+package demacs.unical.esse20.data.domain;
 
 import jakarta.persistence.*;
 

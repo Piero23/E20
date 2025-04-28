@@ -6,12 +6,10 @@ import demacs.unical.esse20.security.oauth2.CustomOAuth2SuccessHandler;
 import demacs.unical.esse20.security.JwtAuthRequestFilter;
 
 import demacs.unical.esse20.service.UtenteService;
-import demacs.unical.esse20.service.UtenteServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

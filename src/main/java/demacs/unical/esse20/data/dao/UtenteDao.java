@@ -1,6 +1,6 @@
-package demacs.unical.esse20.dao;
+package demacs.unical.esse20.data.dao;
 
-import demacs.unical.esse20.domain.Utente;
+import demacs.unical.esse20.data.domain.Utente;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,8 +1,8 @@
 package demacs.unical.esse20.controller;
 
-import demacs.unical.esse20.domain.Utente;
-import demacs.unical.esse20.service.UtenteService;
+import demacs.unical.esse20.data.domain.Utente;
 
+import demacs.unical.esse20.service.UtenteService;
 import lombok.AllArgsConstructor;
 
 import org.json.JSONObject;
@@ -17,7 +17,7 @@ import java.util.Optional;
 @RequestMapping(path="/api/v1", produces = "application/json")
 @CrossOrigin(origins = "http://localhost:${server.port}")
 @AllArgsConstructor
-public class UtenteController {
+public class UtenteController2 {
 
     private final UtenteService utenteService;
 

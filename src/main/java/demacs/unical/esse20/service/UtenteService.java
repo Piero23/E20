@@ -1,28 +1,70 @@
 package demacs.unical.esse20.service;
 
-import demacs.unical.esse20.domain.AuthProvider;
-import demacs.unical.esse20.domain.Utente;
-import demacs.unical.esse20.dto.UtenteBasicDto;
-import demacs.unical.esse20.dto.UtenteRegistrationDto;
+import demacs.unical.esse20.data.dao.UtenteDao;
+import demacs.unical.esse20.data.domain.AuthProvider;
+import demacs.unical.esse20.data.domain.Ruolo;
+import demacs.unical.esse20.data.domain.Utente;
 
+import demacs.unical.esse20.data.dto.UtenteRegistrationDto;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface UtenteService {
 
-    // Crud Methods
-    Utente save(Utente user);
-    void delete(Utente user);
+@Service
+@RequiredArgsConstructor
+public class UtenteService {
 
-    // Search Methods
-    List<Utente> getAllUsers();
-    Optional<Utente> getUserByUsername(String username);
-    Optional<Utente> getUserByEmail(String email);
+    private final UtenteDao utenteDao;
+    private final PasswordEncoder passwordEncoder;
 
-    // External Usage Methods
-    Utente registerNewUser(UtenteRegistrationDto userRegistrationDto);
-    Utente registerNewUser(UtenteRegistrationDto userRegistrationDto, AuthProvider authProvider);
+    
+    public Utente save(Utente user) { return utenteDao.save(user); }
 
-    // Parsing
-    // UtenteBasicDto toUtenteBasicDto(Utente utente);
+    
+    public void delete(Utente user) { utenteDao.delete(user); }
+
+    
+    public List<Utente> getAllUsers() { return utenteDao.findAll(); }
+
+    
+    public Optional<Utente> getUserByUsername(String username) { return utenteDao.findByUsername(username); }
+
+    
+    public Optional<Utente> getUserByEmail(String email) { return utenteDao.findByEmail(email); }
+
+    
+    public Utente registerNewUser(UtenteRegistrationDto userRegistrationDto) {
+        Utente userToSave = Utente.builder()
+                .username(userRegistrationDto.getUsername())
+                .email(userRegistrationDto.getEmail())
+                .password(passwordEncoder.encode(userRegistrationDto.getPassword()))
+                .dataNascita(LocalDate.parse(userRegistrationDto.getDataNascita()))
+                .ruolo(Ruolo.USER)
+                .authProvider(AuthProvider.LOCAL)
+                .build();
+
+        return utenteDao.save(userToSave);
+    }
+
+    
+    public Utente registerNewUser(UtenteRegistrationDto userRegistrationDto, AuthProvider authProvider) {
+        if (authProvider.equals(AuthProvider.LOCAL)) return registerNewUser(userRegistrationDto);
+
+        Utente userToSave = Utente.builder()
+                .username(userRegistrationDto.getUsername())
+                .email(userRegistrationDto.getEmail())
+                .password(authProvider.name() + "_AUTH")
+                .dataNascita(LocalDate.parse(userRegistrationDto.getDataNascita()))
+                .ruolo(Ruolo.USER)
+                .authProvider(authProvider)
+                .build();
+
+        return utenteDao.save(userToSave);
+    }
+
 }

@@ -1,9 +1,9 @@
 package demacs.unical.esse20.security.oauth2;
 
 import com.nimbusds.jose.JOSEException;
-import demacs.unical.esse20.domain.AuthProvider;
-import demacs.unical.esse20.domain.Utente;
-import demacs.unical.esse20.dto.UtenteRegistrationDto;
+import demacs.unical.esse20.data.domain.AuthProvider;
+import demacs.unical.esse20.data.domain.Utente;
+import demacs.unical.esse20.data.dto.UtenteRegistrationDto;
 import demacs.unical.esse20.security.JwtTokenService;
 import demacs.unical.esse20.service.UtenteService;
 import jakarta.servlet.http.HttpServletRequest;

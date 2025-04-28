@@ -1,12 +1,12 @@
 package demacs.unical.esse20.controller;
 
 import com.nimbusds.jose.JOSEException;
-import demacs.unical.esse20.dto.UtenteLoginDto;
-import demacs.unical.esse20.dto.UtenteRegistrationDto;
+import demacs.unical.esse20.data.dto.UtenteLoginDto;
+import demacs.unical.esse20.data.dto.UtenteRegistrationDto;
 
 import demacs.unical.esse20.security.JwtTokenService;
-import demacs.unical.esse20.service.UtenteService;
 
+import demacs.unical.esse20.service.UtenteService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 

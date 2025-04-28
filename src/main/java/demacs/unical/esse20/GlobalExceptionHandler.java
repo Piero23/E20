@@ -20,7 +20,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value={Exception.class})
     public ResponseEntity<String> handleException(Exception e) {
-        e.printStackTrace();
         return new ResponseEntity<>( new JSONObject(Map.of("error", "error while processing the request")).toString(), HttpStatus.BAD_REQUEST);
     }
 }

@@ -36,7 +36,7 @@ public class MailService {
 
 
     public void sendMail(String to, Ordine ordine){
-        String subject = "Ecco Il Tuo Biglietto!";
+        String subject = "Acquisto Confermato";
 
         try {
             Message message = setupMessage(to);

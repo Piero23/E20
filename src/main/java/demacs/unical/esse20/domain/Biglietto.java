@@ -1,13 +1,14 @@
 package demacs.unical.esse20.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.UuidGenerator;
-import javax.validation.constraints.Email;
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Table(name = "biglietto",uniqueConstraints = {
@@ -35,13 +36,12 @@ public class Biglietto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @UuidGenerator
     @Column(length = 36)
-    private String id;
+    private UUID id;
 
     @Column(nullable = false)
     private Long id_evento;
 
     @Column(nullable = false)
-    @Email(message = "Email non valida")
     private String email;
 
     @Column(nullable = false)
@@ -56,6 +56,7 @@ public class Biglietto {
     @Column
     private Date data_nascita;
 
+    @JsonIgnore //serve ad evitare ricorsioni infinite nelle api non mostrando l'ordine quando si fa la query
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Ordine ordine;

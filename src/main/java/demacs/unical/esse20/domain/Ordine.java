@@ -1,5 +1,6 @@
 package demacs.unical.esse20.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +18,7 @@ import java.util.*;
 @ToString
 public class Ordine {
 
-    public Ordine(Long utente_id, int biglietti_comprati, double importo, Date data_pagamento) {
-        this.utente_id = utente_id;
+    public Ordine(int biglietti_comprati, double importo, Date data_pagamento) {
         this.biglietti_comprati = biglietti_comprati;
         this.importo = importo;
         this.data_pagamento = data_pagamento;
@@ -28,10 +28,10 @@ public class Ordine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @UuidGenerator
     @Column(length = 36)
-    private String id;
+    private UUID id;
 
-    @Column(nullable = false)
-    private Long utente_id;
+    @Column(nullable = false, length = 36)
+    private UUID utenteId;
 
     @Column(nullable = false)
     private int biglietti_comprati;

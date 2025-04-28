@@ -18,6 +18,7 @@ target/
 *.iws
 *.iml
 *.ipr
+*.properties
 
 ### NetBeans ###
 /nbproject/private/
@@ -34,3 +35,4 @@ build/
 
 ### JWT Secret Key ###
 jwt-secret.key
+MainKeyGen.java

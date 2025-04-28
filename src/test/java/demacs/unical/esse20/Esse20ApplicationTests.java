@@ -6,7 +6,4 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class Esse20ApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
 }

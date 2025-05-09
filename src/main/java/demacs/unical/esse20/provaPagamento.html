@@ -11,7 +11,7 @@
 <h2>Pagamento con Carta di Credito</h2>
 <form id="payment-form">
     <div id="card-element">
-        <!-- Elemento della carta di credito viene montato qui -->
+
     </div>
     <button type="submit">Paga</button>
 </form>
@@ -21,9 +21,8 @@
     var elements = stripe.elements();
 
     var card = elements.create('card');
-    card.mount('#card-element'); // Assicurati che ci sia un div con id="card-element"
+    card.mount('#card-element');
 
-    // Quando il modulo viene inviato, crea un token
     document.getElementById('payment-form').addEventListener('submit', function(event) {
         event.preventDefault();
 

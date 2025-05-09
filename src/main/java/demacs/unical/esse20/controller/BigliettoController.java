@@ -27,7 +27,7 @@ public class BigliettoController {
 
     private final BigliettoService bigliettoService;
 
-    private static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
+    private static final Logger logger = LoggerFactory.getLogger(BigliettoController.class);
 
     @GetMapping(value="/{id}")
     private ResponseEntity<Map<String, String>> getQrCode(@PathVariable UUID id) throws URISyntaxException {

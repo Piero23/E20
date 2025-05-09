@@ -25,7 +25,7 @@ import java.util.*;
 @AllArgsConstructor
 public class OrdineController {
 
-    private static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
+    private static final Logger logger = LoggerFactory.getLogger(OrdineController.class);
 
     OrdineService ordineService;
     BigliettoService bigliettoService;

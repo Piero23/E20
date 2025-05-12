@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UtenteLoginDTO {
-    @Email(message = "L'email non è valida.")
-    @NotBlank(message = "L'email è obbligatoria.")
+    @Email(message = "L'indirizzo email non è valido.")
+    @NotBlank(message = "L'indirizzo email è obbligatorio.")
     private String email;
 
     @NotBlank(message = "La password è obbligatoria.")

@@ -1,6 +1,5 @@
 package demacs.unical.esse20.data.model;
 
-import demacs.unical.esse20.domain.Evento;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
@@ -38,7 +37,4 @@ public class Utente {
 
     @Column(name = "data_nascita", nullable = false)
     private LocalDate dataNascita;
-
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "organizzatore")
-    private Set<Evento> eventiOrganizzati = new HashSet<>();
 }

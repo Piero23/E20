@@ -17,8 +17,8 @@ public class UtenteRegistrationDTO {
     @Size(min = 4, max = 20, message = "Lo username deve contenere almeno 4, massimo 20 caratteri.")
     private String username;
 
-    @NotBlank(message = "L'email è obbligatoria.")
-    @Email(message = "L'email non è valida.")
+    @NotBlank(message = "L'indirizzo email è obbligatorio.")
+    @Email(message = "L'indirizzo email non è valido.")
     private String email;
 
     @NotBlank(message = "La password è obbligatoria.")

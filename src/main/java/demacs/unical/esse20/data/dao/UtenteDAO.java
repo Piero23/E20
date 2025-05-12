@@ -9,6 +9,4 @@ import java.util.UUID;
 public interface UtenteDAO extends JpaRepository<Utente, UUID> {
     Optional<Utente> findByEmail(String email);
     Optional<Utente> findByUsername(String username);
-    // delete utente
-
 }

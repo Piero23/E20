@@ -6,9 +6,7 @@ import demacs.unical.esse20.service.UtenteService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -24,30 +22,29 @@ public class UtenteController {
         return utenteService.getAllUtenti();
     }
 
-    @GetMapping("/utenti/{id}")
-    public ResponseEntity<UtenteDTO> getUtenteById(@PathVariable UUID id) {
-        return ResponseEntity.ok(utenteService.getUtenteById(id));
+    @GetMapping("/utenti/{username}")
+    public ResponseEntity<UtenteDTO> getUtenteById(@PathVariable String username) {
+        return ResponseEntity.ok(utenteService.getUtenteByUsername(username));
     }
-
 
     @PostMapping("/register")
     public ResponseEntity<UtenteDTO> register(@Valid @RequestBody UtenteRegistrationDTO utenteDTO) {
         return ResponseEntity.ok(utenteService.registerUtente(utenteDTO));
     }
 
-    @DeleteMapping("/utenti/{id}")
+    @DeleteMapping("/utenti/{username}")
     // @PreAuthorize("hasRole('ADMIN')") o qualcosa del genere
-    public ResponseEntity<String> deleteUtenteById(@PathVariable UUID id) {
+    public ResponseEntity<String> deleteUtenteByUsername(@PathVariable String username) {
         try {
-            utenteService.deleteUtenteById(id);
+            utenteService.deleteUtenteByUsername(username);
             return ResponseEntity.ok("Utente eliminato con successo");
         } catch (Exception e) {
             return ResponseEntity.status(404).body("Utente non trovato");
         }
     }
 
-    @PutMapping("/utenti/{id}")
-    public ResponseEntity<UtenteDTO> updateUtente(@PathVariable UUID id, @Valid @RequestBody UtenteDTO utenteDTO) {
-        return ResponseEntity.ok(utenteService.updateUtenteById(id, utenteDTO));
+    @PutMapping("/utenti/{username}")
+    public ResponseEntity<UtenteDTO> updateUtente(@PathVariable String username, @Valid @RequestBody UtenteDTO utenteDTO) {
+        return ResponseEntity.ok(utenteService.updateUtenteByUsername(username, utenteDTO));
     }
 }

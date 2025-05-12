@@ -19,12 +19,12 @@ import java.util.UUID;
 public class UtenteDTO {
     private UUID id;
 
-    @NotBlank(message = "Lo username non può essere vuoto.")
+    @NotBlank(message = "Il campo username non può essere vuoto.")
     @Size(min = 4, max = 20, message = "Lo username deve contenere almeno 4, massimo 20 caratteri.")
     private String username;
 
-    @NotBlank(message = "L'email non può essere vuota.")
-    @Email(message = "L'email non è valida.")
+    @NotBlank(message = "Il campo email non può essere vuoto.")
+    @Email(message = "L'indirizzo email non è valido.")
     private String email;
 
     @NotNull(message = "La data di nascita è obbligatoria.")

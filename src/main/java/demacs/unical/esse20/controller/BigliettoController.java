@@ -1,5 +1,6 @@
 package demacs.unical.esse20.controller;
 
+import demacs.unical.esse20.domain.Biglietto;
 import demacs.unical.esse20.service.BigliettoService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -15,13 +16,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+
+//decidere se rimuovere completamente la classe
 
 @RestController
-@RequestMapping("/biglietto")
+@RequestMapping("/api/biglietto")
 @AllArgsConstructor
 public class BigliettoController {
 
@@ -29,9 +29,15 @@ public class BigliettoController {
 
     private static final Logger logger = LoggerFactory.getLogger(BigliettoController.class);
 
+    @GetMapping
+    private ResponseEntity<List<Biglietto>> getAllBiglietti() {
+        List<Biglietto> response=new ArrayList<>();
+        response.addAll(bigliettoService.findAll());
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping(value="/{id}")
     private ResponseEntity<Map<String, String>> getQrCode(@PathVariable UUID id) throws URISyntaxException {
-
         //potenzialmente sostituibile nel backend
 
         //ritorna l'id del biglietto,

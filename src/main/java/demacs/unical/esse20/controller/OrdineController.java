@@ -16,12 +16,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
 @RestController
-@RequestMapping("/ordine")
+@RequestMapping("/api/ordine")
 @AllArgsConstructor
 public class OrdineController {
 
@@ -29,49 +30,68 @@ public class OrdineController {
 
     OrdineService ordineService;
     BigliettoService bigliettoService;
-    MailService mailService;
 
     @GetMapping
     private ResponseEntity<List<Ordine>> findAll(){
+        logger.info("Effettuata ricerca generale");
         return ResponseEntity.ok(ordineService.findAll());
     }
 
     @GetMapping(value="/{id}")
     private ResponseEntity<Ordine> findById(@PathVariable("id") UUID id){
         logger.info("Ricevuta richiesta di ricerca ordine tramite ID Ordine");
-        if (ordineService.findById(id)!=null)
-            return ResponseEntity.ok(ordineService.findById(id));
+
+        if (ordineService.findById(id)!=null) {
+            String user= SecurityContextHolder.getContext().getAuthentication().getName();
+            String orderId=ordineService.findById(id).getId().toString();
+            if (user.equals(orderId)) {
+                logger.info("Ricerca andata a buon fine");
+                return ResponseEntity.ok(ordineService.findById(id));
+            }
+            else {
+                logger.info("Utente {} non autorizzato", user);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+        }
+        logger.info("Nessun dato");
         return ResponseEntity.notFound().build();
     }
 
     @GetMapping(value="/utente")
     private ResponseEntity<List<Ordine>> findAllByUtente(@RequestParam("utente") UUID utente){
         logger.info("Ricevuta richiesta di ricerca Ordini tramite ID Utente");
-        return ResponseEntity.ok(ordineService.findAllByUtente(utente));
+
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        if (user.equals(utente.toString())) {
+            logger.info("Ricerca andata a buon fine");
+            return ResponseEntity.ok(ordineService.findAllByUtente(utente));
+        }
+        else{
+            logger.info("Utente {} non autorizzato", user);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @GetMapping(value="/biglietti")
     private ResponseEntity<List<Biglietto>> findAllBigliettiByOrdine(@RequestParam("ordine") UUID ordine){
         logger.info("Ricevuta richiesta di ricerca Biglietti tramite ID Ordine");
-        if (ordineService.findById(ordine)!=null)
-            return ResponseEntity.ok(bigliettoService.findAllByOrdine(ordineService.findById(ordine)));
+
+        if (ordineService.findById(ordine)!=null) {
+            String user= SecurityContextHolder.getContext().getAuthentication().getName();
+            String utenteOrderId=ordineService.findById(ordine).getUtenteId().toString();
+
+            if (user.equals(utenteOrderId)) {
+                logger.info("Ricerca andata a buon fine");
+                return ResponseEntity.ok(bigliettoService.findAllByOrdine(ordineService.findById(ordine)));
+            }
+            else{
+                logger.info("Utente {} non autorizzato", user);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
             //non so se si potrebbe spostare tutta la funzione nell'ordine service o se è più pulito così
-        return ResponseEntity.notFound().build();
-    }
-
-    @PutMapping(value="/save")
-    private ResponseEntity<String> createOrdine(@RequestBody OrdineRequest ordineRequest){
-        logger.info("Inizio Salvataggio Ordine");
-        Ordine ordine=ordineService.saveOrdine(ordineRequest.ordine(), ordineRequest.biglietti());
-
-        //ottenere mail utente acquirente
-        //mailService.sendMail(mail utente acquirente, ordine);
-
-        for(Biglietto b: bigliettoService.findAllByOrdine(ordine)){
-            mailService.sendQrCodeMail(b.getEmail(), bigliettoService.getQrCode(b.getId()));
         }
-        logger.info("Ordine {} Salvato", ordine.getId());
-        return new ResponseEntity<>("Ordine Creato Correttamente", HttpStatus.OK);
+        logger.info("Nessun dato");
+        return ResponseEntity.notFound().build();
     }
 
 }

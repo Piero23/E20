@@ -3,6 +3,12 @@ package demacs.unical.esse20.controller;
 import com.stripe.Stripe;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
+import demacs.unical.esse20.domain.Biglietto;
+import demacs.unical.esse20.domain.Ordine;
+import demacs.unical.esse20.dto.OrdineRequest;
+import demacs.unical.esse20.service.BigliettoService;
+import demacs.unical.esse20.service.MailService;
+import demacs.unical.esse20.service.OrdineService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +24,10 @@ public class PaymentController {
 
     private static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
+    OrdineService ordineService;
+    BigliettoService bigliettoService;
+    MailService mailService;
+
     @Value("${stripe.api.secret}")
     private String stripeSecretKey;
 
@@ -28,7 +38,7 @@ public class PaymentController {
     }
 
     @PostMapping("/create-checkout-session")
-    public ResponseEntity<Object> createCheckoutSession() {
+    public ResponseEntity<Object> createCheckoutSession(@RequestBody OrdineRequest ordineRequest) {
         logger.info("Richiesta di creazione sessione di checkout ricevuta.");
         try {
             // Parametri della sessione di checkout
@@ -46,6 +56,17 @@ public class PaymentController {
             // Creazione della sessione su Stripe
             Session session = Session.create(params);
             logger.info("Sessione di checkout creata con ID: " + session.getId());
+
+            logger.info("Inizio Salvataggio Ordine");
+            Ordine ordine=ordineService.saveOrdine(ordineRequest.ordine(), ordineRequest.biglietti());
+
+            //ottenere mail utente acquirente
+            //mailService.sendMail(mail utente acquirente, ordine);
+
+            for(Biglietto b: bigliettoService.findAllByOrdine(ordine)){
+                mailService.sendQrCodeMail(b.getEmail(), bigliettoService.getQrCode(b.getId()));
+            }
+            logger.info("Ordine {} Salvato", ordine.getId());
 
             return ResponseEntity.ok().body("{\"id\": \"" + session.getId() + "\"}");
         } catch (Exception e) {

@@ -7,6 +7,7 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -33,8 +34,7 @@ public class MailService {
         }
     });
 
-
-
+    @Transactional
     public void sendMail(String to, Ordine ordine){
         String subject = "Acquisto Confermato";
 
@@ -72,6 +72,7 @@ public class MailService {
         }
     }
 
+    @Transactional
     public void sendQrCodeMail(String to, String image) {
 
         String subject = "Ecco Il Tuo Biglietto!";
@@ -113,6 +114,7 @@ public class MailService {
         }
 
     }
+
 
     private Properties setupProperties(){
         Properties props = new Properties();

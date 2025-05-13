@@ -21,6 +21,9 @@ public class BigliettoService {
     private final BigliettoDao bigliettoDao;
 
     @Transactional
+    public List<Biglietto> findAll(){return bigliettoDao.findAll();}
+
+    @Transactional
     public List<Biglietto> findAllByOrdine(Ordine ordine){
         return bigliettoDao.findAllByOrdine(ordine);
     }

@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/mail")
+@RequestMapping("/api/mail")
 @AllArgsConstructor
 public class MailController {
 

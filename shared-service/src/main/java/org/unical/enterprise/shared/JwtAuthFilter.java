@@ -1,4 +1,4 @@
-package shared;
+package org.unical.enterprise.shared;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

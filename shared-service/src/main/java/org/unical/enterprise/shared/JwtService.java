@@ -1,4 +1,4 @@
-package shared;
+package org.unical.enterprise.shared;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

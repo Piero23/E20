@@ -1,4 +1,4 @@
-package shared;
+package org.unical.enterprise.shared;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

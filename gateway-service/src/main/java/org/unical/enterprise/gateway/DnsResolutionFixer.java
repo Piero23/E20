@@ -1,4 +1,4 @@
-package gateway;
+package org.unical.enterprise.gateway;
 
 import io.netty.resolver.DefaultAddressResolverGroup;
 import org.springframework.cloud.gateway.config.HttpClientCustomizer;

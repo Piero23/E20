@@ -1,4 +1,4 @@
-package shared;
+package org.unical.enterprise.shared;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

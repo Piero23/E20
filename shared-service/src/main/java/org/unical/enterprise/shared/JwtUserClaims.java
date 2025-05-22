@@ -1,4 +1,4 @@
-package shared;
+package org.unical.enterprise.shared;
 
 import java.util.List;
 

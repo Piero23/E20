@@ -1,4 +1,4 @@
-package shared;
+package org.unical.enterprise.shared;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

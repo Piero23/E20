@@ -1,4 +1,4 @@
-package discovery;
+package org.unical.enterprise.discovery;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

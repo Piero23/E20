@@ -1,4 +1,4 @@
-package gateway;
+package org.unical.enterprise.gateway;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;

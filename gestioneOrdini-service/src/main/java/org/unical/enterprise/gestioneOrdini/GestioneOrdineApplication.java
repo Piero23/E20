@@ -1,0 +1,20 @@
+package org.unical.enterprise.gestioneOrdini;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+
+@SpringBootApplication
+@ComponentScan(basePackages = {
+		"org.unical.enterprise.gestioneOrdini",
+		"org.unical.enterprise.shared"
+})
+public class GestioneOrdineApplication {
+
+
+	public static void main(String[] args) {
+		SpringApplication.run(GestioneOrdineApplication.class, args);
+
+	}
+
+}

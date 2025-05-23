@@ -34,3 +34,7 @@ spring:
           uri: lb://mailSender-service
           predicates:
             - Path=/api/mail/**
+        - id: authentication-service
+          uri: lb://authentication-service
+          predicates:
+            - Path=/api/authentication/**

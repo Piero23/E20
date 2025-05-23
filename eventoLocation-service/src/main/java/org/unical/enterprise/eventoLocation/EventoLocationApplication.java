@@ -10,9 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 		"org.unical.enterprise.shared"
 })
 public class EventoLocationApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(EventoLocationApplication.class, args);
 	}
-
 }

@@ -1,4 +1,4 @@
-package org.unical.enterprise.authentication;
+package org.unical.enterprise.authentication.dto;
 
 import jakarta.validation.constraints.Email;
 

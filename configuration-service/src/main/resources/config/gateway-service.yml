@@ -1,0 +1,36 @@
+server:
+  port: 8060
+  max-http-header-size: 48KB  # Aumenta la dimensione massima dell'header HTTP
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8061/eureka/
+
+
+spring:
+  output:
+    ansi:
+      enabled: always
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: gestioneOrdini-service
+          uri: lb://gestioneOrdini-service
+          predicates:
+            - Path=/api/ordine/**, /api/biglietto/**
+        - id: utente-service
+          uri: lb://utente-service
+          predicates:
+            - Path=/api/utente/**
+        - id: utente-service
+          uri: lb://eventoLocation-service
+          predicates:
+            - Path=/api/evento/**, /api/location/**, /api/preferiti/**
+        - id: mailSender-service
+          uri: lb://mailSender-service
+          predicates:
+            - Path=/api/mail/**

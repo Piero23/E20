@@ -18,8 +18,8 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: pagamentoBiglietto-service
-          uri: lb://pagamentoBiglietto-service
+        - id: gestioneOrdini-service
+          uri: lb://gestioneOrdini-service
           predicates:
             - Path=/api/ordine/**, /api/pagamento/**, /api/biglietto/**
         - id: utente-service
@@ -30,3 +30,7 @@ spring:
           uri: lb://eventoLocation-service
           predicates:
             - Path=/api/evento/**, /api/location/**, /api/preferiti/**
+        - id: mailSender-service
+          uri: lb://mailSender-service
+          predicates:
+            - Path=/api/mail/**

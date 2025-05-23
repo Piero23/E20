@@ -1,20 +1,9 @@
 spring:
   application:
-    name: pagamentoBiglietto-service
+    name: mailSender-service
   output:
     ansi:
       enabled: always
-
-  datasource:
-    url: jdbc:postgresql://localhost:5454/e20
-    username: admin
-    password: admin
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: update
-    show-sql: true
 
 server:
   port: 0
@@ -33,10 +22,6 @@ jwt:
     enabled: true
     publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /api/**
 
-stripe:
-  api:
-    secret: sk_test_51RFjSkP6wuNuFoXfwTOPhTkziWj1DDXYpCwLLkxKQFAZaojXuPeh8FX5DHOMvPjvmTgMkoMhPGNa9oIrGoKYO7Sb00ZNYIN3FZ
-
 logging:
   file:
     name: logs/app.log
@@ -46,7 +31,7 @@ logging:
         esse20: INFO
 
 springdoc:
-  packages-to-scan: org.unical.enterprise.pagamentoBiglietto-service
+  packages-to-scan: org.unical.enterprise.mailSender-service
   swagger-ui:
     tags-sorter: alpha
     operations-sorter: alpha

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: gestioneOrdini-service
+    name: mailSender-service
 
 
   config:

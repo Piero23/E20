@@ -1,4 +1,4 @@
-package org.unical.enterprise.gestioneOrdini.service;
+package org.unical.enterprise.mailSender.service;
 
 import jakarta.activation.DataHandler;
 import jakarta.mail.*;
@@ -6,10 +6,9 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.unical.enterprise.gestioneOrdini.domain.Ordine;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Base64;
 import java.util.Properties;
@@ -31,7 +30,7 @@ public class MailService {
     });
 
     @Transactional
-    public void sendMail(String to, Ordine ordine){
+    public void sendMail(String to /*, Ordine ordine*/){
         String subject = "Acquisto Confermato";
 
         try {
@@ -54,7 +53,7 @@ public class MailService {
                     <br>
                 </body>
             </html>
-            """, ordine.getId().toString(), ordine.getData_pagamento().toString(), ordine.getImporto());
+            """ /*, ordine.id, ordine.data, ordine.importo*/);
             textPart.setContent(body, "text/html; charset=utf-8");
 
             multipart.addBodyPart(textPart);
@@ -69,7 +68,7 @@ public class MailService {
     }
 
     @Transactional
-    public void sendQrCodeMail(String to, String image) {
+    public void sendQrCodeMail(String to /*, String image*/) {
 
         String subject = "Ecco Il Tuo Biglietto!";
 
@@ -92,6 +91,7 @@ public class MailService {
             """;
             textPart.setContent(body, "text/html; charset=utf-8");
 
+            /*
             MimeBodyPart imgPart = new MimeBodyPart();
             DataHandler dh = new DataHandler(Base64.getDecoder().decode(image), "image/png");
             imgPart.setDataHandler(dh);
@@ -105,14 +105,15 @@ public class MailService {
 
             Transport.send(message);
             //System.out.println("Email inviata con successo!");
+
+             */
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-
-    private Properties setupProperties(){
+    private Properties setupProperties() {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");

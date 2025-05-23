@@ -12,12 +12,14 @@
     <packaging>pom</packaging>
     <name>E20</name>
     <description>Gestore di eventi</description>
+
     <modules>
         <module>shared-service</module>
         <module>configuration-service</module>
         <module>discovery-service</module>
         <module>gateway-service</module>
         <module>gestioneOrdini-service</module>
+        <module>mailSender-service</module>
     </modules>
 
     <properties>

@@ -1,6 +1,7 @@
 package org.unical.enterprise.authentication;
 
 import jakarta.ws.rs.core.Response;
+import lombok.RequiredArgsConstructor;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
@@ -8,31 +9,63 @@ import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.ClientRepresentation;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.unical.enterprise.authentication.dto.AuthDTOResponse;
 import org.unical.enterprise.authentication.dto.RegisterDTORequest;
 
 import java.util.List;
 
-
-public class KeycloackAdminRealm {
-
-    //TODO Rilevamento eccezzioni
+@Service
+@RequiredArgsConstructor
+//TODO passare tutto il Keyclock admin realm Qui
+public class AuthenticationService {
 
     private Keycloak keycloak;
     private RealmResource realmResource;
     private UsersResource usersResource;
 
     //TODO Variabili nascoste
+    //TODO PULIRE TUTTO MADONNA SANTA CHE SCHIFO
+
     String serverUrl = "http://localhost:8085";
     String realm = "esse20";
     String username = "admin";
     String password = "admin";
     String clientId = "admin-cli";
 
-    private KeycloackAdminRealm() {
+    public AccessTokenResponse login(String username, String password) {
+        Keycloak keycloak2 = KeycloakBuilder.builder()
+                .serverUrl(serverUrl)
+                .realm(realm)
+                .clientId("esse20-client")
+                .clientSecret("T8v2mi3WWV5JxXOJSCDn7KGDdspKcKvz")
+                .username(username)
+                .password(password)
+                .grantType(OAuth2Constants.PASSWORD)
+                .build();
+
+        try {
+            AccessTokenResponse tokenResponse = keycloak2.tokenManager().getAccessToken();
+            return tokenResponse;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+    public String registerNewUser(RegisterDTORequest registerDTORequest){
+
 
         keycloak = KeycloakBuilder.builder()
                 .serverUrl(serverUrl)
@@ -45,21 +78,6 @@ public class KeycloackAdminRealm {
 
         realmResource = keycloak.realm(realm);
         usersResource = realmResource.users();
-    }
-
-    private static KeycloackAdminRealm instance;
-
-    public static KeycloackAdminRealm getInstance() {
-        if(instance!=null){
-            return instance;
-        }
-
-        instance = new KeycloackAdminRealm();
-        return instance;
-    }
-
-
-    public String registerNewUser(RegisterDTORequest registerDTORequest){
 
         try {
             UserRepresentation user = new UserRepresentation();
@@ -69,7 +87,6 @@ public class KeycloackAdminRealm {
             user.setEmail(registerDTORequest.email());
             user.setEnabled(true);
 
-            // Crea l'utente
             Response response = usersResource.create(user);
             System.out.println("Status: " + response.getStatus());
 
@@ -80,11 +97,10 @@ public class KeycloackAdminRealm {
             }
 
 
-            // Estrai l'ID utente dalla location dell'header
+
             String userId = CreatedResponseUtil.getCreatedId(response);
             response.close();
 
-            // Imposta la password
             CredentialRepresentation credential = new CredentialRepresentation();
             credential.setTemporary(false);
             credential.setType(CredentialRepresentation.PASSWORD);
@@ -96,42 +112,47 @@ public class KeycloackAdminRealm {
         }catch (Exception e){
             e.printStackTrace();
 
-            return "Error";
+            return "Error: " + e.getMessage();
         }
 
         return "201";
     }
 
-    public String login(String username, String password){
-        // Build Keycloak instance
-        Keycloak keycloak2 = KeycloakBuilder.builder()
-                .serverUrl(serverUrl)
-                .realm(realm)
-                .clientId("esse20-client")
-                .clientSecret("T8v2mi3WWV5JxXOJSCDn7KGDdspKcKvz")
-                .username(username)
-                .password(password)
-                .grantType(OAuth2Constants.PASSWORD)
-                .build();
+    private final RestTemplate restTemplate = new RestTemplate();
 
-        try {
-            return keycloak2.tokenManager().getAccessToken().getToken();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
+
+    //FIXME  400 Bad Request on POST request for "http://localhost:8085/realms/esse20/protocol/openid-connect/token": "{"error":"invalid_grant","error_description":"Invalid refresh token. Token client and authorized client don't match"}"
+    public AccessTokenResponse refreshAccessToken(String refreshToken) {
+        String tokenUrl = serverUrl
+                + "/realms/" + realm
+                + "/protocol/openid-connect/token";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String,String> form = new LinkedMultiValueMap<>();
+        form.add("grant_type", "refresh_token");
+        form.add("client_id", clientId);
+        form.add("client_secret", "T8v2mi3WWV5JxXOJSCDn7KGDdspKcKvz");
+        form.add("refresh_token", refreshToken);
+
+        HttpEntity<MultiValueMap<String,String>> request = new HttpEntity<>(form, headers);
+
+        ResponseEntity<AccessTokenResponse> response = restTemplate
+                .exchange(tokenUrl, HttpMethod.POST, request, AccessTokenResponse.class);
+
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            throw new RuntimeException("Failed to refresh token: " + response.getStatusCode());
         }
+
+        return response.getBody();
     }
 
+    //TODO
+    public void logout(){
 
-    public boolean close(){
-        try {
-            keycloak.close();
-        }catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }
-        return true;
     }
+
 
     public void assignClientRoleToUser(String username, String clientId, String roleName) {
 
@@ -172,5 +193,4 @@ public class KeycloackAdminRealm {
                 .clientLevel(clientUUID)
                 .add(List.of(clientRole));
     }
-
 }

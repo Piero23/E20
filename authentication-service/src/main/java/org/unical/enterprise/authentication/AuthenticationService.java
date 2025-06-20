@@ -41,13 +41,14 @@ public class AuthenticationService {
     String username = "admin";
     String password = "admin";
     String clientId = "admin-cli";
+    String CLIENT_SECRET = "**********";
 
     public AccessTokenResponse login(String username, String password) {
         Keycloak keycloak2 = KeycloakBuilder.builder()
                 .serverUrl(serverUrl)
                 .realm(realm)
                 .clientId("esse20-client")
-                .clientSecret("T8v2mi3WWV5JxXOJSCDn7KGDdspKcKvz")
+                .clientSecret(CLIENT_SECRET)
                 .username(username)
                 .password(password)
                 .grantType(OAuth2Constants.PASSWORD)

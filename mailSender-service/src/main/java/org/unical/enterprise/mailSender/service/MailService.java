@@ -18,6 +18,8 @@ import java.util.Properties;
 @RequiredArgsConstructor
 public class MailService {
 
+
+    //TODO Mettili secret
     final String username = "noreply.esse20@gmail.com";
     final String password = "lqvxdvovovxwmjfd";
 

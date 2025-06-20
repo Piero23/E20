@@ -9,6 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.gestioneOrdini.domain.Biglietto;
 import org.unical.enterprise.gestioneOrdini.domain.Ordine;
+import org.unical.enterprise.gestioneOrdini.dto.BigliettoDto;
+import org.unical.enterprise.gestioneOrdini.dto.OrdineDto;
 import org.unical.enterprise.gestioneOrdini.service.BigliettoService;
 import org.unical.enterprise.gestioneOrdini.service.OrdineService;
 
@@ -29,6 +31,11 @@ public class OrdineController {
     private ResponseEntity<List<Ordine>> findAll(){
         logger.info("Effettuata ricerca generale");
         return ResponseEntity.ok(ordineService.findAll());
+    }
+
+    @PostMapping("/save")
+    private void save(@RequestBody OrdineDto ordine , @RequestBody List<BigliettoDto> biglietto){
+        ordineService.saveOrdine(ordine, biglietto);
     }
 
     @GetMapping(value="/{id}")

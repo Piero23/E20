@@ -33,6 +33,11 @@ public class AuthenticationController {
         return authenticationService.refreshAccessToken(ref);
     }
 
+    @GetMapping("/test1")
+    public String test() {
+        return "Funzia";
+    }
+
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody RegisterDTORequest registerDTORequest) {
 

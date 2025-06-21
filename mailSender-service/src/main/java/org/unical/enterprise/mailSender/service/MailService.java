@@ -9,6 +9,7 @@ import jakarta.mail.internet.MimeMultipart;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.unical.enterprise.shared.dto.MailTransferDto;
 
 import java.util.Base64;
 import java.util.Properties;
@@ -32,7 +33,7 @@ public class MailService {
     });
 
     @Transactional
-    public void sendMail(String to /*, Ordine ordine*/){
+    public void sendMail(String to , MailTransferDto ordine){
         String subject = "Acquisto Confermato";
 
         try {
@@ -55,7 +56,7 @@ public class MailService {
                     <br>
                 </body>
             </html>
-            """ /*, ordine.id, ordine.data, ordine.importo*/);
+            """ , ordine.ID(), ordine.data(), ordine.importo());
             textPart.setContent(body, "text/html; charset=utf-8");
 
             multipart.addBodyPart(textPart);

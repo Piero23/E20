@@ -14,8 +14,6 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableFeignClients
 @EnableDiscoveryClient
 public class GestioneOrdineApplication {
-
-
 	public static void main(String[] args) {
 		SpringApplication.run(GestioneOrdineApplication.class, args);
 

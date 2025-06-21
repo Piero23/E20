@@ -21,9 +21,9 @@ public class MailController {
         mailService.sendQrCodeMail(email);
     }
 
-    @PostMapping("/mail/{email}")
-    public void sendMail(@PathVariable String email, @RequestParam MailTransferDto mailTransferDto) {
-        mailService.sendMail(email, mailTransferDto);
+    @PostMapping(value = "/sendMail", consumes = "application/json")
+    public void sendMail(@RequestBody MailTransferDto mailTransferDto) {
+        mailService.sendMail(mailTransferDto.mail() ,mailTransferDto);
     }
 
     @GetMapping("/test")

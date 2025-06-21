@@ -2,13 +2,16 @@ package org.unical.enterprise.gestioneOrdini.service;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.unical.enterprise.gestioneOrdini.MailServiceClient;
 import org.unical.enterprise.gestioneOrdini.dao.OrdineDao;
 import org.unical.enterprise.gestioneOrdini.domain.Biglietto;
 import org.unical.enterprise.gestioneOrdini.domain.Ordine;
 import org.unical.enterprise.gestioneOrdini.dto.BigliettoDto;
 import org.unical.enterprise.gestioneOrdini.dto.OrdineDto;
+import org.unical.enterprise.shared.dto.MailTransferDto;
 
 import java.util.HashSet;
 import java.util.List;
@@ -20,6 +23,10 @@ import java.util.UUID;
 public class OrdineService {
 
     private final OrdineDao ordineDao;
+
+
+    @Autowired
+    private final MailServiceClient mailServiceClient;
 
     @Transactional(readOnly = true)
     public void test() {
@@ -42,7 +49,7 @@ public class OrdineService {
     }
 
     @Transactional
-    public Ordine saveOrdine(OrdineDto ordine, List<BigliettoDto> biglietti) {
+    public void saveOrdine(OrdineDto ordine, List<BigliettoDto> biglietti) {
         Ordine newOrdine = new Ordine();
         newOrdine.setUtenteId(ordine.utenteId());
         newOrdine.setBiglietti_comprati(ordine.bigliettiComprati());
@@ -67,8 +74,11 @@ public class OrdineService {
         ordineDao.save(newOrdine);
 
 
+        String mail =
 
-        return newOrdine;
+        MailTransferDto mailSended = new MailTransferDto(newOrdine.getId() , newOrdine.getData_pagamento(), newOrdine.getImporto(),mail);
+        mailServiceClient.sendMail(mailSended);
+        //return newOrdine;
     }
 
     @Transactional

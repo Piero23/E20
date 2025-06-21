@@ -11,6 +11,7 @@ import org.unical.enterprise.gestioneOrdini.domain.Biglietto;
 import org.unical.enterprise.gestioneOrdini.domain.Ordine;
 import org.unical.enterprise.gestioneOrdini.dto.BigliettoDto;
 import org.unical.enterprise.gestioneOrdini.dto.OrdineDto;
+import org.unical.enterprise.gestioneOrdini.dto.OrdineRequest;
 import org.unical.enterprise.gestioneOrdini.service.BigliettoService;
 import org.unical.enterprise.gestioneOrdini.service.OrdineService;
 
@@ -34,8 +35,8 @@ public class OrdineController {
     }
 
     @PostMapping("/save")
-    private void save(@RequestBody OrdineDto ordine , @RequestBody List<BigliettoDto> biglietto){
-        ordineService.saveOrdine(ordine, biglietto);
+    private void save(@RequestBody OrdineRequest ordineRequest){
+        ordineService.saveOrdine(ordineRequest.ordine(), ordineRequest.biglietti());
     }
 
     @GetMapping(value="/{id}")

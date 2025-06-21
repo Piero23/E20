@@ -1,12 +1,15 @@
 package org.unical.enterprise.gestioneOrdini;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.unical.enterprise.shared.dto.MailTransferDto;
 
-@FeignClient("mailSender-service")
+@FeignClient(name = "mailSender-service")
 public interface MailServiceClient {
 
-    @PostMapping("/mail/{email}")
-    void sendMail(@PathVariable String email);
+    @PostMapping(value = "/api/mail/sendMail", consumes = "application/json")
+    void sendMail(@RequestBody MailTransferDto dto);
+
+    @GetMapping("api/mail/test")
+    String test();
 }

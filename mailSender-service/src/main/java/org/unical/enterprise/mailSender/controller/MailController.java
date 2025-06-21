@@ -3,6 +3,7 @@ package org.unical.enterprise.mailSender.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.mailSender.service.MailService;
+import org.unical.enterprise.shared.dto.MailTransferDto;
 
 
 import java.awt.*;
@@ -21,8 +22,8 @@ public class MailController {
     }
 
     @PostMapping("/mail/{email}")
-    public void sendMail(@PathVariable String email) {
-        mailService.sendMail(email);
+    public void sendMail(@PathVariable String email, @RequestParam MailTransferDto mailTransferDto) {
+        mailService.sendMail(email, mailTransferDto);
     }
 
     @GetMapping("/test")

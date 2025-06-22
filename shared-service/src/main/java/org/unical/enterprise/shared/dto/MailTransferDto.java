@@ -10,6 +10,7 @@ public record MailTransferDto (
         UUID ID,
         Date data,
         @Positive Double importo,
-        @Email String mail
+        @Email String mail,
+        String cliente
 ){
 }

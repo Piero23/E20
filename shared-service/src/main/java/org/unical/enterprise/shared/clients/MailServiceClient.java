@@ -1,4 +1,4 @@
-package org.unical.enterprise.gestioneOrdini;
+package org.unical.enterprise.shared.clients;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;

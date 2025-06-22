@@ -23,7 +23,7 @@ public class MailController {
 
     @PostMapping(value = "/sendMail", consumes = "application/json")
     public void sendMail(@RequestBody MailTransferDto mailTransferDto) {
-        mailService.sendMail(mailTransferDto.mail() ,mailTransferDto);
+        mailService.sendMail(mailTransferDto);
     }
 
     @GetMapping("/test")

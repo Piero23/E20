@@ -1,5 +1,6 @@
 package org.unical.enterprise.gestioneOrdini.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,7 @@ public class OrdineController {
     }
 
     @PostMapping("/save")
-    private void save(@RequestBody OrdineRequest ordineRequest){
+    private void save(@Valid @RequestBody OrdineRequest ordineRequest){
         ordineService.saveOrdine(ordineRequest.ordine(), ordineRequest.biglietti());
     }
 

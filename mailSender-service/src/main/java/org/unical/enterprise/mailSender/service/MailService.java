@@ -33,11 +33,11 @@ public class MailService {
     });
 
     @Transactional
-    public void sendMail(String to , MailTransferDto ordine){
+    public void sendMail(MailTransferDto ordine){
         String subject = "Acquisto Confermato";
 
         try {
-            Message message = setupMessage(to);
+            Message message = setupMessage(ordine.mail());
             message.setSubject(subject);
 
             Multipart multipart = new MimeMultipart();
@@ -47,16 +47,17 @@ public class MailService {
             <html>
                 <body>
                     <h3>Conferma Ordine Numero %s</h3>
-                    <p>Data dell'ordine: %s</p>
+                    <br>
+                    <p>Gentile Signor %s</p>
+                    <p>Le comunichiamo che l'ordine effettuato in data %s è andato a buon fine</p>
                     <br>
                     <p>Dati Di Pagamento</p>
                     <p>Importo: %.2f</p>
-                    <p>inserire qui i dati dell'utente<p>
-                    <p>Grazie per l'acquisto.</p>
+                    <p>La ringraziamo per l'acquisto.</p>
                     <br>
                 </body>
             </html>
-            """ , ordine.ID(), ordine.data(), ordine.importo());
+            """ , ordine.ID(), ordine.cliente(), ordine.data(), ordine.importo());
             textPart.setContent(body, "text/html; charset=utf-8");
 
             multipart.addBodyPart(textPart);

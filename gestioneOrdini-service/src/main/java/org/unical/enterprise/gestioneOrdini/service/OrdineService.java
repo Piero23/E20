@@ -5,13 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.unical.enterprise.gestioneOrdini.MailServiceClient;
-import org.unical.enterprise.gestioneOrdini.UtenteServiceClient;
 import org.unical.enterprise.gestioneOrdini.dao.OrdineDao;
 import org.unical.enterprise.gestioneOrdini.domain.Biglietto;
 import org.unical.enterprise.gestioneOrdini.domain.Ordine;
 import org.unical.enterprise.gestioneOrdini.dto.BigliettoDto;
 import org.unical.enterprise.gestioneOrdini.dto.OrdineDto;
+import org.unical.enterprise.shared.clients.MailServiceClient;
+import org.unical.enterprise.shared.clients.UtenteServiceClient;
 import org.unical.enterprise.shared.dto.MailTransferDto;
 import org.unical.enterprise.shared.dto.UtenteDTO;
 
@@ -29,10 +29,8 @@ public class OrdineService {
 
 
     //TODO fare in modo che non siano "istanze volanti" ma che vengano chiamate da un solo punto
-    @Autowired
     private final MailServiceClient mailServiceClient;
 
-    @Autowired
     private final UtenteServiceClient utenteServiceClient;
 
     @Transactional(readOnly = true)
@@ -84,13 +82,11 @@ public class OrdineService {
         //TODO Tutto da pulire non deve stare qua a volare
 
         //TODO quando una diqueste cose non va a buon fine 1 la mail deve cambiare / o non deve inviarsi
-        System.out.println(newOrdine.getUtenteId());
 
         UtenteDTO toUtente = utenteServiceClient.getById(newOrdine.getUtenteId());
 
-        MailTransferDto mailSended = new MailTransferDto(newOrdine.getId() , newOrdine.getData_pagamento(), newOrdine.getImporto(),toUtente.getEmail());
+        MailTransferDto mailSended = new MailTransferDto(newOrdine.getId() , newOrdine.getData_pagamento(), newOrdine.getImporto(), toUtente.getEmail(), toUtente.getUsername());
         mailServiceClient.sendMail(mailSended);
-        //return newOrdine;
     }
 
     @Transactional

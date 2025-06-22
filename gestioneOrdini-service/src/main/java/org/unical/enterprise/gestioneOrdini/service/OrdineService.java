@@ -58,7 +58,7 @@ public class OrdineService {
     }
 
     @Transactional
-    public void saveOrdine(OrdineDto ordine, List<BigliettoDto> biglietti) {
+    public void saveOrdine(OrdineDto ordine, List<BigliettoDto> biglietti) throws Exception {
         Ordine newOrdine = new Ordine();
         newOrdine.setUtenteId(ordine.utenteId());
         newOrdine.setBiglietti_comprati(ordine.bigliettiComprati());
@@ -70,16 +70,9 @@ public class OrdineService {
         for(BigliettoDto bigliettoDto : biglietti){
 
             //Controlla se l'id dell'evento esiste altrimenti exception
-            if(true){
-                EventoBasicDto evento = eventoServiceClient.findById(2L);
-
-                System.out.println(evento);
-
-                throw new RuntimeException("Prova");
-            }
+            eventoServiceClient.findById(bigliettoDto.idEvento());
 
             Biglietto newBiglietto = new Biglietto();
-
 
 
             //TODO Builder

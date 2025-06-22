@@ -1,6 +1,7 @@
 package org.unical.enterprise.gestioneOrdini.controller;
 
 import jakarta.validation.Valid;
+import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,12 @@ public class OrdineController {
 
     @PostMapping("/save")
     private void save(@Valid @RequestBody OrdineRequest ordineRequest){
-        ordineService.saveOrdine(ordineRequest.ordine(), ordineRequest.biglietti());
+        try {
+            ordineService.saveOrdine(ordineRequest.ordine(), ordineRequest.biglietti());
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            //TODO Tutti gli errori che possono avvenire
+        }
     }
 
     @GetMapping(value="/{id}")

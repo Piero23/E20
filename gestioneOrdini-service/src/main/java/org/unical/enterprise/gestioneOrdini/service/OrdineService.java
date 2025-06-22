@@ -15,10 +15,7 @@ import org.unical.enterprise.shared.clients.UtenteServiceClient;
 import org.unical.enterprise.shared.dto.MailTransferDto;
 import org.unical.enterprise.shared.dto.UtenteDTO;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -59,7 +56,7 @@ public class OrdineService {
         newOrdine.setUtenteId(ordine.utenteId());
         newOrdine.setBiglietti_comprati(ordine.bigliettiComprati());
         newOrdine.setImporto(ordine.importo());
-        newOrdine.setData_pagamento(ordine.dataPagamento());
+        newOrdine.setData_pagamento(new Date());
 
         Set<Biglietto> newBiglietti = new HashSet<>();
         for(BigliettoDto bigliettoDto : biglietti){

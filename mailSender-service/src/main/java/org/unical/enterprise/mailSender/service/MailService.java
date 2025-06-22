@@ -7,6 +7,7 @@ import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.unical.enterprise.shared.dto.MailTransferDto;
@@ -28,10 +29,10 @@ import java.util.Properties;
 @RequiredArgsConstructor
 public class MailService {
 
-
-    //TODO Mettili secret
-    final String username = "noreply.esse20@gmail.com";
-    final String password = "lqvxdvovovxwmjfd";
+    @Value("${mail.username}")
+    private String username;
+    @Value("${mail.password}")
+    private String password;
 
     final Properties props = setupProperties();
 

@@ -1,27 +1,33 @@
-package org.unical.enterprise.eventoLocation.data.dto;
+package org.unical.enterprise.shared.dto;
 
-import org.unical.enterprise.eventoLocation.data.entities.Evento;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.Positive;
+import lombok.*;
 
 import java.util.Date;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
 public class EventoBasicDto {
+
+    //TODO Valida con jakartaValidation
     private Long id;
     private String nome;
     private String descrizione;
+    //TODO fai a UUID
     private String organizzatore;
     private Long posti;
     private boolean b_riutilizzabile;
     private boolean b_nominativo;
     private Long locationId;
     private Date data;
+    @Positive
     private double prezzo;
 
+    /*
     public EventoBasicDto(Evento event) {
         this.id = event.getId();
         this.nome = event.getNome();
@@ -37,4 +43,6 @@ public class EventoBasicDto {
             locationId = null;
         }
     }
+
+     */
 }

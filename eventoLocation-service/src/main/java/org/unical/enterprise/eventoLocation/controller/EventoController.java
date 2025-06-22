@@ -1,16 +1,15 @@
 package org.unical.enterprise.eventoLocation.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.unical.enterprise.eventoLocation.data.dto.EventoBasicDto;
+import org.unical.enterprise.shared.dto.EventoBasicDto;
 import org.unical.enterprise.eventoLocation.data.entities.Evento;
 import org.unical.enterprise.eventoLocation.service.EventoService;
-
-import java.util.Map;
 
 
 @RequestMapping("/api/evento")
@@ -19,29 +18,31 @@ import java.util.Map;
 public class EventoController {
 
     private final EventoService eventoService;
-
-
+    //TODO Valida e riscrivi tutto
 
     @GetMapping
     public Page<EventoBasicDto> findAllPagable(Pageable pageable) {
         return eventoService.getPagable(pageable);
     }
 
+    //Non mi ricordo cosa ho fatto co sta roba
     @GetMapping(value="/{id}")
-    private ResponseEntity<?> findById(@PathVariable("id") Long id, @RequestParam Map<String, String> allParams){
+    private EventoBasicDto findById(@PathVariable("id") Long id /* @RequestParam Map<String, String> allParams*/){
 
+        /*
             if (!allParams.isEmpty() && allParams.containsKey("locationFormat") && allParams.size() == 1)
                 if (allParams.get("locationFormat").equals("true"))
                     return new ResponseEntity<>(eventoService.getByIdWithLocation(id), HttpStatus.OK);
 
             else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+         */
 
-
-        return new ResponseEntity<>(eventoService.getByIdNoLocation(id), HttpStatus.OK);
+        return eventoService.getByIdNoLocation(id);
     }
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
+    //Validate
     public ResponseEntity<EventoBasicDto> createEvento(@RequestBody EventoBasicDto evento) {
         return new ResponseEntity<>(eventoService.save(evento), HttpStatus.CREATED);
     }

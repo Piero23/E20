@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class LocationDto {
 
-
+    //TODO ToDTO
     public LocationDto(Location location)
     {
         this.id = location.getId();

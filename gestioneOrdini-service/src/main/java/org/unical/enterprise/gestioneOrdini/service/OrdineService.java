@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.unical.enterprise.gestioneOrdini.EventoServiceClient;
 import org.unical.enterprise.gestioneOrdini.dao.OrdineDao;
 import org.unical.enterprise.gestioneOrdini.domain.Biglietto;
 import org.unical.enterprise.gestioneOrdini.domain.Ordine;
@@ -12,6 +13,7 @@ import org.unical.enterprise.gestioneOrdini.dto.BigliettoDto;
 import org.unical.enterprise.gestioneOrdini.dto.OrdineDto;
 import org.unical.enterprise.shared.clients.MailServiceClient;
 import org.unical.enterprise.shared.clients.UtenteServiceClient;
+import org.unical.enterprise.shared.dto.EventoBasicDto;
 import org.unical.enterprise.shared.dto.MailTransferDto;
 import org.unical.enterprise.shared.dto.UtenteDTO;
 
@@ -32,6 +34,8 @@ public class OrdineService {
     private final MailServiceClient mailServiceClient;
 
     private final UtenteServiceClient utenteServiceClient;
+
+    private final EventoServiceClient eventoServiceClient;
 
     @Transactional(readOnly = true)
     public void test() {
@@ -61,10 +65,24 @@ public class OrdineService {
         newOrdine.setImporto(ordine.importo());
         newOrdine.setData_pagamento(ordine.dataPagamento());
 
+
         Set<Biglietto> newBiglietti = new HashSet<>();
         for(BigliettoDto bigliettoDto : biglietti){
+
+            //Controlla se l'id dell'evento esiste altrimenti exception
+            if(true){
+                EventoBasicDto evento = eventoServiceClient.findById(2L);
+
+                System.out.println(evento);
+
+                throw new RuntimeException("Prova");
+            }
+
             Biglietto newBiglietto = new Biglietto();
 
+
+
+            //TODO Builder
             newBiglietto.setOrdine(newOrdine);
             newBiglietto.setEmail(bigliettoDto.email());
             newBiglietto.setNome(bigliettoDto.nome());

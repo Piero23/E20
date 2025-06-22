@@ -10,6 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
+
 public class EventoDto {
 
     private Long id;
@@ -23,6 +24,7 @@ public class EventoDto {
     private Date data;
     private double prezzo;
 
+    //TODO ToDTO
 
     public EventoDto(Evento evento) {
         this.setId(evento.getId());

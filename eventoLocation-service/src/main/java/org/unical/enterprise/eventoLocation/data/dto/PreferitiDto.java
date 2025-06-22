@@ -14,6 +14,7 @@ public class PreferitiDto {
     String utente_id;
     long evento_id;
 
+    //TODO ToDTO
     public PreferitiDto(Preferiti preferiti) {
         this.id = preferiti.getId();
         this.utente_id = preferiti.getUtente_id();

@@ -12,7 +12,8 @@ import org.springframework.context.annotation.ComponentScan;
 		"org.unical.enterprise.shared"
 })
 @EnableFeignClients(basePackages = {
-		"org.unical.enterprise.shared.clients"
+		"org.unical.enterprise.shared.clients",
+		"org.unical.enterprise.gestioneOrdini"
 })
 @EnableDiscoveryClient
 public class GestioneOrdineApplication {

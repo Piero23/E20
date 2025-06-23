@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -20,6 +21,9 @@ import java.util.stream.Collectors;
 public class JwtService {
     
     private String jwtSecret;
+
+    @Value("${jwt.public}")
+    private String pubKey;
     
     private long jwtExpiration = 3600000; // Default 1 ora
     
@@ -176,7 +180,7 @@ public class JwtService {
      * Ottiene la chiave per la firma JWT
      */
     private Key getSigningKey() {
-        String pubKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyds99Sr9Jy2b6aehdgSRf6n+B4lvB5ITFBQj5JNleg1FsvSCECXpkcdEO27F56JX8HK95vgV2Mnv9/NcWasO254R0wyjlSUDMrLJIs7r4IEAA9CpPy6aitfvLMhIwNgg4HHlMnO1PJ5wWACjC4uMne3jTSefRybQkxf+sNSlw3zJLPNOBn+Zl8D4PmhvQVNKj+Tt49zBvauxCIt0cBFBvxpiDkOyBx873ph1WjZBmVzTyCybxF0ebrLCjg8JjmJQabXPaoIB2V6aV3P1PN2itiENKUXEtaq/eveoLj0opb14/foU/ObgCYhAHzjFcZ+l77uS1kRvj8NWLRWxOc0KAwIDAQAB";
+
         try{
             byte[] keyBytes = Decoders.BASE64.decode(pubKey);
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);

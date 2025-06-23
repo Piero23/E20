@@ -16,6 +16,7 @@ import org.unical.enterprise.gestioneOrdini.dto.OrdineDto;
 import org.unical.enterprise.gestioneOrdini.dto.OrdineRequest;
 import org.unical.enterprise.gestioneOrdini.service.BigliettoService;
 import org.unical.enterprise.gestioneOrdini.service.OrdineService;
+import org.unical.enterprise.shared.clients.MailServiceClient;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,6 +30,7 @@ public class OrdineController {
 
     OrdineService ordineService;
     BigliettoService bigliettoService;
+    MailServiceClient mailService;
 
     @GetMapping
     private ResponseEntity<List<Ordine>> findAll(){
@@ -107,6 +109,11 @@ public class OrdineController {
     @GetMapping("/test")
     private String test() {
         return "Sono OrdineController";
+    }
+
+    @GetMapping("/testFeign")
+    private String testo() {
+        return mailService.test();
     }
 
 }

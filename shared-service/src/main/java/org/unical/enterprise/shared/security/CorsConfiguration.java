@@ -1,4 +1,4 @@
-package org.unical.enterprise.shared;
+package org.unical.enterprise.shared.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

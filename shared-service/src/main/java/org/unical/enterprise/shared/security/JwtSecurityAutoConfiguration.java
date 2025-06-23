@@ -1,4 +1,4 @@
-package org.unical.enterprise.shared;
+package org.unical.enterprise.shared.security;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -11,8 +11,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
-
-import java.util.Map;
 
 /*
  * Configura automaticamente la sicurezza in ogni microservizio in base alle proprietà definite nei file YAML.
@@ -37,7 +35,7 @@ public class JwtSecurityAutoConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, 
+    public SecurityFilterChain filterChain (HttpSecurity http,
                                           JwtAuthFilter jwtAuthFilter, 
                                           CorsConfigurationSource corsConfigurationSource) throws Exception {
         
@@ -50,7 +48,7 @@ public class JwtSecurityAutoConfiguration {
                     .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
                     .build();
         }
-        
+
         // Altrimenti, configura la sicurezza in base alle rotte definite
         return http
                 .cors(c -> c.configurationSource(corsConfigurationSource))
@@ -64,16 +62,19 @@ public class JwtSecurityAutoConfiguration {
 
                     // Configurazione delle rotte protette,
                     if (securityProperties.getProtectedRoutes() != null) {
-                        for (Map.Entry<String, String[]> entry : securityProperties.getProtectedRoutes().entrySet()) {
-                            String path = entry.getKey();
-                            String[] roles = entry.getValue();
+                        for (ProtectedRoute route : securityProperties.getProtectedRoutes()) {
+                            String path = route.getPath();
+                            String[] roles = route.getRoles();
 
                             // Controlla se il path contiene indicazione del metodo HTTP
-                            if (path.contains("/POST") || path.contains("/PUT") || path.contains("/DELETE")) {
+                            if (path.contains("/GET") ||path.contains("/POST") || path.contains("/PUT") || path.contains("/DELETE")) {
                                 String actualPath = path.split("/")[0];
                                 String method = path.split("/")[1];
 
                                 switch(method) {
+                                    case "GET":
+                                        auth.requestMatchers(HttpMethod.GET, actualPath).hasAnyAuthority(roles);
+                                        break;
                                     case "POST":
                                         auth.requestMatchers(HttpMethod.POST, actualPath).hasAnyAuthority(roles);
                                         break;

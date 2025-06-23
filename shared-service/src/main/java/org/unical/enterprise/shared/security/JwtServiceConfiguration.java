@@ -1,4 +1,4 @@
-package org.unical.enterprise.shared;
+package org.unical.enterprise.shared.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +21,8 @@ public class JwtServiceConfiguration {
 
     @Bean
     public JwtService jwtService() {
+        System.out.println("popopopo");
+        System.out.println(jwtSecret);
         JwtService jwtService = new JwtService();
         jwtService.setJwtSecret(jwtSecret);
         jwtService.setJwtExpiration(jwtExpiration);

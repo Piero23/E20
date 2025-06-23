@@ -1,6 +1,5 @@
-package org.unical.enterprise.shared;
+package org.unical.enterprise.shared.security;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -12,9 +11,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
-
-import java.util.Arrays;
-import java.util.Map;
 
 /*
  * Configura automaticamente la sicurezza in ogni microservizio in base alle proprietà definite nei file YAML.
@@ -52,16 +48,6 @@ public class JwtSecurityAutoConfiguration {
                     .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
                     .build();
         }
-
-        System.out.println("MUCCA");
-        System.out.println(Arrays.toString(securityProperties.getPublicPaths()));
-
-        for (ProtectedRoute route : securityProperties.getProtectedRoutes()){
-            String path = route.getPath();
-            String[] roles = route.getRoles();
-            System.out.println("Configuro matcher per path: " + path + " con ruoli: " + Arrays.toString(roles));
-        }
-
 
         // Altrimenti, configura la sicurezza in base alle rotte definite
         return http

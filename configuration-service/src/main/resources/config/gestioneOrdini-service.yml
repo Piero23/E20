@@ -28,10 +28,9 @@ cors:
   allowed-origins: http://localhost:8060
 
 jwt:
-  secret: Yq9j0wLSpqMi7iDGTW6wqBFQBTaub6G8 # si potrebbe centrallizare inserirela in un punto comume o costante in SHARED o variabile di sistema
   security:
     enabled: true
-    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html
+    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /api/ordine/testFeign
     protectedRoutes:
       - path: /api/ordine/test
         roles:

@@ -1,11 +1,9 @@
-package org.unical.enterprise.shared;
+package org.unical.enterprise.shared.security;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /*
  * Definisce le proprietà configurabili (percorsi pubblici, rotte protette, flags) per la sicurezza di ogni servizio.

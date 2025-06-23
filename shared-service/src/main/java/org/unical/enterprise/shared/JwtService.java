@@ -6,12 +6,14 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.security.KeyFactory;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -44,10 +46,26 @@ public class JwtService {
     public JwtUserClaims extractUserClaims(String token) {
         Claims claims = extractAllClaims(token);
         String username = claims.getSubject();
-        
-        @SuppressWarnings("unchecked")
-        List<String> authorities = claims.get("roles", List.class);
-        
+
+
+        List<String> authorities = new ArrayList<>();
+
+        Map<String, Object> resourceAccess = claims.get("resource_access", Map.class);
+        if (resourceAccess != null) {
+            Map<String, Object> clientAccess = (Map<String, Object>) resourceAccess.get("esse20-client");
+            if (clientAccess != null) {
+                Object rolesObject = clientAccess.get("roles");
+                if (rolesObject instanceof List<?>) {
+                    for (Object role : (List<?>) rolesObject) {
+                        if (role instanceof String) {
+                            authorities.add("ROLE_" + role);
+                        }
+                    }
+                }
+            }
+        }
+
+
         return new JwtUserClaims(username, authorities);
     }
 
@@ -161,7 +179,14 @@ public class JwtService {
      * Ottiene la chiave per la firma JWT
      */
     private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
-        return Keys.hmacShaKeyFor(keyBytes);
+        String pubKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyds99Sr9Jy2b6aehdgSRf6n+B4lvB5ITFBQj5JNleg1FsvSCECXpkcdEO27F56JX8HK95vgV2Mnv9/NcWasO254R0wyjlSUDMrLJIs7r4IEAA9CpPy6aitfvLMhIwNgg4HHlMnO1PJ5wWACjC4uMne3jTSefRybQkxf+sNSlw3zJLPNOBn+Zl8D4PmhvQVNKj+Tt49zBvauxCIt0cBFBvxpiDkOyBx873ph1WjZBmVzTyCybxF0ebrLCjg8JjmJQabXPaoIB2V6aV3P1PN2itiENKUXEtaq/eveoLj0opb14/foU/ObgCYhAHzjFcZ+l77uS1kRvj8NWLRWxOc0KAwIDAQAB";
+        try{
+            byte[] keyBytes = Decoders.BASE64.decode(pubKey);
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            return keyFactory.generatePublic(keySpec);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Errore nella creazione della chiave pubblica", e);
+        }
     }
 }

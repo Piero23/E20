@@ -14,6 +14,7 @@ import org.keycloak.representations.idm.ClientRepresentation;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -41,7 +42,9 @@ public class AuthenticationService {
     String username = "admin";
     String password = "admin";
     String clientId = "admin-cli";
-    String CLIENT_SECRET = "**********";
+
+    @Value("${jwt.secret}")
+    String CLIENT_SECRET;
 
     public AccessTokenResponse login(String username, String password) {
         Keycloak keycloak2 = KeycloakBuilder.builder()

@@ -45,7 +45,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             if (userClaims != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 // Crea UserDetails dalla rappresentazione delle authorities nel JWT
                 UserDetails userDetails = JwtUserDetails.fromUserClaims(userClaims);
-                
+
+
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
 
@@ -58,7 +59,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         } catch (Exception ignored) {
             ignored.printStackTrace();
         }
-
+        System.out.println("JWT AUTH FILTER EXECUTED");
         filterChain.doFilter(request, response);
     }
 }

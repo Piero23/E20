@@ -19,7 +19,7 @@ spring:
           issuer-uri: http://localhost:8085/realms/esse20
 
 jwt:
-  secret: ZNAUhywjWMxENUeQvxjmDSfbNHaJeYmecN4pGHgZxQMqgdHZGLNejvtP9PuXCmE6 # si potrebbe centrallizare inserirela in un punto comume o costante in SHARED o variabile di sistema
+  secret: Yq9j0wLSpqMi7iDGTW6wqBFQBTaub6G8 # si potrebbe centrallizare inserirela in un punto comume o costante in SHARED o variabile di sistema
   security:
     enabled: true
     publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /api/**

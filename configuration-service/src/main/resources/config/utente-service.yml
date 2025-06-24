@@ -27,34 +27,28 @@ eureka:
 cors:
   allowed-origins: http://localhost:8060
 
+
+
 jwt:
   security:
-  enabled: true
-  publicPaths:
-    /v3/api-docs/**,
-    /swagger-ui/**,
-    /swagger-ui.html,
-    /api/utente/register,
-    /api/utente/login,
-  protectedRoutes:
-    - path: /api/utente
-      roles:
-        - ROLE_ADMIN
-    - path: /api/utente/{username}
-      roles:
-        - ROLE_USER
-    - path: DELETE:/api/utente/{username}
-      roles:
-        - ROLE_USER
-    - path: PUT:/api/utente/{username}
-      roles:
-        - ROLE_USER
-    - path: /api/utente/getById
-      roles:
-        - ROLE_ADMIN
-    - path: /api/utente/register
-      roles:
-        - ROLE_USER
+    enabled: true
+    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /api/utente/register, /api/utente/test
+    protectedRoutes:
+      - path: /api/utente
+        roles:
+          - ROLE_ADMIN
+      - path: /api/utente/{username}
+        roles:
+          - ROLE_USER
+      - path: DELETE:/api/utente/{username}
+        roles:
+          - ROLE_USER
+      - path: PUT:/api/utente/{username}
+        roles:
+          - ROLE_USER
+      - path: /api/utente/getById
+        roles:
+          - ROLE_ADMIN
 
 logging:
   file:

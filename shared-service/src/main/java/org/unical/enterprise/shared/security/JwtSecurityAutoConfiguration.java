@@ -64,28 +64,29 @@ public class JwtSecurityAutoConfiguration {
 
         http.authorizeHttpRequests(auth -> {
 
-            for (ProtectedRoute route : securityProperties.getProtectedRoutes()) {
-                String path = route.getPath();
-                String[] roles = route.getRoles();
-
-                if (path.contains("POST:") || path.contains("PUT:") || path.contains("DELETE:")) {
-
-                    String[] parts = path.split(":");
-                    String actualPath = parts[1];
-                    String method     = parts[0];
-
-                    switch (method) {
-                        case "POST"   -> auth.requestMatchers(HttpMethod.POST, actualPath).hasAnyAuthority(roles);
-                        case "PUT"    -> auth.requestMatchers(HttpMethod.PUT, actualPath).hasAnyAuthority(roles);
-                        case "DELETE" -> auth.requestMatchers(HttpMethod.DELETE, actualPath).hasAnyAuthority(roles);
-                    }
-                } else {
-                    auth.requestMatchers(path).hasAnyAuthority(roles);
-                }
-            }
-
-            if (securityProperties.getPublicPaths() != null) {
+            if (securityProperties.getPublicPaths() != null && securityProperties.getPublicPaths().length > 0) {
                 auth.requestMatchers(securityProperties.getPublicPaths()).permitAll();
+            }
+            if (securityProperties.getProtectedRoutes() != null) {
+                for (ProtectedRoute route : securityProperties.getProtectedRoutes()) {
+                    String path = route.getPath();
+                    String[] roles = route.getRoles();
+
+                    if (path.contains("POST:") || path.contains("PUT:") || path.contains("DELETE:")) {
+
+                        String[] parts = path.split(":");
+                        String actualPath = parts[1];
+                        String method = parts[0];
+
+                        switch (method) {
+                            case "POST" -> auth.requestMatchers(HttpMethod.POST, actualPath).hasAnyAuthority(roles);
+                            case "PUT" -> auth.requestMatchers(HttpMethod.PUT, actualPath).hasAnyAuthority(roles);
+                            case "DELETE" -> auth.requestMatchers(HttpMethod.DELETE, actualPath).hasAnyAuthority(roles);
+                        }
+                    } else {
+                        auth.requestMatchers(path).hasAnyAuthority(roles);
+                    }
+                }
             }
 
             auth.anyRequest().authenticated();

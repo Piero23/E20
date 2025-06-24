@@ -48,7 +48,7 @@ jwt:
       - path: POST:/api/evento
         roles:
           - ROLE_MANAGER
-      - path: DELETE:/api/evento
+      - path: DELETE:/api/evento/{id}
         roles:
           - ROLE_MANAGER
       - path: PUT:/api/evento

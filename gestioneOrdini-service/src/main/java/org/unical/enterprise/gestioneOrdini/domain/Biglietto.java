@@ -2,10 +2,7 @@ package org.unical.enterprise.gestioneOrdini.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.Date;
@@ -21,17 +18,10 @@ import java.util.UUID;
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString
 public class Biglietto {
-
-    public Biglietto(Long id_evento, String email, boolean e_valido, String nome, String cognome, Date data_nascita) {
-        this.id_evento = id_evento;
-        this.email = email;
-        this.e_valido = e_valido;
-        this.nome = nome;
-        this.cognome = cognome;
-        this.data_nascita = data_nascita;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

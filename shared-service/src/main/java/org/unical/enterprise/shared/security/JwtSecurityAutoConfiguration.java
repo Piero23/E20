@@ -49,24 +49,6 @@ public class JwtSecurityAutoConfiguration {
                     .build();
         }
 
-        System.out.println("MUCCA");
-        if (securityProperties.getProtectedRoutes() != null) {
-            for (ProtectedRoute route : securityProperties.getProtectedRoutes()) {
-                String path = route.getPath();
-                String[] roles = route.getRoles();
-
-                // Controlla se il path contiene indicazione del metodo HTTP
-                if (path.contains("/GET") || path.contains("/POST") || path.contains("/PUT") || path.contains("/DELETE")) {
-                    String actualPath = path.split("/")[0];
-                    String method = path.split("/")[1];
-
-                    System.out.println(actualPath);
-                    System.out.println(method);
-                }
-            }
-        }
-        System.out.println(securityProperties);
-
         // Altrimenti, configura la sicurezza in base alle rotte definite
         return http
                 .cors(c -> c.configurationSource(corsConfigurationSource))
@@ -85,14 +67,11 @@ public class JwtSecurityAutoConfiguration {
                             String[] roles = route.getRoles();
 
                             // Controlla se il path contiene indicazione del metodo HTTP
-                            if (path.contains("/GET") ||path.contains("/POST") || path.contains("/PUT") || path.contains("/DELETE")) {
-                                String actualPath = path.split("/")[0];
-                                String method = path.split("/")[1];
+                            if (path.contains("POST:") || path.contains("PUT:") || path.contains("DELETE:")) {
+                                String actualPath = path.split(":")[1];
+                                String method = path.split(":")[0];
 
                                 switch(method) {
-                                    case "GET":
-                                        auth.requestMatchers(HttpMethod.GET, actualPath).hasAnyAuthority(roles);
-                                        break;
                                     case "POST":
                                         auth.requestMatchers(HttpMethod.POST, actualPath).hasAnyAuthority(roles);
                                         break;

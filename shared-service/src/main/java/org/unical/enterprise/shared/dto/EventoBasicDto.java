@@ -1,9 +1,11 @@
 package org.unical.enterprise.shared.dto;
 
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -13,18 +15,31 @@ import java.util.Date;
 @ToString
 public class EventoBasicDto {
 
-    //TODO Valida con jakartaValidation
-    private Long id;
-    private String nome;
-    private String descrizione;
-    //TODO fai a UUID
-    private String organizzatore;
-    private Long posti;
-    private boolean b_riutilizzabile;
-    private boolean b_nominativo;
-    private Long locationId;
-    private Date data;
     @Positive
+    private Long id;
+
+    @NotBlank(message = "Il campo nome non può essere vuoto.")
+    private String nome;
+
+    private String descrizione;
+
+    @NotNull(message="Organizzatore mancante")
+    private UUID organizzatore;
+
+    @PositiveOrZero(message = "Il numero di posti deve essere 0 o superiore")
+    private Long posti;
+
+    private boolean b_riutilizzabile;
+
+    private boolean b_nominativo;
+
+    @Positive(message = "Location mancante")
+    private Long locationId;
+
+    @NotNull(message = "La data dell'evento è obbligatoria.")
+    private Date data;
+
+    @PositiveOrZero
     private double prezzo;
 
     /*

@@ -56,11 +56,12 @@ public class OrdineService {
 
     @Transactional
     public void saveOrdine(OrdineDto ordine, List<BigliettoDto> biglietti) throws Exception {
-        Ordine newOrdine = new Ordine();
-        newOrdine.setUtenteId(ordine.utenteId());
-        newOrdine.setBiglietti_comprati(ordine.bigliettiComprati());
-        newOrdine.setImporto(ordine.importo());
-        newOrdine.setData_pagamento(new Date());
+        Ordine newOrdine = Ordine.builder()
+                .utenteId(ordine.utenteId())
+                .biglietti_comprati(ordine.bigliettiComprati())
+                .importo(ordine.importo())
+                .data_pagamento(new Date())
+                .build();
 
 
         Set<Biglietto> newBiglietti = new HashSet<>();
@@ -69,17 +70,16 @@ public class OrdineService {
             //Controlla se l'id dell'evento esiste altrimenti exception
             eventoServiceClient.findById(bigliettoDto.idEvento());
 
-            Biglietto newBiglietto = new Biglietto();
+            Biglietto newBiglietto = Biglietto.builder()
+                    .ordine(newOrdine)
+                    .email(bigliettoDto.email())
+                    .nome(bigliettoDto.nome())
+                    .cognome(bigliettoDto.cognome())
+                    .data_nascita(bigliettoDto.dataNascita())
+                    .e_valido(bigliettoDto.eValido())
+                    .id_evento(bigliettoDto.idEvento())
+                    .build();
 
-
-            //TODO Builder
-            newBiglietto.setOrdine(newOrdine);
-            newBiglietto.setEmail(bigliettoDto.email());
-            newBiglietto.setNome(bigliettoDto.nome());
-            newBiglietto.setCognome(bigliettoDto.cognome());
-            newBiglietto.setData_nascita(bigliettoDto.dataNascita());
-            newBiglietto.setE_valido(bigliettoDto.eValido());
-            newBiglietto.setId_evento(bigliettoDto.idEvento());
             newBiglietti.add(newBiglietto);
         }
 

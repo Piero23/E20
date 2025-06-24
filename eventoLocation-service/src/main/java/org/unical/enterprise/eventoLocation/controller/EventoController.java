@@ -18,7 +18,6 @@ import org.unical.enterprise.eventoLocation.service.EventoService;
 public class EventoController {
 
     private final EventoService eventoService;
-    //TODO Valida e riscrivi tutto
 
     @GetMapping
     public Page<EventoBasicDto> findAllPagable(Pageable pageable) {
@@ -43,7 +42,7 @@ public class EventoController {
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     //Validate
-    public ResponseEntity<EventoBasicDto> createEvento(@RequestBody EventoBasicDto evento) {
+    public ResponseEntity<EventoBasicDto> createEvento(@Valid @RequestBody EventoBasicDto evento) {
         return new ResponseEntity<>(eventoService.save(evento), HttpStatus.CREATED);
     }
 

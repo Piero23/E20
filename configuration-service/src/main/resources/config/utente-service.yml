@@ -43,10 +43,10 @@ jwt:
     - path: /api/utente/{username}
       roles:
         - ROLE_USER
-    - path: /api/utente/{username}/DELETE
+    - path: DELETE:/api/utente/{username}
       roles:
         - ROLE_USER
-    - path: /api/utente/{username}/PUT
+    - path: PUT:/api/utente/{username}
       roles:
         - ROLE_USER
     - path: /api/utente/getById

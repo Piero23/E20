@@ -45,22 +45,22 @@ jwt:
       - path: /api/preferiti/**
         roles:
           - ROLE_USER
-      - path: /api/evento
+      - path: POST:D/api/evento
         roles:
           - ROLE_MANAGER
-      - path: /api/evento/DELETE
+      - path: DELETE:/api/evento
         roles:
           - ROLE_MANAGER
-      - path: /api/evento/PUT
+      - path: PUT:/api/evento
         roles:
           - ROLE_MANAGER
-      - path: /api/location/{id}/DElETE
+      - path: DELETE:/api/location/{id}
         roles:
           - ROLE_ADMIN
-      - path: /api/location/POST
+      - path: POST:/api/location
         roles:
           - ROLE_MANAGER
-      - path: /api/location/{id}/PUT
+      - path: PUT:/api/location/{id}
         roles:
           - ROLE_MANAGER
 

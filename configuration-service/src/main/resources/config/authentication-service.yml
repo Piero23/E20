@@ -21,9 +21,7 @@ spring:
 jwt:
   security:
     enabled: true
-    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html
+    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /api/**
     protectedRoutes:
-      - path: /api/**
-        roles:
-          - ROLE_ADMIN
+
 

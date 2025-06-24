@@ -1,10 +1,7 @@
 package org.unical.enterprise.gestioneOrdini.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.Date;
@@ -17,14 +14,10 @@ import java.util.UUID;
 @Setter
 @Getter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @ToString
 public class Ordine {
-
-    public Ordine(int biglietti_comprati, double importo, Date data_pagamento) {
-        this.biglietti_comprati = biglietti_comprati;
-        this.importo = importo;
-        this.data_pagamento = data_pagamento;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

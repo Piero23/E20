@@ -1,3 +1,12 @@
-jwt:
-  secret: Yq9j0wLSpqMi7iDGTW6wqBFQBTaub6G8
-  public: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyds99Sr9Jy2b6aehdgSRf6n+B4lvB5ITFBQj5JNleg1FsvSCECXpkcdEO27F56JX8HK95vgV2Mnv9/NcWasO254R0wyjlSUDMrLJIs7r4IEAA9CpPy6aitfvLMhIwNgg4HHlMnO1PJ5wWACjC4uMne3jTSefRybQkxf+sNSlw3zJLPNOBn+Zl8D4PmhvQVNKj+Tt49zBvauxCIt0cBFBvxpiDkOyBx873ph1WjZBmVzTyCybxF0ebrLCjg8JjmJQabXPaoIB2V6aV3P1PN2itiENKUXEtaq/eveoLj0opb14/foU/ObgCYhAHzjFcZ+l77uS1kRvj8NWLRWxOc0KAwIDAQAB
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8085/realms/esse20
+
+logging:
+  level:
+    org.springframework.security.oauth2.server.resource.authentication: DEBUG
+    org.springframework.security.oauth2.jwt: DEBUG
+    org.springframework.security.authentication: DEBUG

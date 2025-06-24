@@ -43,7 +43,7 @@ public class AuthenticationService {
     String password = "admin";
     String clientId = "admin-cli";
 
-    @Value("${jwt.secret}")
+
     String CLIENT_SECRET;
 
     public AccessTokenResponse login(String username, String password) {

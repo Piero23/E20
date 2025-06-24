@@ -40,7 +40,7 @@ jwt:
       - path: /api/ordine
         roles:
           - ROLE_ADMIN
-      - path: /api/ordine
+      - path: POST:/api/ordine
         roles:
           - ROLE_USER
       - path: /api/ordine/{id}

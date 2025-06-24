@@ -21,7 +21,6 @@ public class JwtServiceConfiguration {
 
     @Bean
     public JwtService jwtService() {
-        System.out.println(jwtSecret);
         JwtService jwtService = new JwtService();
         jwtService.setJwtSecret(jwtSecret);
         jwtService.setJwtExpiration(jwtExpiration);

@@ -51,16 +51,13 @@ public class JwtService {
 
         List<String> authorities = new ArrayList<>();
 
-        Map<String, Object> resourceAccess = claims.get("resource_access", Map.class);
-        if (resourceAccess != null) {
-            Map<String, Object> clientAccess = (Map<String, Object>) resourceAccess.get("esse20-client");
-            if (clientAccess != null) {
-                Object rolesObject = clientAccess.get("roles");
-                if (rolesObject instanceof List<?>) {
-                    for (Object role : (List<?>) rolesObject) {
-                        if (role instanceof String) {
-                            authorities.add("ROLE_" + role);
-                        }
+        Map<String, Object> realmAccess = claims.get("realm_access", Map.class);
+        if (realmAccess != null) {
+            Object rolesObject = realmAccess.get("roles");
+            if (rolesObject instanceof List<?>) {
+                for (Object role : (List<?>) rolesObject) {
+                    if (role instanceof String) {
+                        authorities.add("ROLE_" + role);
                     }
                 }
             }

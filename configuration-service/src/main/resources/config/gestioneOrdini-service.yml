@@ -30,11 +30,32 @@ cors:
 jwt:
   security:
     enabled: true
-    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /api/ordine/testFeign
+    publicPaths:
+      /v3/api-docs/**,
+      /swagger-ui/**,
+      /swagger-ui.html,
+      /api/ordine/testFeign,
+      /api/ordine/test
     protectedRoutes:
-      - path: /api/ordine/test
+      - path: /api/ordine
         roles:
           - ROLE_ADMIN
+      - path: /api/ordine
+        roles:
+          - ROLE_USER
+      - path: /api/ordine/{id}
+        roles:
+          - ROLE_USER
+      - path: /api/ordine/utente
+        roles:
+          - ROLE_USER
+      - path: /api/ordine/biglietti
+        roles:
+          - ROLE_USER
+      - path: /api/biglietto
+        roles:
+          - ROLE_ADMIN
+
 
 logging:
   file:

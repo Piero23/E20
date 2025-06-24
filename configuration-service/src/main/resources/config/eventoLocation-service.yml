@@ -28,8 +28,41 @@ cors:
   allowed-origins: http://localhost:8060
 
 jwt:
+  security:
     enabled: true
-    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /api/**
+    publicPaths:
+      /v3/api-docs/**,
+      /swagger-ui/**,
+      /swagger-ui.html,
+      /api/evento/{id} ,
+      /api/evento ,
+      /api/evento/test,
+      /api/location,
+      /api/location/{id},
+      /api/location/test,
+      /api/preferiti/test
+    protectedRoutes:
+      - path: /api/preferiti/**
+        roles:
+          - ROLE_USER
+      - path: /api/evento
+        roles:
+          - ROLE_MANAGER
+      - path: /api/evento/DELETE
+        roles:
+          - ROLE_MANAGER
+      - path: /api/evento/PUT
+        roles:
+          - ROLE_MANAGER
+      - path: /api/location/{id}/DElETE
+        roles:
+          - ROLE_ADMIN
+      - path: /api/location/POST
+        roles:
+          - ROLE_MANAGER
+      - path: /api/location/{id}/PUT
+        roles:
+          - ROLE_MANAGER
 
 logging:
   file:

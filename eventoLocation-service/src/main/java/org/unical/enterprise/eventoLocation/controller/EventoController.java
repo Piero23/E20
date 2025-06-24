@@ -49,11 +49,14 @@ public class EventoController {
 
     @DeleteMapping(path="/{id}")
     @ResponseStatus(HttpStatus.OK)
+    //TODO check con sub del token jwt
     public void deleteEvento(@PathVariable("id") Long id) {
         eventoService.delete(id);
     }
 
     @PutMapping(path="/{id}", consumes = "application/json")
+
+    //TODO vedere se serve
     public ResponseEntity<Evento> replacePerson(@PathVariable("id") Long id, @RequestBody Evento evento) {
         return new ResponseEntity<>(eventoService.update(evento,id), HttpStatus.OK);
     }

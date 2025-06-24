@@ -45,7 +45,7 @@ jwt:
       - path: /api/preferiti/**
         roles:
           - ROLE_USER
-      - path: POST:D/api/evento
+      - path: POST:/api/evento
         roles:
           - ROLE_MANAGER
       - path: DELETE:/api/evento

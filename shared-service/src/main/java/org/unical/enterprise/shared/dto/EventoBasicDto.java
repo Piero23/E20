@@ -24,7 +24,8 @@ public class EventoBasicDto {
     private String descrizione;
 
     @NotNull(message="Organizzatore mancante")
-    private UUID organizzatore;
+    ///TODO fare UUID
+    private String organizzatore;
 
     @PositiveOrZero(message = "Il numero di posti deve essere 0 o superiore")
     private Long posti;

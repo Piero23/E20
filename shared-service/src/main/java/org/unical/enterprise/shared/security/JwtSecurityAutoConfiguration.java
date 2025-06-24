@@ -21,6 +21,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
@@ -61,23 +62,17 @@ public class JwtSecurityAutoConfiguration {
                     .build();
         }
 
-
         http.authorizeHttpRequests(auth -> {
-
-            if (securityProperties.getPublicPaths() != null) {
-                auth.requestMatchers(securityProperties.getPublicPaths()).permitAll();
-            }
 
             for (ProtectedRoute route : securityProperties.getProtectedRoutes()) {
                 String path = route.getPath();
                 String[] roles = route.getRoles();
 
-                if (path.contains("/POST") || path.contains("/PUT") || path.contains("/DELETE")) {
+                if (path.contains("POST:") || path.contains("PUT:") || path.contains("DELETE:")) {
 
                     String[] parts = path.split(":");
                     String actualPath = parts[1];
                     String method     = parts[0];
-
 
                     switch (method) {
                         case "POST"   -> auth.requestMatchers(HttpMethod.POST, actualPath).hasAnyAuthority(roles);
@@ -87,6 +82,10 @@ public class JwtSecurityAutoConfiguration {
                 } else {
                     auth.requestMatchers(path).hasAnyAuthority(roles);
                 }
+            }
+
+            if (securityProperties.getPublicPaths() != null) {
+                auth.requestMatchers(securityProperties.getPublicPaths()).permitAll();
             }
 
             auth.anyRequest().authenticated();

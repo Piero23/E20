@@ -3,12 +3,12 @@ package org.unical.enterprise.gestioneOrdini.controller;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.gestioneOrdini.domain.Biglietto;
+import org.unical.enterprise.gestioneOrdini.domain.Ordine;
 import org.unical.enterprise.gestioneOrdini.service.BigliettoService;
 
 import java.net.URISyntaxException;

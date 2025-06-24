@@ -58,7 +58,6 @@ public class OrdineService {
     public void saveOrdine(OrdineDto ordine, List<BigliettoDto> biglietti) throws Exception {
         Ordine newOrdine = Ordine.builder()
                 .utenteId(ordine.utenteId())
-                .biglietti_comprati(ordine.bigliettiComprati())
                 .importo(ordine.importo())
                 .data_pagamento(new Date())
                 .build();
@@ -83,7 +82,9 @@ public class OrdineService {
             newBiglietti.add(newBiglietto);
         }
 
-        newOrdine.getBiglietti().addAll(newBiglietti);
+        newOrdine.setBiglietti(newBiglietti);
+        newOrdine.setBiglietti_comprati(newBiglietti.size());
+
         ordineDao.save(newOrdine);
 
 

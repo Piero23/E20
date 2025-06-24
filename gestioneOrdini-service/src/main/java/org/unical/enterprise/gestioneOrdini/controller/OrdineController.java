@@ -99,7 +99,6 @@ public class OrdineController {
                 logger.info("Utente {} non autorizzato", user);
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
-            //non so se si potrebbe spostare tutta la funzione nell'ordine service o se è più pulito così
         }
         logger.info("Nessun dato");
         return ResponseEntity.notFound().build();

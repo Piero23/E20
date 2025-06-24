@@ -19,6 +19,7 @@ public class PreferitiController {
         return new ResponseEntity<>(preferitiService.getById(id), HttpStatus.OK);
     }
 
+    ///TODO ERRORI CREAZIONE PREFERITI (duplicated keys)
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createPreferito(@RequestBody PreferitiDto preferiti) {
@@ -38,6 +39,7 @@ public class PreferitiController {
         return "Sono PreferitiController";
     }
 }
+
 
 /* Post API
 {

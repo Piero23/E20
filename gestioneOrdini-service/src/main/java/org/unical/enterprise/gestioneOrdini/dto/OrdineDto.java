@@ -10,9 +10,6 @@ import java.util.UUID;
 public record OrdineDto(
         UUID utenteId,
 
-        @Positive(message = "Il numero di biglietti deve essere positivo")
-        int bigliettiComprati,
-
         @NotBlank
         @Positive(message = "L'importo deve essere positivo")
         double importo

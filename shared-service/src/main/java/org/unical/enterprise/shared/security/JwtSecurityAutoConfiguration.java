@@ -65,7 +65,21 @@ public class JwtSecurityAutoConfiguration {
         http.authorizeHttpRequests(auth -> {
 
             if (securityProperties.getPublicPaths() != null && securityProperties.getPublicPaths().length > 0) {
-                auth.requestMatchers(securityProperties.getPublicPaths()).permitAll();
+                for (String path : securityProperties.getPublicPaths()) {
+                    if (path.contains(":")) {
+                        String[] parts = path.split(":", 2);
+                        String method = parts[0];
+                        String actualPath = parts[1];
+                        switch (method.toUpperCase()) {
+                            case "GET" -> auth.requestMatchers(HttpMethod.GET, actualPath).permitAll();
+                            case "POST" -> auth.requestMatchers(HttpMethod.POST, actualPath).permitAll();
+                            case "PUT" -> auth.requestMatchers(HttpMethod.PUT, actualPath).permitAll();
+                            case "DELETE" -> auth.requestMatchers(HttpMethod.DELETE, actualPath).permitAll();
+                        }
+                    } else {
+                        auth.requestMatchers(path).permitAll();
+                    }
+                }
             }
             if (securityProperties.getProtectedRoutes() != null) {
                 for (ProtectedRoute route : securityProperties.getProtectedRoutes()) {

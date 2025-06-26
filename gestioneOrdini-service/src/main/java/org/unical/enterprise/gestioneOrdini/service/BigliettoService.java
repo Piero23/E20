@@ -10,7 +10,6 @@ import org.unical.enterprise.gestioneOrdini.domain.Ordine;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
@@ -35,5 +34,12 @@ public class BigliettoService {
         byte[] imageBytes = new RestTemplate().getForObject(qrUrl, byte[].class);
 
         return Base64.getEncoder().encodeToString(imageBytes);
+    }
+
+    @Transactional
+    public boolean findTicketByData(Biglietto biglietto){
+        if (bigliettoDao.existsByEmailAndId_evento(biglietto.getEmail(), biglietto.getId_evento()))
+            return true;
+        return false;
     }
 }

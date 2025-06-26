@@ -24,6 +24,7 @@ import java.util.*;
 public class OrdineService {
 
     private final OrdineDao ordineDao;
+    private final BigliettoService bigliettoService;
 
 
 
@@ -34,28 +35,13 @@ public class OrdineService {
 
     private final EventoServiceClient eventoServiceClient;
 
-    @Transactional(readOnly = true)
-    public void test() {
-/*
-        Ordine ordine =  new Ordine("117c2dcb-d492-4dd6-b349-8db6a021038c", 5, 10.5F, new Date(10,10,10));
-
-        Biglietto b = new Biglietto(2L,"AAAAAAAAAAAAAAAAAAAAAAAAAAAAA",true,"cia","caa",new Date(10,10,10));
-
-        ordine.addBiglietto(b);
-
-        ordineDao.save(ordine);
-
-
- */
-    }
-
     @Transactional
     public List<Ordine> findAll() {
         return ordineDao.findAll();
     }
 
     @Transactional
-    public void saveOrdine(OrdineDto ordine, List<BigliettoDto> biglietti) throws Exception {
+    public void saveOrdine(OrdineDto ordine, List<BigliettoDto> biglietti) {
         Ordine newOrdine = Ordine.builder()
                 .utenteId(ordine.utenteId())
                 .importo(ordine.importo())
@@ -66,8 +52,11 @@ public class OrdineService {
         Set<Biglietto> newBiglietti = new HashSet<>();
         for(BigliettoDto bigliettoDto : biglietti){
 
-            //Controlla se l'id dell'evento esiste altrimenti exception
-            eventoServiceClient.findById(bigliettoDto.idEvento());
+            try {
+                eventoServiceClient.findById(bigliettoDto.idEvento());
+            }catch(Exception e){
+                throw new RuntimeException("L'evento che stai provando a prenotare non esiste.");
+            }
 
             Biglietto newBiglietto = Biglietto.builder()
                     .ordine(newOrdine)
@@ -79,6 +68,11 @@ public class OrdineService {
                     .id_evento(bigliettoDto.idEvento())
                     .build();
 
+
+            if(bigliettoService.findTicketByData(newBiglietto))
+                throw new RuntimeException("Esiste già un biglietto per evento " + newBiglietto.getId_evento() + " per " + newBiglietto.getNome() + " " + newBiglietto.getCognome());
+
+
             newBiglietti.add(newBiglietto);
         }
 
@@ -87,10 +81,7 @@ public class OrdineService {
 
         ordineDao.save(newOrdine);
 
-
         //TODO Tutto da pulire non deve stare qua a volare
-
-        //TODO quando una diqueste cose non va a buon fine 1 la mail deve cambiare / o non deve inviarsi
 
         UtenteDTO toUtente = utenteServiceClient.getById(newOrdine.getUtenteId());
 
@@ -110,6 +101,17 @@ public class OrdineService {
     public List<Ordine> findAllByUtente(UUID utente) {
         return ordineDao.findAllByUtenteId(utente);
     }
+
+    @Transactional
+    public boolean checkUtente(UUID utente){
+        try{
+            utenteServiceClient.getById(utente);
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+    }
+
 
 
 }

@@ -13,7 +13,9 @@ public interface BigliettoDao extends JpaRepository<Biglietto, UUID> {
 
     List<Biglietto> findAllByOrdine(Ordine ordine);
 
-    @Query("SELECT COUNT(b) > 0 FROM Biglietto b WHERE b.email = :email AND b.id_evento = :idEvento")
-    boolean existsByEmailAndId_evento(@Param("email") String email, @Param("idEvento") Long idEvento);
+    @Query("SELECT COUNT(b) > 0 FROM Biglietto b WHERE b.email = :email AND b.idEvento = :idEvento")
+    boolean existsByEmailAndIdEvento(@Param("email") String email, @Param("idEvento") Long idEvento);
+
+    List<Biglietto> findAllByIdEvento(Long idEvento);
 
 }

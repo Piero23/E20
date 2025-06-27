@@ -7,9 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.unical.enterprise.shared.dto.BigliettoDto;
 import org.unical.enterprise.shared.dto.EventoBasicDto;
 import org.unical.enterprise.eventoLocation.data.entities.Evento;
 import org.unical.enterprise.eventoLocation.service.EventoService;
+
+import java.util.List;
 
 
 @RequestMapping("/api/evento")
@@ -60,10 +63,16 @@ public class EventoController {
         return new ResponseEntity<>(eventoService.update(evento,id), HttpStatus.OK);
     }
 
+    @GetMapping("/bookings")
+    public ResponseEntity<List<BigliettoDto>> getBookings(@RequestParam Long evento){
+        return ResponseEntity.ok(eventoService.getBigliettiByEvento(evento));
+    }
+
     @GetMapping("/test")
     private String test() {
         return "Sono EventoController";
     }
+
 
 }
 

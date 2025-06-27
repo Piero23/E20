@@ -2,18 +2,16 @@ package org.unical.enterprise.gestioneOrdini.service;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.unical.enterprise.gestioneOrdini.EventoServiceClient;
 import org.unical.enterprise.gestioneOrdini.dao.OrdineDao;
 import org.unical.enterprise.gestioneOrdini.domain.Biglietto;
 import org.unical.enterprise.gestioneOrdini.domain.Ordine;
-import org.unical.enterprise.gestioneOrdini.dto.BigliettoDto;
+import org.unical.enterprise.shared.dto.BigliettoDto;
 import org.unical.enterprise.gestioneOrdini.dto.OrdineDto;
 import org.unical.enterprise.shared.clients.MailServiceClient;
 import org.unical.enterprise.shared.clients.UtenteServiceClient;
-import org.unical.enterprise.shared.dto.EventoBasicDto;
 import org.unical.enterprise.shared.dto.MailTransferDto;
 import org.unical.enterprise.shared.dto.UtenteDTO;
 
@@ -65,12 +63,12 @@ public class OrdineService {
                     .cognome(bigliettoDto.cognome())
                     .data_nascita(bigliettoDto.dataNascita())
                     .e_valido(bigliettoDto.eValido())
-                    .id_evento(bigliettoDto.idEvento())
+                    .idEvento(bigliettoDto.idEvento())
                     .build();
 
 
             if(bigliettoService.findTicketByData(newBiglietto))
-                throw new RuntimeException("Esiste già un biglietto per evento " + newBiglietto.getId_evento() + " per " + newBiglietto.getNome() + " " + newBiglietto.getCognome());
+                throw new RuntimeException("Esiste già un biglietto per evento " + newBiglietto.getIdEvento() + " per " + newBiglietto.getNome() + " " + newBiglietto.getCognome());
 
 
             newBiglietti.add(newBiglietto);

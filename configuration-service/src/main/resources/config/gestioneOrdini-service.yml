@@ -55,6 +55,9 @@ jwt:
       - path: /api/biglietto
         roles:
           - ROLE_ADMIN
+      - path: /api/biglietto/evento
+        roles:
+          - ROLE_MANAGER
 
 
 logging:

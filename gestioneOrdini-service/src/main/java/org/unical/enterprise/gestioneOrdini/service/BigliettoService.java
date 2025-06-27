@@ -2,14 +2,17 @@ package org.unical.enterprise.gestioneOrdini.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.unical.enterprise.gestioneOrdini.dao.BigliettoDao;
 import org.unical.enterprise.gestioneOrdini.domain.Biglietto;
 import org.unical.enterprise.gestioneOrdini.domain.Ordine;
+import org.unical.enterprise.shared.dto.BigliettoDto;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
@@ -38,8 +41,19 @@ public class BigliettoService {
 
     @Transactional
     public boolean findTicketByData(Biglietto biglietto){
-        if (bigliettoDao.existsByEmailAndId_evento(biglietto.getEmail(), biglietto.getId_evento()))
+        if (bigliettoDao.existsByEmailAndIdEvento(biglietto.getEmail(), biglietto.getIdEvento()))
             return true;
         return false;
+    }
+
+    public List<BigliettoDto> findAllByEvento(Long id) {
+        List<Biglietto> biglietti = bigliettoDao.findAllByIdEvento(id);
+
+        List<BigliettoDto> bigliettiDto = new ArrayList<>();
+        for (Biglietto biglietto : biglietti) {
+            BigliettoDto b = new BigliettoDto(id, biglietto.getEmail(), biglietto.isE_valido(), biglietto.getNome(), biglietto.getCognome(), biglietto.getData_nascita());
+            bigliettiDto.add(b);
+        }
+        return bigliettiDto;
     }
 }

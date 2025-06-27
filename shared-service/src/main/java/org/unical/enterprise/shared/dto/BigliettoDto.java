@@ -1,4 +1,4 @@
-package org.unical.enterprise.gestioneOrdini.dto;
+package org.unical.enterprise.shared.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

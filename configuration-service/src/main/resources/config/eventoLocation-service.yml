@@ -63,6 +63,9 @@ jwt:
       - path: PUT:/api/location/{id}
         roles:
           - ROLE_MANAGER
+      - path: /api/evento/bookings
+        roles:
+          - ROLE_MANAGER
 
 logging:
   file:

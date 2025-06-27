@@ -30,7 +30,7 @@ public class Biglietto {
     private UUID id;
 
     @Column(nullable = false)
-    private Long id_evento;
+    private Long idEvento;
 
     @Column(nullable = false)
     private String email;

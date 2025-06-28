@@ -2,4 +2,26 @@ spring:
   application:
     name: discovery-service
   config:
-    import: "optional:configserver:http://localhost:8088"
+    import: "optional:configserver:https://localhost:8441"
+  output:
+    ansi:
+      enabled: always
+
+server:
+  ssl:
+    enabled: true
+    key-store: classpath:esse20.p12
+    key-store-type: PKCS12
+    key-store-password: eaproject
+    key-alias: esse20
+    key-password: eaproject
+  port: 8442
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: https://${eureka.instance.hostname}:${server.port}/eureka/

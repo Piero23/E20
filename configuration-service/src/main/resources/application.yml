@@ -1,5 +1,12 @@
 server:
-  port: 8088
+  ssl:
+    enabled: true
+    key-store: classpath:esse20.p12
+    key-store-type: PKCS12
+    key-store-password: eaproject
+    key-alias: esse20
+    key-password: eaproject
+  port: 8441
 spring:
   profiles:
     active: native

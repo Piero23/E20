@@ -1,9 +1,4 @@
 spring:
-  application:
-    name: utente-service
-  output:
-    ansi:
-      enabled: always
   datasource:
     url: jdbc:postgresql://localhost:5454/e20
     username: admin
@@ -14,24 +9,6 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-
-
-server:
-  port: 0
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8061/eureka/
-
-cors:
-  allowed-origins: http://localhost:8060
-
-jwt:
-  secret: ZNAUhywjWMxENUeQvxjmDSfbNHaJeYmecN4pGHgZxQMqgdHZGLNejvtP9PuXCmE6 # si potrebbe centrallizare inserirela in un punto comume o costante in SHARED o variabile di sistema
-  security:
-    enabled: true
-    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /api/**
 
 logging:
   file:

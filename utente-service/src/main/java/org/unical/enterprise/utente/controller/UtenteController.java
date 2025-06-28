@@ -1,11 +1,12 @@
 package org.unical.enterprise.utente.controller;
 
-import org.unical.enterprise.utente.data.dto.UtenteDTO;
-import org.unical.enterprise.utente.data.dto.UtenteRegistrationDTO;
-import org.unical.enterprise.utente.service.UtenteService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.unical.enterprise.utente.data.dto.UtenteDTO;
+import org.unical.enterprise.utente.data.dto.UtenteRegistrationDTO;
+import org.unical.enterprise.utente.service.UtenteService;
+
 import java.util.List;
 import java.util.UUID;
 

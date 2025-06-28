@@ -1,11 +1,11 @@
 package org.unical.enterprise.utente.service;
 
+import jakarta.validation.Valid;
+import org.springframework.stereotype.Service;
 import org.unical.enterprise.utente.data.dao.UtenteDAO;
 import org.unical.enterprise.utente.data.dto.UtenteDTO;
 import org.unical.enterprise.utente.data.dto.UtenteRegistrationDTO;
 import org.unical.enterprise.utente.data.model.Utente;
-import jakarta.validation.Valid;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
@@ -48,14 +48,14 @@ public class UtenteService {
     // read
     public UtenteDTO getUtenteById(UUID id) {
         return utenteDAO.findById(id)
-        .map(this::toDTO)
-        .orElseThrow(() -> new RuntimeException("Utente non trovato."));
+                .map(this::toDTO)
+                .orElseThrow(() -> new RuntimeException("Utente non trovato."));
     }
 
     public UtenteDTO getUtenteByUsername(String username) {
         return utenteDAO.findByUsername(username)
-        .map(this::toDTO)
-        .orElseThrow(() -> new RuntimeException("Utente non trovato."));
+                .map(this::toDTO)
+                .orElseThrow(() -> new RuntimeException("Utente non trovato."));
     }
 
     // update
@@ -95,12 +95,12 @@ public class UtenteService {
     }
 
     private UtenteDTO toDTO(Utente utente) {
-    return UtenteDTO.builder()
-        .id(utente.getId())
-        .username(utente.getUsername())
-        .email(utente.getEmail())
-        .data_nascita(utente.getDataNascita())
-        .build();
+        return UtenteDTO.builder()
+                .id(utente.getId())
+                .username(utente.getUsername())
+                .email(utente.getEmail())
+                .data_nascita(utente.getDataNascita())
+                .build();
     }
 
 }

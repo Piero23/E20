@@ -1,11 +1,11 @@
 package org.unical.enterprise.utente.service;
 
-import org.unical.enterprise.utente.data.dao.UtenteDAO;
-import org.unical.enterprise.utente.data.model.Utente;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.unical.enterprise.utente.data.dao.UtenteDAO;
+import org.unical.enterprise.utente.data.model.Utente;
 
 import java.util.List;
 

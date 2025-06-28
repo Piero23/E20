@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/utente")
@@ -23,8 +24,13 @@ public class UtenteController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<UtenteDTO> getUtenteById(@PathVariable String username) {
+    public ResponseEntity<UtenteDTO> getUtenteByUsername(@PathVariable String username) {
         return ResponseEntity.ok(utenteService.getUtenteByUsername(username));
+    }
+
+    @GetMapping("/{uuid}")
+    public ResponseEntity<UtenteDTO> getUtenteById(@PathVariable UUID uuid) {
+        return ResponseEntity.ok(utenteService.getUtenteById(uuid));
     }
 
     @PostMapping("/register")

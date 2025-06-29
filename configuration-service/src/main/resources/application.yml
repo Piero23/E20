@@ -6,7 +6,10 @@ server:
     key-store-password: eaproject
     key-alias: esse20
     key-password: eaproject
+    protocol: TLS
+    enabled-protocols: TLSv1.2
   port: 8441
+
 spring:
   profiles:
     active: native

@@ -64,7 +64,7 @@ public class JwtSecurityAutoConfiguration {
 
         http.authorizeHttpRequests(auth -> {
 
-            if (securityProperties.getPublicPaths() != null && securityProperties.getPublicPaths().length > 0) {
+            if (securityProperties.getPublicPaths() != null) {
                 for (String path : securityProperties.getPublicPaths()) {
                     if (path.contains(":")) {
                         String[] parts = path.split(":", 2);

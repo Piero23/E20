@@ -9,7 +9,6 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:8061/eureka/
 
-
 spring:
   output:
     ansi:
@@ -23,15 +22,18 @@ spring:
         - id: gestioneOrdini-service
           uri: lb://gestioneOrdini-service
           predicates:
-            - Path=/api/ordine/**, /api/biglietto/**
+            - Path=/api/ordine/**
+            - Path=/api/biglietto/**
         - id: utente-service
           uri: lb://utente-service
           predicates:
             - Path=/api/utente/**
-        - id: utente-service
+        - id: eventoLocation-service
           uri: lb://eventoLocation-service
           predicates:
-            - Path=/api/evento/**, /api/location/**, /api/preferiti/**
+            - Path=/api/evento/**
+            - Path=/api/location/**
+            - Path=/api/preferiti/**
         - id: mailSender-service
           uri: lb://mailSender-service
           predicates:
@@ -40,3 +42,77 @@ spring:
           uri: lb://authentication-service
           predicates:
             - Path=/api/authentication/**
+
+        # Rotte per Swagger GestioneOrdini Service
+        - id: gestioneOrdini-service-api-docs
+          uri: lb://gestioneOrdini-service
+          predicates:
+            - Path=/gestioneOrdini-service/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+
+        - id: gestioneOrdini-service-swagger-ui
+          uri: lb://gestioneOrdini-service
+          predicates:
+            - Path=/gestioneOrdini-service/swagger-ui/**
+          filters:
+            - StripPrefix=1
+
+        # Rotte per Swagger Utente Service
+        - id: utente-service-api-docs
+          uri: lb://utente-service
+          predicates:
+            - Path=/utente-service/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+
+        - id: utente-service-swagger-ui
+          uri: lb://utente-service
+          predicates:
+            - Path=/utente-service/swagger-ui/**
+          filters:
+            - StripPrefix=1
+
+        # Rotte per Swagger EventoLocation Service
+        - id: eventoLocation-service-api-docs
+          uri: lb://eventoLocation-service
+          predicates:
+            - Path=/eventoLocation-service/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+
+        - id: eventoLocation-service-swagger-ui
+          uri: lb://eventoLocation-service
+          predicates:
+            - Path=/eventoLocation-service/swagger-ui/**
+          filters:
+            - StripPrefix=1
+
+        # Rotte per Swagger MailSender Service
+        - id: mailSender-service-api-docs
+          uri: lb://mailSender-service
+          predicates:
+            - Path=/mailSender-service/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+
+        - id: mailSender-service-swagger-ui
+          uri: lb://mailSender-service
+          predicates:
+            - Path=/mailSender-service/swagger-ui/**
+          filters:
+            - StripPrefix=1
+
+        #TODO AUTH ROTTE SWAGGER
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: Utente Service
+        url: /utente-service/v3/api-docs
+      - name: Evento-Location Service
+        url: /eventoLocation-service/v3/api-docs
+      - name: Gestione Ordini Service
+        url: /gestioneOrdini-service/v3/api-docs
+      - name: Mail Sender Service
+        url: /mailSender-service/v3/api-docs

@@ -34,7 +34,7 @@ logging:
         esse20: INFO
 
 springdoc:
-  packages-to-scan: org.unical.enterprise.mailSender-service
+  packages-to-scan: org.unical.enterprise.mailSender
   swagger-ui:
     tags-sorter: alpha
     operations-sorter: alpha

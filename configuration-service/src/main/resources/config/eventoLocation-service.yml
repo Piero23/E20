@@ -54,6 +54,9 @@ jwt:
       - path: PUT:/api/evento/{id}
         roles:
           - ROLE_MANAGER
+      - path: /api/evento/bookings
+        roles:
+          - ROLE_MANAGER
       - path: DELETE:/api/location/{id}
         roles:
           - ROLE_ADMIN
@@ -61,9 +64,6 @@ jwt:
         roles:
           - ROLE_MANAGER
       - path: PUT:/api/location/{id}
-        roles:
-          - ROLE_MANAGER
-      - path: /api/evento/bookings
         roles:
           - ROLE_MANAGER
 

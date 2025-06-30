@@ -9,6 +9,7 @@ import org.unical.enterprise.utente.data.model.Seguace;
 import org.unical.enterprise.utente.data.model.Utente;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +49,23 @@ public class SeguaceService {
                 .build();
 
         seguaceDAO.save(relazioneSeguaci);
+    }
+
+    public void smettiDiSeguireUtente(String usernameUtenteSeguace, String usernameUtenteSeguito) {
+        // Username inesistenti
+        if (usernameUtenteSeguace == null || usernameUtenteSeguito == null ||
+                usernameUtenteSeguace.isBlank() || usernameUtenteSeguito.isBlank())
+            throw new IllegalArgumentException("Sono necessari usernames definiti");
+
+        // Non si puo' seguire se stessi
+        if (usernameUtenteSeguace.equals(usernameUtenteSeguito))
+            throw new IllegalArgumentException("Non puoi seguire te stesso");
+
+        Optional<Seguace> relazioneSeguace = seguaceDAO.findByUtenteSeguace_UsernameAndUtenteSeguito_Username(usernameUtenteSeguace, usernameUtenteSeguito);
+
+        if (relazioneSeguace.isEmpty()) throw new RuntimeException("Non segui questo utente.");
+        else seguaceDAO.delete(relazioneSeguace.get());
+
     }
 
     public List<Utente> getAllSeguiti(String usernameUtente) {

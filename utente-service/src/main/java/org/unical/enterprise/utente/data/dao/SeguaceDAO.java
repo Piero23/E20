@@ -4,7 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.unical.enterprise.utente.data.model.Seguace;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
+// import java.util.UUID;
 
 
 public interface SeguaceDAO extends JpaRepository<Seguace, Long>  {
@@ -16,5 +17,8 @@ public interface SeguaceDAO extends JpaRepository<Seguace, Long>  {
     List<Seguace> findAllByUtenteSeguito_Username(String username);
 
     boolean existsByUtenteSeguace_UsernameAndUtenteSeguito_Username(String usernameUtenteSeguace, String usernameUtenteSeguito);
+
+    Optional<Seguace> findByUtenteSeguace_UsernameAndUtenteSeguito_Username(String usernameUtenteSeguace, String usernameUtenteSeguito);
+
 
 }

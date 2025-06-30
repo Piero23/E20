@@ -1,10 +1,12 @@
 package org.unical.enterprise.utente.service;
 
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.unical.enterprise.utente.data.dao.SeguaceDAO;
 import org.unical.enterprise.utente.data.dao.UtenteDAO;
+import org.unical.enterprise.utente.data.dto.UtenteDTO;
 import org.unical.enterprise.utente.data.model.Seguace;
 import org.unical.enterprise.utente.data.model.Utente;
 
@@ -12,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class SeguaceService {
 
     private SeguaceDAO seguaceDAO;
@@ -68,18 +70,31 @@ public class SeguaceService {
 
     }
 
-    public List<Utente> getAllSeguiti(String usernameUtente) {
+    public List<UtenteDTO> getAllSeguiti(String usernameUtente) {
         return seguaceDAO.findAllByUtenteSeguace_Username(usernameUtente)
                 .stream()
                 .map(Seguace::getUtenteSeguito)
+                .map(this::toDTO)
                 .toList();
     }
 
-    public List<Utente> getAllSeguaci(String usernameUtente) {
+    public List<UtenteDTO> getAllSeguaci(String usernameUtente) {
         return seguaceDAO.findAllByUtenteSeguito_Username(usernameUtente)
                 .stream()
                 .map(Seguace::getUtenteSeguace)
+                .map(this::toDTO)
                 .toList();
+    }
+
+
+    // Private Methods
+    private UtenteDTO toDTO(Utente utente) {
+        return UtenteDTO.builder()
+                .id(utente.getId())
+                .username(utente.getUsername())
+                .email(utente.getEmail())
+                .data_nascita(utente.getDataNascita())
+                .build();
     }
 
 }

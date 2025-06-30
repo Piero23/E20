@@ -1,25 +1,25 @@
 package org.unical.enterprise.utente.controller;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.utente.data.dto.SeguaceRequestDTO;
-import org.unical.enterprise.utente.data.model.Utente;
+import org.unical.enterprise.utente.data.dto.UtenteDTO;
 import org.unical.enterprise.utente.service.SeguaceService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/utente/{username}")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class SeguaciController {
 
     private SeguaceService seguaceService;
 
     // Handling della Relazione Seguiti rispetto ad UtenteCorrente
     @GetMapping("/seguiti")
-    public ResponseEntity<List<Utente>> getSeguiti(@PathVariable String username) {
+    public ResponseEntity<List<UtenteDTO>> getSeguiti(@PathVariable String username) {
         return ResponseEntity.ok(seguaceService.getAllSeguiti(username));
     }
 
@@ -43,7 +43,7 @@ public class SeguaciController {
 
     // Handling della Relazione Seguaci rispetto ad UtenteCorrente
     @GetMapping("/seguaci")
-    public ResponseEntity<List<Utente>> getSeguaci(@PathVariable String username) {
+    public ResponseEntity<List<UtenteDTO>> getSeguaci(@PathVariable String username) {
         return ResponseEntity.ok(seguaceService.getAllSeguaci(username));
     }
 

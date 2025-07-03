@@ -24,12 +24,12 @@ public class UtenteController {
         return utenteService.getAllUtenti();
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/username/{username}")
     public ResponseEntity<UtenteDTO> getUtenteByUsername(@PathVariable String username) {
         return ResponseEntity.ok(utenteService.getUtenteByUsername(username));
     }
 
-    @GetMapping("/{uuid}")
+    @GetMapping("/id/{uuid}")
     public ResponseEntity<UtenteDTO> getUtenteById(@PathVariable UUID uuid) {
         return ResponseEntity.ok(utenteService.getUtenteById(uuid));
     }

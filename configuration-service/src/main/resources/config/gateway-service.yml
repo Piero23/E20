@@ -1,23 +1,25 @@
 spring:
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
-      routes:
-        - id: gestioneOrdini-service
-          uri: lb://gestioneOrdini-service
-          predicates:
-            - Path=/api/ordine/**, /api/biglietto/**
-        - id: utente-service
-          uri: lb://utente-service
-          predicates:
-            - Path=/api/utente/**
-        - id: eventoLocation-service
-          uri: lb://eventoLocation-service
-          predicates:
-            - Path=/api/evento/**, /api/location/**, /api/preferiti/**
-        - id: mailSender-service
-          uri: lb://mailSender-service
-          predicates:
-            - Path=/api/mail/**
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
+          routes:
+            - id: gestioneOrdini-service
+              uri: lb://gestioneOrdini-service
+              predicates:
+                - Path=/api/ordine/**, /api/biglietto/**
+            - id: utente-service
+              uri: lb://utente-service
+              predicates:
+                - Path=/api/utente/**
+            - id: eventoLocation-service
+              uri: lb://eventoLocation-service
+              predicates:
+                - Path=/api/evento/**, /api/location/**, /api/preferiti/**
+            - id: mailSender-service
+              uri: lb://mailSender-service
+              predicates:
+                - Path=/api/mail/**

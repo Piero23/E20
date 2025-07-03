@@ -1,1 +1,4 @@
-
+logging:
+  level:
+    com.netflix.eureka: WARN
+    com.example.discoveryservice: INFO

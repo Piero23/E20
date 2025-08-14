@@ -3,6 +3,7 @@ package org.unical.enterprise.mailSender.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.mailSender.service.MailService;
+import org.unical.enterprise.shared.dto.MailTransferDto;
 
 
 import java.awt.*;
@@ -20,9 +21,9 @@ public class MailController {
         mailService.sendQrCodeMail(email);
     }
 
-    @PostMapping("/mail/{email}")
-    public void sendMail(@PathVariable String email) {
-        mailService.sendMail(email);
+    @PostMapping(value = "/sendMail", consumes = "application/json")
+    public void sendMail(@RequestBody MailTransferDto mailTransferDto) {
+        mailService.sendMail(mailTransferDto);
     }
 
     @GetMapping("/test")

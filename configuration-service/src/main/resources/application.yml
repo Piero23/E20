@@ -5,3 +5,8 @@ spring:
     name: config-service
   profiles:
     active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: file:./configuration-service/src/main/resources/config

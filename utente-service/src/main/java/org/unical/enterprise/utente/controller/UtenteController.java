@@ -58,8 +58,8 @@ public class UtenteController {
 
 
     //////// franci l'ho fatto io <3
-    @GetMapping("/getById")
-    UtenteDTO getById(@RequestParam UUID id) {
-        return utenteService.getUtenteById(id);
+    @GetMapping("/id/{utenteId}")
+    UtenteDTO getById(@PathVariable UUID utenteId) {
+        return utenteService.getUtenteById(utenteId);
     }
 }

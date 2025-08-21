@@ -6,6 +6,10 @@ import org.unical.enterprise.eventoLocation.service.PreferitiService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.unical.enterprise.shared.dto.EventoBasicDto;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/preferiti")
@@ -37,6 +41,38 @@ public class PreferitiController {
     private String test() {
         return "Sono PreferitiController";
     }
+
+
+    @GetMapping("/utente/{utenteId}")
+    public ResponseEntity<List<EventoBasicDto>> getAllPreferiti(@PathVariable String utenteId) {
+        return ResponseEntity.ok(preferitiService.getAllEventiByUtenteId(utenteId));
+    }
+
+    @PostMapping("/utente/{utenteId}/evento/{eventoId}")
+    public ResponseEntity<?> aggiungiAiPreferiti(@RequestHeader(value = "X-Internal-Request", required = false) String internal,
+                                                 @PathVariable UUID utenteId,
+                                                 @PathVariable Long eventoId) {
+
+        // Solo le Chiamate interne sono Accettate -> tramite Feign
+        if (!"true".equals(internal)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+        preferitiService.save(PreferitiDto.fromIds(String.valueOf(utenteId), eventoId));
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/utente/{utenteId}/evento/{eventoId}")
+    public ResponseEntity<?> rimuoviDaiPreferiti(@RequestHeader(value = "X-Internal-Request", required = false) String internal,
+                                                 @PathVariable UUID utenteId,
+                                                 @PathVariable Long eventoId) {
+
+        // Solo le Chiamate interne sono Accettate -> tramite Feign
+        if (!"true".equals(internal)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+        preferitiService.findAndDelete(PreferitiDto.fromIds(String.valueOf(utenteId), eventoId));
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
 }
 
 /* Post API

@@ -21,8 +21,8 @@ import org.hibernate.annotations.OnDeleteAction;
 @Setter
 public class Preferiti extends DomainObject<Long> {
 
-    public Preferiti(String utente_id, Evento evento) {
-        this.utente_id = utente_id;
+    public Preferiti(String utenteId, Evento evento) {
+        this.utenteId = utenteId;
         this.evento = evento;
     }
 
@@ -32,12 +32,14 @@ public class Preferiti extends DomainObject<Long> {
 
     @Size(min = 36, max = 36)
     @Column(length = 36 ,nullable = false)
-    private String utente_id;
+    private String utenteId;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Evento evento;
+
+
 
 }

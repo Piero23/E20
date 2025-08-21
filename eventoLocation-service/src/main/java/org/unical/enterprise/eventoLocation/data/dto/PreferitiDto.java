@@ -17,7 +17,14 @@ public class PreferitiDto {
     //TODO ToDTO
     public PreferitiDto(Preferiti preferiti) {
         this.id = preferiti.getId();
-        this.utente_id = preferiti.getUtente_id();
+        this.utente_id = preferiti.getUtenteId();
         this.evento_id = preferiti.getEvento().getId();
+    }
+
+    public static PreferitiDto fromIds(String utenteId, long eventoId) {
+        PreferitiDto dto = new PreferitiDto();
+        dto.setUtente_id(utenteId);
+        dto.setEvento_id(eventoId);
+        return dto;
     }
 }

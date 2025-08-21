@@ -20,5 +20,4 @@ public class UtenteApplication {
 		SpringApplication.run(UtenteApplication.class, args);
 	}
 
-
 }

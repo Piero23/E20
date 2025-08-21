@@ -3,6 +3,8 @@ package org.unical.enterprise.utente.data.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
+import org.unical.enterprise.shared.dto.UtenteDTO;
+
 import java.time.LocalDate;
 import java.util.*;
 
@@ -34,4 +36,14 @@ public class Utente {
 
     @Column(name = "data_nascita", nullable = false)
     private LocalDate dataNascita;
+
+    // to-DTO Conversions
+    public static UtenteDTO toSharedDTO(Utente utente) {
+        return UtenteDTO.builder()
+                .id(utente.getId())
+                .username(utente.getUsername())
+                .email(utente.getEmail())
+                .data_nascita(utente.getDataNascita())
+                .build();
+    }
 }

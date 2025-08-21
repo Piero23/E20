@@ -6,11 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-
-import org.unical.enterprise.utente.client.EventoClient;
-import org.unical.enterprise.utente.data.dto.EventoDTO;
+import org.unical.enterprise.shared.clients.EventoServiceClient;
+import org.unical.enterprise.shared.dto.EventoBasicDto;
 import org.unical.enterprise.utente.data.dto.EventoPreferitoRequestDTO;
-
 import org.unical.enterprise.utente.service.SeguaceService;
 import org.unical.enterprise.utente.service.UtenteService;
 
@@ -22,14 +20,14 @@ import java.util.UUID;
 @AllArgsConstructor
 public class EventoPreferitoController {
 
-    private EventoClient eventoClient;
-    private UtenteService utenteService;
-    private SeguaceService seguaceService;
+    private final EventoServiceClient eventoServiceClient;
+    private final UtenteService utenteService;
+    private final SeguaceService seguaceService;
 
     // Handling della Relazione Seguiti rispetto ad UtenteCorrente
     @GetMapping("/preferiti")
-    public ResponseEntity<List<EventoDTO>> getPreferiti(@PathVariable String username,
-                                                        JwtAuthenticationToken jwtAuth) {
+    public ResponseEntity<List<EventoBasicDto>> getPreferiti(@PathVariable String username,
+                                                             JwtAuthenticationToken jwtAuth) {
 
         String viewerUsername = jwtAuth.getToken().getClaimAsString("username");
         if (viewerUsername == null || viewerUsername.isBlank())
@@ -40,7 +38,7 @@ public class EventoPreferitoController {
 
         UUID utenteId = utenteService.resolveIdFromUsername(username);
 
-        return ResponseEntity.ok(eventoClient.getAllPreferiti(utenteId));
+        return ResponseEntity.ok(eventoServiceClient.getAllPreferiti(utenteId));
     }
 
     @PostMapping("/preferiti")
@@ -49,7 +47,7 @@ public class EventoPreferitoController {
 
         UUID utenteId = utenteService.resolveIdFromUsername(username);
 
-        eventoClient.aggiungiAiPreferiti(utenteId, eventoPreferitoRequestDTO.getEventoId());
+        eventoServiceClient.aggiungiAiPreferiti(utenteId, eventoPreferitoRequestDTO.getEventoId());
         return ResponseEntity.ok("Evento aggiunto ai Preferiti");
 
     }
@@ -60,7 +58,7 @@ public class EventoPreferitoController {
 
         UUID utenteId = utenteService.resolveIdFromUsername(username);
 
-        eventoClient.rimuoviDaiPreferiti(utenteId, eventoPreferitoRequestDTO.getEventoId());
+        eventoServiceClient.rimuoviDaiPreferiti(utenteId, eventoPreferitoRequestDTO.getEventoId());
         return ResponseEntity.ok("Evento rimosso ai Preferiti");
 
     }

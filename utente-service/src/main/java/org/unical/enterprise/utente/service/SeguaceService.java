@@ -2,11 +2,10 @@ package org.unical.enterprise.utente.service;
 
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.unical.enterprise.shared.dto.UtenteDTO;
 import org.unical.enterprise.utente.data.dao.SeguaceDAO;
 import org.unical.enterprise.utente.data.dao.UtenteDAO;
-import org.unical.enterprise.utente.data.dto.UtenteDTO;
 import org.unical.enterprise.utente.data.model.Seguace;
 import org.unical.enterprise.utente.data.model.Utente;
 
@@ -25,7 +24,7 @@ public class SeguaceService {
         return seguaceDAO.findAllByUtenteSeguace_Username(usernameUtente)
                 .stream()
                 .map(Seguace::getUtenteSeguito)
-                .map(UtenteDTO::toDTO)
+                .map(Utente::toSharedDTO)
                 .toList();
     }
 
@@ -33,7 +32,7 @@ public class SeguaceService {
         return seguaceDAO.findAllByUtenteSeguito_Username(usernameUtente)
                 .stream()
                 .map(Seguace::getUtenteSeguace)
-                .map(UtenteDTO::toDTO)
+                .map(Utente::toSharedDTO)
                 .toList();
     }
 

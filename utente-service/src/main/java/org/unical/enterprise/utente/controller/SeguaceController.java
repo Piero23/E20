@@ -4,8 +4,8 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.unical.enterprise.shared.dto.UtenteDTO;
 import org.unical.enterprise.utente.data.dto.SeguaceRequestDTO;
-import org.unical.enterprise.utente.data.dto.UtenteDTO;
 import org.unical.enterprise.utente.service.SeguaceService;
 
 import java.util.List;

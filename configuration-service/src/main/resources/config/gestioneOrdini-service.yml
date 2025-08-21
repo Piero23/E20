@@ -28,10 +28,34 @@ cors:
   allowed-origins: http://localhost:8060
 
 jwt:
-  secret: ZNAUhywjWMxENUeQvxjmDSfbNHaJeYmecN4pGHgZxQMqgdHZGLNejvtP9PuXCmE6 # si potrebbe centrallizare inserirela in un punto comume o costante in SHARED o variabile di sistema
   security:
     enabled: true
-    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /api/**
+    publicPaths:
+      /v3/api-docs/**,
+      /swagger-ui/**,
+      /swagger-ui.html,
+      /api/ordine/testFeign,
+      /api/ordine/test
+    protectedRoutes:
+      - path: /api/ordine
+        roles:
+          - ROLE_ADMIN
+      - path: POST:/api/ordine
+        roles:
+          - ROLE_USER
+      - path: /api/ordine/{id}
+        roles:
+          - ROLE_USER
+      - path: /api/ordine/utente
+        roles:
+          - ROLE_USER
+      - path: /api/ordine/biglietti
+        roles:
+          - ROLE_USER
+      - path: /api/biglietto
+        roles:
+          - ROLE_ADMIN
+
 
 logging:
   file:

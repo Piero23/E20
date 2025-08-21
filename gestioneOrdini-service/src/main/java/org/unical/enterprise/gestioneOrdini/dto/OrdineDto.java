@@ -1,12 +1,19 @@
 package org.unical.enterprise.gestioneOrdini.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+
 import java.util.Date;
 import java.util.UUID;
 
 
 public record OrdineDto(
         UUID utenteId,
+
+        @Positive(message = "Il numero di biglietti deve essere positivo")
         int bigliettiComprati,
-        double importo,
-        Date dataPagamento
+
+        @NotBlank
+        @Positive(message = "L'importo deve essere positivo")
+        double importo
 ) {}

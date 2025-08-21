@@ -1,12 +1,13 @@
 package org.unical.enterprise.utente.controller;
 
-import org.unical.enterprise.utente.data.dto.UtenteDTO;
+import org.unical.enterprise.shared.dto.UtenteDTO;
 import org.unical.enterprise.utente.data.dto.UtenteRegistrationDTO;
 import org.unical.enterprise.utente.service.UtenteService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/utente")
@@ -26,6 +27,7 @@ public class UtenteController {
     public ResponseEntity<UtenteDTO> getUtenteById(@PathVariable String username) {
         return ResponseEntity.ok(utenteService.getUtenteByUsername(username));
     }
+
 
     @PostMapping("/register")
     public ResponseEntity<UtenteDTO> register(@Valid @RequestBody UtenteRegistrationDTO utenteDTO) {
@@ -52,5 +54,12 @@ public class UtenteController {
     @GetMapping("/test")
     private String test() {
         return "Sono UtenteController";
+    }
+
+
+    //////// franci l'ho fatto io <3
+    @GetMapping("/getById")
+    UtenteDTO getById(@RequestParam UUID id) {
+        return utenteService.getUtenteById(id);
     }
 }

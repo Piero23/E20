@@ -1,5 +1,7 @@
 package org.unical.enterprise.gestioneOrdini.controller;
 
+import jakarta.validation.Valid;
+import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,8 +11,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.gestioneOrdini.domain.Biglietto;
 import org.unical.enterprise.gestioneOrdini.domain.Ordine;
+import org.unical.enterprise.gestioneOrdini.dto.BigliettoDto;
+import org.unical.enterprise.gestioneOrdini.dto.OrdineDto;
+import org.unical.enterprise.gestioneOrdini.dto.OrdineRequest;
 import org.unical.enterprise.gestioneOrdini.service.BigliettoService;
 import org.unical.enterprise.gestioneOrdini.service.OrdineService;
+import org.unical.enterprise.shared.clients.MailServiceClient;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,11 +30,22 @@ public class OrdineController {
 
     OrdineService ordineService;
     BigliettoService bigliettoService;
+    MailServiceClient mailService;
 
     @GetMapping
     private ResponseEntity<List<Ordine>> findAll(){
         logger.info("Effettuata ricerca generale");
         return ResponseEntity.ok(ordineService.findAll());
+    }
+
+    @PostMapping("/save")
+    private void save(@Valid @RequestBody OrdineRequest ordineRequest){
+        try {
+            ordineService.saveOrdine(ordineRequest.ordine(), ordineRequest.biglietti());
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            //TODO Tutti gli errori che possono avvenire
+        }
     }
 
     @GetMapping(value="/{id}")
@@ -92,6 +109,11 @@ public class OrdineController {
     @GetMapping("/test")
     private String test() {
         return "Sono OrdineController";
+    }
+
+    @GetMapping("/testFeign")
+    private String testo() {
+        return mailService.test();
     }
 
 }

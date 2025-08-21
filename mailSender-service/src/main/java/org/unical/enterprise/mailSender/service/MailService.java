@@ -7,9 +7,20 @@ import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.unical.enterprise.shared.dto.MailTransferDto;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Base64;
 import java.util.Properties;
 
@@ -18,8 +29,10 @@ import java.util.Properties;
 @RequiredArgsConstructor
 public class MailService {
 
-    final String username = "noreply.esse20@gmail.com";
-    final String password = "lqvxdvovovxwmjfd";
+    @Value("${mail.username}")
+    private String username;
+    @Value("${mail.password}")
+    private String password;
 
     final Properties props = setupProperties();
 
@@ -30,31 +43,38 @@ public class MailService {
     });
 
     @Transactional
-    public void sendMail(String to /*, Ordine ordine*/){
+    public void sendMail(MailTransferDto ordine){
         String subject = "Acquisto Confermato";
 
         try {
-            Message message = setupMessage(to);
+            Message message = setupMessage(ordine.mail());
             message.setSubject(subject);
+
+            Instant instant = ordine.data().toInstant();
+            ZoneId zoneId = ZoneId.systemDefault();
+
+            LocalDate data = instant.atZone(zoneId).toLocalDate();
+            LocalTime ora = instant.atZone(zoneId).toLocalTime();
+
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("index.html");
+            if (inputStream == null) {
+                throw new FileNotFoundException("index.html non trovato nel classpath.");
+            }
+            String htmlTemplate = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+
+
+            String htmlContent = htmlTemplate
+                    .replace("${username}", ordine.cliente())
+                    .replace("${ordineId}", ordine.ID().toString())
+                    .replace("${dataOrdine}", data.toString())
+                    .replace("${oraOrdine}", ora.toString())
+                    .replace("${importo}", String.format("%.2f", ordine.importo()));
+
 
             Multipart multipart = new MimeMultipart();
 
             MimeBodyPart textPart = new MimeBodyPart();
-            String body = String.format("""
-            <html>
-                <body>
-                    <h3>Conferma Ordine Numero %s</h3>
-                    <p>Data dell'ordine: %s</p>
-                    <br>
-                    <p>Dati Di Pagamento</p>
-                    <p>Importo: %.2f</p>
-                    <p>inserire qui i dati dell'utente<p>
-                    <p>Grazie per l'acquisto.</p>
-                    <br>
-                </body>
-            </html>
-            """ /*, ordine.id, ordine.data, ordine.importo*/);
-            textPart.setContent(body, "text/html; charset=utf-8");
+            textPart.setContent(htmlContent, "text/html; charset=utf-8");
 
             multipart.addBodyPart(textPart);
 

@@ -2,24 +2,37 @@ package org.unical.enterprise.gestioneOrdini.service;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.unical.enterprise.gestioneOrdini.EventoServiceClient;
 import org.unical.enterprise.gestioneOrdini.dao.OrdineDao;
 import org.unical.enterprise.gestioneOrdini.domain.Biglietto;
 import org.unical.enterprise.gestioneOrdini.domain.Ordine;
 import org.unical.enterprise.gestioneOrdini.dto.BigliettoDto;
 import org.unical.enterprise.gestioneOrdini.dto.OrdineDto;
+import org.unical.enterprise.shared.clients.MailServiceClient;
+import org.unical.enterprise.shared.clients.UtenteServiceClient;
+import org.unical.enterprise.shared.dto.EventoBasicDto;
+import org.unical.enterprise.shared.dto.MailTransferDto;
+import org.unical.enterprise.shared.dto.UtenteDTO;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class OrdineService {
 
     private final OrdineDao ordineDao;
+
+
+
+    //TODO fare in modo che non siano "istanze volanti" ma che vengano chiamate da un solo punto
+    private final MailServiceClient mailServiceClient;
+
+    private final UtenteServiceClient utenteServiceClient;
+
+    private final EventoServiceClient eventoServiceClient;
 
     @Transactional(readOnly = true)
     public void test() {
@@ -42,17 +55,24 @@ public class OrdineService {
     }
 
     @Transactional
-    public Ordine saveOrdine(OrdineDto ordine, List<BigliettoDto> biglietti) {
+    public void saveOrdine(OrdineDto ordine, List<BigliettoDto> biglietti) throws Exception {
         Ordine newOrdine = new Ordine();
         newOrdine.setUtenteId(ordine.utenteId());
         newOrdine.setBiglietti_comprati(ordine.bigliettiComprati());
         newOrdine.setImporto(ordine.importo());
-        newOrdine.setData_pagamento(ordine.dataPagamento());
+        newOrdine.setData_pagamento(new Date());
+
 
         Set<Biglietto> newBiglietti = new HashSet<>();
         for(BigliettoDto bigliettoDto : biglietti){
+
+            //Controlla se l'id dell'evento esiste altrimenti exception
+            eventoServiceClient.findById(bigliettoDto.idEvento());
+
             Biglietto newBiglietto = new Biglietto();
 
+
+            //TODO Builder
             newBiglietto.setOrdine(newOrdine);
             newBiglietto.setEmail(bigliettoDto.email());
             newBiglietto.setNome(bigliettoDto.nome());
@@ -65,7 +85,16 @@ public class OrdineService {
 
         newOrdine.getBiglietti().addAll(newBiglietti);
         ordineDao.save(newOrdine);
-        return newOrdine;
+
+
+        //TODO Tutto da pulire non deve stare qua a volare
+
+        //TODO quando una diqueste cose non va a buon fine 1 la mail deve cambiare / o non deve inviarsi
+
+        UtenteDTO toUtente = utenteServiceClient.getById(newOrdine.getUtenteId());
+
+        MailTransferDto mailSended = new MailTransferDto(newOrdine.getId() , newOrdine.getData_pagamento(), newOrdine.getImporto(), toUtente.getEmail(), toUtente.getUsername());
+        mailServiceClient.sendMail(mailSended);
     }
 
     @Transactional

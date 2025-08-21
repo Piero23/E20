@@ -4,6 +4,8 @@ server:
 
 eureka:
   client:
+    registry-fetch-interval-seconds: 10
+    fetch-registry: true
     serviceUrl:
       defaultZone: http://localhost:8061/eureka/
 
@@ -34,3 +36,7 @@ spring:
           uri: lb://mailSender-service
           predicates:
             - Path=/api/mail/**
+        - id: authentication-service
+          uri: lb://authentication-service
+          predicates:
+            - Path=/api/authentication/**

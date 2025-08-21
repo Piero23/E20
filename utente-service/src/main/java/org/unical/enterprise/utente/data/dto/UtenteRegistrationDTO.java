@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class UtenteRegistrationDTO {
+
     @NotBlank(message = "Lo username è obbligatorio.")
     @Size(min = 4, max = 20, message = "Lo username deve contenere almeno 4, massimo 20 caratteri.")
     private String username;

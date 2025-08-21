@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.unical.enterprise.utente.data.model.Utente;
+
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -29,4 +31,13 @@ public class UtenteDTO {
 
     @NotNull(message = "La data di nascita è obbligatoria.")
     private LocalDate data_nascita;
+
+    public static UtenteDTO toDTO(Utente utente) {
+        return UtenteDTO.builder()
+                .id(utente.getId())
+                .username(utente.getUsername())
+                .email(utente.getEmail())
+                .data_nascita(utente.getDataNascita())
+                .build();
+    }
 }

@@ -20,7 +20,33 @@ public class SeguaceService {
     private SeguaceDAO seguaceDAO;
     private UtenteDAO utenteDAO;
 
-    // Public Methods
+    // Getter & Checking Methods
+    public List<UtenteDTO> getAllSeguiti(String usernameUtente) {
+        return seguaceDAO.findAllByUtenteSeguace_Username(usernameUtente)
+                .stream()
+                .map(Seguace::getUtenteSeguito)
+                .map(UtenteDTO::toDTO)
+                .toList();
+    }
+
+    public List<UtenteDTO> getAllSeguaci(String usernameUtente) {
+        return seguaceDAO.findAllByUtenteSeguito_Username(usernameUtente)
+                .stream()
+                .map(Seguace::getUtenteSeguace)
+                .map(UtenteDTO::toDTO)
+                .toList();
+    }
+
+    public boolean isSeguaceDi(String utenteTestUsername, String utenteTargetUsername) {
+        return seguaceDAO.existsByUtenteSeguace_UsernameAndUtenteSeguito_Username(utenteTestUsername, utenteTargetUsername);
+    }
+
+    public boolean isSeguitoDa(String utenteTestUsername, String utenteTargetUsername) {
+        return seguaceDAO.existsByUtenteSeguace_UsernameAndUtenteSeguito_Username(utenteTargetUsername, utenteTestUsername);
+    }
+
+
+    // Actions Methods
     public void seguiUtente(String usernameUtenteSeguace, String usernameUtenteSeguito) {
 
         // Username inesistenti
@@ -70,31 +96,5 @@ public class SeguaceService {
 
     }
 
-    public List<UtenteDTO> getAllSeguiti(String usernameUtente) {
-        return seguaceDAO.findAllByUtenteSeguace_Username(usernameUtente)
-                .stream()
-                .map(Seguace::getUtenteSeguito)
-                .map(this::toDTO)
-                .toList();
-    }
-
-    public List<UtenteDTO> getAllSeguaci(String usernameUtente) {
-        return seguaceDAO.findAllByUtenteSeguito_Username(usernameUtente)
-                .stream()
-                .map(Seguace::getUtenteSeguace)
-                .map(this::toDTO)
-                .toList();
-    }
-
-
-    // Private Methods
-    private UtenteDTO toDTO(Utente utente) {
-        return UtenteDTO.builder()
-                .id(utente.getId())
-                .username(utente.getUsername())
-                .email(utente.getEmail())
-                .data_nascita(utente.getDataNascita())
-                .build();
-    }
 
 }

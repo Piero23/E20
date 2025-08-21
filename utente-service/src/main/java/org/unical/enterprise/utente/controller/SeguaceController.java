@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/utente/{username}")
 @AllArgsConstructor
-public class SeguaciController {
+public class SeguaceController {
 
     private SeguaceService seguaceService;
 
@@ -46,6 +46,5 @@ public class SeguaciController {
     public ResponseEntity<List<UtenteDTO>> getSeguaci(@PathVariable String username) {
         return ResponseEntity.ok(seguaceService.getAllSeguaci(username));
     }
-
 
 }

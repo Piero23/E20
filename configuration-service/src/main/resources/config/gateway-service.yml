@@ -27,3 +27,32 @@ spring:
               uri: lb://authentication-service
               predicates:
                 - Path=/api/authentication/**
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowed-origins: "http://localhost:3000"
+                allowed-methods:
+                  - GET
+                  - POST
+                  - PUT
+                  - DELETE
+                  - OPTIONS
+                allowed-headers: "*"
+                allow-credentials: true
+                max-age: 3600
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+
+rate-limiter:
+  permits-per-second: 5

@@ -1,7 +1,6 @@
 package org.unical.enterprise.gestioneOrdini.controller;
 
 import jakarta.validation.Valid;
-import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.gestioneOrdini.domain.Biglietto;
 import org.unical.enterprise.gestioneOrdini.domain.Ordine;
-import org.unical.enterprise.gestioneOrdini.dto.BigliettoDto;
-import org.unical.enterprise.gestioneOrdini.dto.OrdineDto;
 import org.unical.enterprise.gestioneOrdini.dto.OrdineRequest;
 import org.unical.enterprise.gestioneOrdini.service.BigliettoService;
 import org.unical.enterprise.gestioneOrdini.service.OrdineService;

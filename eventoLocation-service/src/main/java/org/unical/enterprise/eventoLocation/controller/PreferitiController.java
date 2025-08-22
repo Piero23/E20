@@ -1,11 +1,11 @@
 package org.unical.enterprise.eventoLocation.controller;
 
-import org.springframework.web.bind.annotation.*;
-import org.unical.enterprise.eventoLocation.data.dto.PreferitiDto;
-import org.unical.enterprise.eventoLocation.service.PreferitiService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.unical.enterprise.eventoLocation.data.dto.PreferitiDto;
+import org.unical.enterprise.eventoLocation.service.PreferitiService;
 
 @RestController
 @RequestMapping("/api/preferiti")

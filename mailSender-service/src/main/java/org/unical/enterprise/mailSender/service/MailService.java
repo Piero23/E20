@@ -1,6 +1,5 @@
 package org.unical.enterprise.mailSender.service;
 
-import jakarta.activation.DataHandler;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeBodyPart;
@@ -15,13 +14,10 @@ import org.unical.enterprise.shared.dto.MailTransferDto;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.Base64;
 import java.util.Properties;
 
 

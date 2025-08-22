@@ -1,12 +1,11 @@
 package org.unical.enterprise.authentication;
 
 
-
 import lombok.AllArgsConstructor;
 import org.keycloak.representations.AccessTokenResponse;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import org.unical.enterprise.authentication.dto.LoginDTORequest;
 import org.unical.enterprise.authentication.dto.RegisterDTORequest;
 

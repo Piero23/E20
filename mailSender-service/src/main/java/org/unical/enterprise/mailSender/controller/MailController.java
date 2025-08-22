@@ -5,10 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.mailSender.service.MailService;
 import org.unical.enterprise.shared.dto.MailTransferDto;
 
-
-import java.awt.*;
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/api/mail")
 @AllArgsConstructor

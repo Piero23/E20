@@ -1,9 +1,9 @@
 package org.unical.enterprise.eventoLocation.data.dto;
 
-import org.unical.enterprise.eventoLocation.data.entities.Evento;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.unical.enterprise.eventoLocation.data.entities.Evento;
 
 import java.util.Date;
 

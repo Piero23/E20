@@ -1,9 +1,9 @@
 package org.unical.enterprise.eventoLocation.data.dto;
 
-import org.unical.enterprise.eventoLocation.data.entities.Location;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.unical.enterprise.eventoLocation.data.entities.Location;
 
 @Getter
 @Setter

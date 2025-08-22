@@ -1,6 +1,5 @@
 package org.unical.enterprise.eventoLocation.service;
 
-import jakarta.persistence.Temporal;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -9,11 +8,11 @@ import org.springframework.stereotype.Service;
 import org.unical.enterprise.eventoLocation.ContentNotFoundException;
 import org.unical.enterprise.eventoLocation.data.dao.EventoDao;
 import org.unical.enterprise.eventoLocation.data.dao.LocationDao;
-import org.unical.enterprise.shared.clients.UtenteServiceClient;
-import org.unical.enterprise.shared.dto.EventoBasicDto;
 import org.unical.enterprise.eventoLocation.data.dto.EventoDto;
 import org.unical.enterprise.eventoLocation.data.entities.Evento;
 import org.unical.enterprise.eventoLocation.data.entities.Location;
+import org.unical.enterprise.shared.clients.UtenteServiceClient;
+import org.unical.enterprise.shared.dto.EventoBasicDto;
 import org.unical.enterprise.shared.dto.UtenteDTO;
 
 import java.util.UUID;

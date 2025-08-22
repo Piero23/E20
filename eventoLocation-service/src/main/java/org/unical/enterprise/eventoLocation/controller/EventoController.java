@@ -1,15 +1,14 @@
 package org.unical.enterprise.eventoLocation.controller;
 
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.unical.enterprise.shared.dto.EventoBasicDto;
 import org.unical.enterprise.eventoLocation.data.entities.Evento;
 import org.unical.enterprise.eventoLocation.service.EventoService;
+import org.unical.enterprise.shared.dto.EventoBasicDto;
 
 
 @RequestMapping("/api/evento")

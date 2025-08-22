@@ -1,14 +1,14 @@
 package org.unical.enterprise.eventoLocation.controller;
 
-import org.springframework.web.bind.annotation.*;
-import org.unical.enterprise.eventoLocation.data.dto.LocationDto;
-import org.unical.enterprise.eventoLocation.data.entities.Location;
-import org.unical.enterprise.eventoLocation.service.LocationService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.unical.enterprise.eventoLocation.data.dto.LocationDto;
+import org.unical.enterprise.eventoLocation.data.entities.Location;
+import org.unical.enterprise.eventoLocation.service.LocationService;
 
 @RestController
 @RequestMapping("/api/location")

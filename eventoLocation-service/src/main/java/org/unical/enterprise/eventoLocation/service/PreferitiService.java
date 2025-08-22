@@ -1,13 +1,12 @@
 package org.unical.enterprise.eventoLocation.service;
 
-import feign.Client;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.unical.enterprise.eventoLocation.ContentNotFoundException;
 import org.unical.enterprise.eventoLocation.data.dao.EventoDao;
 import org.unical.enterprise.eventoLocation.data.dao.PreferitiDao;
 import org.unical.enterprise.eventoLocation.data.dto.PreferitiDto;
 import org.unical.enterprise.eventoLocation.data.entities.Preferiti;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.unical.enterprise.shared.clients.UtenteServiceClient;
 
 import java.util.UUID;

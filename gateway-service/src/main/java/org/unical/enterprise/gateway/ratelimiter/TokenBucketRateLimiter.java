@@ -1,7 +1,7 @@
 package org.unical.enterprise.gateway.ratelimiter;
 
-import org.springframework.stereotype.Component;
 import com.google.common.util.concurrent.RateLimiter;
+import org.springframework.stereotype.Component;
 import org.unical.enterprise.gateway.config.RateLimiterProperties;
 
 import java.util.concurrent.ConcurrentHashMap;

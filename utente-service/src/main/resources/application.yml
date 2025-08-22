@@ -12,11 +12,6 @@ spring:
       - "configserver:http://localhost:8080"
       - "vault://"
 
-  # database fallback che viene sostituito una volta caricata la configurazione
-#  datasource:
-#    url: jdbc:h2:mem:tempdb
-#    driver-class-name: org.h2.Driver
-
   cloud:
     config:
       fail-fast: true

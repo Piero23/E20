@@ -1,12 +1,34 @@
 server:
-  port: 8088
+  port: 8080
+
 spring:
   application:
     name: config-service
-  profiles:
-    active: native
+
   cloud:
     config:
       server:
-        native:
-          search-locations: file:./configuration-service/src/main/resources/config
+        git:
+          uri: ${HOME}/config
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8085/realms/esse20
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics,refresh
+        exclude: env,configprops
+
+  endpoint:
+    health:
+      show-details: when-authorized
+      show-components: always
+  prometheus:
+    metrics:
+      export:
+        enabled: true

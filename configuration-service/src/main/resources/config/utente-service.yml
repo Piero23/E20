@@ -1,22 +1,40 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5454/e20
-    username: admin
-    password: admin
+    url: jdbc:postgresql://localhost:5432/e20
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+      idle-timeout: 600000
+
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
-    open-in-view: false
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
 
-logging:
-  file:
-    name: logs/app.log
-  level:
-    demacs:
-      unical:
-        esse20: INFO
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8085/realms/esse20
+          cache-duration: PT5M
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    hostname: localhost
+    prefer-ip-address: false
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
 
 springdoc:
   packages-to-scan: org.unical.enterprise.utente-service
@@ -26,3 +44,4 @@ springdoc:
   api-docs:
     groups:
       enabled: true
+

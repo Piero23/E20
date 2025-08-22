@@ -3,7 +3,7 @@ package org.unical.enterprise.utente.controller;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.unical.enterprise.utente.data.dto.UtenteDTO;
+import org.unical.enterprise.shared.dto.UtenteDTO;
 import org.unical.enterprise.utente.data.dto.UtenteRegistrationDTO;
 import org.unical.enterprise.utente.service.UtenteService;
 

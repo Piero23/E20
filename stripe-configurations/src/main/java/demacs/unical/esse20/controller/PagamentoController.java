@@ -1,8 +1,9 @@
 package demacs.unical.esse20.controller;
 
-import com.stripe.exception.StripeException;
-import com.stripe.model.checkout.Session;
 import demacs.unical.esse20.service.PagamentoService;
+import demacs.unical.esse20.service.PagamentoWebhookService;
+import com.stripe.model.checkout.Session;
+import com.stripe.exception.StripeException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,28 +19,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PagamentoController {
 
-    /*
-    https://github.com/stripe/stripe-cli/releases/download/v1.29.0/stripe_1.29.0_windows_x86_64.zip
-
-    & "C:\Users\andre\Desktop\Unical\Enterprise Applications\stripe.exe" listen --forward-to http://localhost:8083/stripe/webhook
-
-    $response = Invoke-WebRequest -Uri "http://localhost:8083/stripe/checkout" `
-            -Method POST `
-            -ContentType "application/json" `
-            -Body '{
-            "nomeArticolo":"Torta Decorata",
-            "prezzo":1500,
-            "valuta":"eur",
-            "successUrl":"https://prova1.com/success",
-            "cancelUrl":"https://prova2.com/cancel",
-            }'
-
-            $data = $response.Content | ConvertFrom-Json
-            Write-Output $data.url
-
-     */
-
     private final PagamentoService pagamentoService;
+    private final PagamentoWebhookService webhookService;
 
     @PostMapping("/checkout")
     public ResponseEntity<?> checkout(@RequestBody CheckoutRequest request) {
@@ -92,28 +73,7 @@ public class PagamentoController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Errore lettura payload");
         }
 
-        String body = payload.toString();
-
-        try {
-            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-            Map<String, Object> event = mapper.readValue(body, Map.class);
-            String eventType = (String) event.get("type");
-
-            switch (eventType) {
-                case "checkout.session.completed":
-                    System.out.println("Richiesta completata");
-                    break;
-                case "payment_intent.succeeded":
-                    System.out.println("Richiesta completata");
-                    break;
-                case "checkout.session.expired":
-                    System.out.println("Richiesta cancellata");
-                    break;
-            }
-        } catch (Exception e) {
-            System.out.println("Errore parsing webhook: " + e.getMessage());
-        }
-
+        webhookService.processWebhook(payload.toString());
         return ResponseEntity.ok("success");
     }
 }

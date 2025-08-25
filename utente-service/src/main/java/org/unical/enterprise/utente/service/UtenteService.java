@@ -96,6 +96,13 @@ public class UtenteService {
         utenteDAO.delete(utente);
     }
 
+    public UUID resolveIdFromUsername(String username) {
+        Utente utente = utenteDAO.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Utente inesistente"));
+
+        return utente.getId();
+    }
+
     private UtenteDTO toDTO(Utente utente) {
     return UtenteDTO.builder()
         .id(utente.getId())

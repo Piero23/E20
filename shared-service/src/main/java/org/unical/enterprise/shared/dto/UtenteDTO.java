@@ -29,4 +29,5 @@ public class UtenteDTO {
 
     @NotNull(message = "La data di nascita è obbligatoria.")
     private LocalDate data_nascita;
+
 }

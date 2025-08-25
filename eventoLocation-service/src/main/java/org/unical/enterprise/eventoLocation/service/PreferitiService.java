@@ -1,15 +1,18 @@
 package org.unical.enterprise.eventoLocation.service;
 
-import feign.Client;
 import org.unical.enterprise.eventoLocation.ContentNotFoundException;
 import org.unical.enterprise.eventoLocation.data.dao.EventoDao;
 import org.unical.enterprise.eventoLocation.data.dao.PreferitiDao;
 import org.unical.enterprise.eventoLocation.data.dto.PreferitiDto;
+import org.unical.enterprise.eventoLocation.data.entities.Evento;
 import org.unical.enterprise.eventoLocation.data.entities.Preferiti;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.unical.enterprise.shared.clients.UtenteServiceClient;
+import org.unical.enterprise.shared.dto.EventoBasicDto;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -48,6 +51,25 @@ public class PreferitiService {
             throw new ContentNotFoundException("preferiti with id "+ id + "not found");
 
         preferitiDao.deleteById(id);
+    }
+
+    // Getter Methods
+    public List<EventoBasicDto> getAllEventiByUtenteId(String utenteUUID) {
+        return preferitiDao.findAllByUtenteId(utenteUUID)
+                .stream()
+                .map(Preferiti::getEvento)
+                .map(Evento::toSharedDTO)
+                .toList();
+    }
+
+    public void findAndDelete(PreferitiDto preferitiDto) {
+        Optional<Preferiti> relazionePreferiti;
+
+        if (preferitiDto.getId() > 0) relazionePreferiti = preferitiDao.findById(preferitiDto.getId());
+        else relazionePreferiti = preferitiDao.findByUtenteIdAndEventoId(preferitiDto.getUtente_id(), preferitiDto.getEvento_id());
+
+        relazionePreferiti.ifPresent(preferiti -> preferitiDao.delete(preferiti));
+
     }
 
 }

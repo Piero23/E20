@@ -11,11 +11,14 @@ import org.springframework.context.annotation.ComponentScan;
 		"org.unical.enterprise.utente",
 		"org.unical.enterprise.shared"
 })
-
+@EnableFeignClients(basePackages = {
+		"org.unical.enterprise.shared.clients"
+})
 @EnableDiscoveryClient
-@EnableFeignClients
 public class UtenteApplication {
+
 	public static void main(String[] args) {
 		SpringApplication.run(UtenteApplication.class, args);
 	}
+
 }

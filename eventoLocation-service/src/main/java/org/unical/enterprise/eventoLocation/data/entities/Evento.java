@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.unical.enterprise.shared.dto.EventoBasicDto;
 
 import java.util.Date;
 
@@ -63,4 +64,20 @@ public class Evento extends DomainObject<Long> {
 
     @Column(nullable = false)
     private double prezzo;
+
+    // to-DTO Conversion
+    public static EventoBasicDto toSharedDTO(Evento evento) {
+        return EventoBasicDto.builder()
+                .id(evento.getId())
+                .nome(evento.getNome())
+                .descrizione(evento.getDescrizione())
+                .organizzatore(evento.getOrganizzatore())
+                .posti(evento.getPosti())
+                .b_riutilizzabile(evento.isB_riutilizzabile())
+                .b_nominativo(evento.isB_nominativo())
+                .locationId(evento.getLocation().getId())
+                .data(evento.getData())
+                .prezzo(evento.getPrezzo())
+                .build();
+    }
 }

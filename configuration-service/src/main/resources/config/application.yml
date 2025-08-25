@@ -1,9 +1,23 @@
 spring:
   security:
     oauth2:
+      client:
+        registration:
+          custom-oidc:
+            client-id: oidc-client
+            client-secret: secret
+            scope:
+              - openid
+              - profile
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8075/login/oauth2/code/custom-oidc
+        provider:
+          custom-oidc:
+            #usare 127.0.0.1
+            issuer-uri: http://127.0.0.1:9000  # Sostituisci con il tuo issuer URL
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8085/realms/esse20
+          issuer-uri: http://127.0.0.1:9000
 
 logging:
   level:

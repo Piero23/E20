@@ -14,17 +14,12 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -43,6 +38,7 @@ public class JwtSecurityAutoConfiguration {
     public JwtAuthFilter jwtAuthFilter() {
         return new JwtAuthFilter();
     }
+
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain securityFilterChain(
@@ -54,7 +50,7 @@ public class JwtSecurityAutoConfiguration {
         http
                 .cors(c -> c.configurationSource(corsSource))
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 
         if (securityProperties.isOpenService()) {
             return http
@@ -63,6 +59,8 @@ public class JwtSecurityAutoConfiguration {
         }
 
         http.authorizeHttpRequests(auth -> {
+            // Aggiungi endpoint pubblici per OAuth2
+            auth.requestMatchers("/login/**", "/oauth2/**", "/error").permitAll();
 
             if (securityProperties.getPublicPaths() != null) {
                 for (String path : securityProperties.getPublicPaths()) {
@@ -81,13 +79,13 @@ public class JwtSecurityAutoConfiguration {
                     }
                 }
             }
+
             if (securityProperties.getProtectedRoutes() != null) {
                 for (ProtectedRoute route : securityProperties.getProtectedRoutes()) {
                     String path = route.getPath();
                     String[] roles = route.getRoles();
 
                     if (path.contains("POST:") || path.contains("PUT:") || path.contains("DELETE:")) {
-
                         String[] parts = path.split(":");
                         String actualPath = parts[1];
                         String method = parts[0];
@@ -106,8 +104,10 @@ public class JwtSecurityAutoConfiguration {
             auth.anyRequest().authenticated();
         });
 
-        http.oauth2ResourceServer(oauth2 -> oauth2
-                .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+        // Configurazione OAuth2 Client per il redirect automatico
+        http.oauth2Login(oauth2 -> oauth2
+                .defaultSuccessUrl("/api/token/user", true)
+                .failureUrl("/login?error")
         );
 
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
@@ -115,23 +115,35 @@ public class JwtSecurityAutoConfiguration {
         return http.build();
     }
 
+
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            Object realmAccess = jwt.getClaim("realm_access");
-            if (!(realmAccess instanceof Map<?,?>)) {
-                return List.of();
-            }
-            @SuppressWarnings("unchecked")
-            List<String> roles = (List<String>) ((Map<String,Object>) realmAccess).get("roles");
-            if (roles == null) {
-                return List.of();
+            // Prima prova con il formato del tuo custom auth server (claim "roles")
+            Object rolesObj = jwt.getClaim("roles");
+            if (rolesObj instanceof List) {
+                @SuppressWarnings("unchecked")
+                List<String> roles = (List<String>) rolesObj;
+                return roles.stream()
+                        .map(r -> (GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + r.toUpperCase()))
+                        .collect(Collectors.toList());
             }
 
-            return roles.stream()
-                    .map(r -> (GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + r))
-                    .collect(Collectors.toList());
+            // Fallback per Keycloak format (realm_access.roles)
+            Object realmAccess = jwt.getClaim("realm_access");
+            if (realmAccess instanceof Map<?,?>) {
+                @SuppressWarnings("unchecked")
+                List<String> realmRoles = (List<String>) ((Map<String,Object>) realmAccess).get("roles");
+                if (realmRoles != null) {
+                    return realmRoles.stream()
+                            .map(r -> (GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + r.toUpperCase()))
+                            .collect(Collectors.toList());
+                }
+            }
+
+            // Se non trova ruoli, restituisce lista vuota
+            return List.of();
         });
         return converter;
     }

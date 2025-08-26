@@ -3,14 +3,15 @@ server:
 
 spring:
   application:
-    name: gestioneOrdini-service
+    name: gestione-ordini-service
   datasource:
     username: ${username}
     password: ${password}
+    url: jdbc:postgresql://localhost:5432/e20
   config:
     import:
-      - configserver:http://localhost:8080
-      - vault://
+      - "configserver:http://localhost:8080"
+      - "vault://"
   cloud:
     config:
       fail-fast: true
@@ -26,7 +27,7 @@ spring:
       kv:
         enabled: true
         backend: secret
-        default-context: e20
+        default-context: ${spring.application.name}
 
 springdoc:
   packages-to-scan: org.unical.enterprise.gestioneOrdini-service

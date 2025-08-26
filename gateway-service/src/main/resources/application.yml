@@ -1,15 +1,14 @@
 server:
   port: 8443
   ssl:
-    key-store: classpath:esse20.p12
     key-store-type: PKCS12
-    key-store-password: ${keystore_password}
-    key-alias: esse20
-    key-password: ${key_password}
+    key-store-password: ${KS_PWD}
+    key-password: ${KEY_PWD}
+    key-store: classpath:keystore.p12
   max-http-request-header-size: 48KB # Aumenta la dimensione massima dell'header HTTP
 
 spring:
   application:
     name: gateway-service
   config:
-    import: configserver:http://localhost:8088
+    import: optional:configserver:http://localhost:8080

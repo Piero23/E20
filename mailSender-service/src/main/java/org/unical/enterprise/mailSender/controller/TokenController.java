@@ -1,11 +1,16 @@
 package org.unical.enterprise.mailSender.controller;
 
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +22,10 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/token")
+@AllArgsConstructor
 public class TokenController {
+
+    private JwtDecoder jwtDecoder;
 
     @GetMapping("/user")
     public ResponseEntity<Map<String, Object>> getUserInfo(@AuthenticationPrincipal OidcUser oidcUser) {
@@ -46,6 +54,24 @@ public class TokenController {
         }
 
         return ResponseEntity.ok(userInfo);
+    }
+
+    @GetMapping("/testClaims")
+    public ResponseEntity<Map<String, Object>> getClaims(
+            @RegisteredOAuth2AuthorizedClient("custom-oidc") OAuth2AuthorizedClient client) {
+
+        if (client == null || client.getAccessToken() == null) {
+            return ResponseEntity.status(401).body(Map.of("error", "No access token available"));
+        }
+
+        // Access token JWT
+        String tokenValue = client.getAccessToken().getTokenValue();
+
+        // Decodifica il token con il decoder di Spring
+        Jwt jwt = jwtDecoder.decode(tokenValue);
+
+        System.out.println(jwt.getTokenValue());
+        return ResponseEntity.ok(jwt.getClaims());
     }
 
     @GetMapping("/claims")

@@ -106,8 +106,12 @@ public class JwtSecurityAutoConfiguration {
 
         // Configurazione OAuth2 Client per il redirect automatico
         http.oauth2Login(oauth2 -> oauth2
-                .defaultSuccessUrl("/api/token/user", true)
+                .defaultSuccessUrl("/api/utente/test", true)
                 .failureUrl("/login?error")
+        );
+
+        http.oauth2ResourceServer(oauth2 -> oauth2
+                .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
         );
 
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
@@ -120,29 +124,30 @@ public class JwtSecurityAutoConfiguration {
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            System.out.println("=== JWT AUTHENTICATION CONVERTER ===");
+            System.out.println("JWT Claims: " + jwt.getClaims());
+
             // Prima prova con il formato del tuo custom auth server (claim "roles")
             Object rolesObj = jwt.getClaim("roles");
+            System.out.println("Roles claim: " + rolesObj);
+
             if (rolesObj instanceof List) {
                 @SuppressWarnings("unchecked")
                 List<String> roles = (List<String>) rolesObj;
-                return roles.stream()
-                        .map(r -> (GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + r.toUpperCase()))
+                List<GrantedAuthority> authorities = roles.stream()
+                        .map(r -> {
+                            String authority = "ROLE_" + r.toUpperCase();
+                            System.out.println("Adding authority: " + authority);
+                            return (GrantedAuthority) new SimpleGrantedAuthority(authority);
+                        })
                         .collect(Collectors.toList());
-            }
 
-            // Fallback per Keycloak format (realm_access.roles)
-            Object realmAccess = jwt.getClaim("realm_access");
-            if (realmAccess instanceof Map<?,?>) {
-                @SuppressWarnings("unchecked")
-                List<String> realmRoles = (List<String>) ((Map<String,Object>) realmAccess).get("roles");
-                if (realmRoles != null) {
-                    return realmRoles.stream()
-                            .map(r -> (GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + r.toUpperCase()))
-                            .collect(Collectors.toList());
-                }
+                System.out.println("Final authorities: " + authorities);
+                return authorities;
             }
 
             // Se non trova ruoli, restituisce lista vuota
+            System.out.println("No roles found, returning empty list");
             return List.of();
         });
         return converter;

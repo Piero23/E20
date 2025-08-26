@@ -10,7 +10,7 @@ spring:
               - openid
               - profile
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8075/login/oauth2/code/custom-oidc
+            redirect-uri: http://localhost:8060/login/oauth2/code/custom-oidc
         provider:
           custom-oidc:
             #usare 127.0.0.1

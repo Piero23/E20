@@ -4,6 +4,10 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.shared.clients.EventoServiceClient;
@@ -24,12 +28,21 @@ public class EventoPreferitoController {
     private final UtenteService utenteService;
     private final SeguaceService seguaceService;
 
+    private JwtDecoder jwtDecoder;
+
     // Handling della Relazione Seguiti rispetto ad UtenteCorrente
     @GetMapping("/preferiti")
     public ResponseEntity<List<EventoBasicDto>> getPreferiti(@PathVariable String username,
-                                                             JwtAuthenticationToken jwtAuth) {
+                                                             @RegisteredOAuth2AuthorizedClient("custom-oidc") OAuth2AuthorizedClient client) {
 
-        String viewerUsername = jwtAuth.getToken().getClaimAsString("username");
+        String tokenValue = client.getAccessToken().getTokenValue();
+
+        // Decodifica il token con il decoder di Spring
+        Jwt jwt = jwtDecoder.decode(tokenValue);
+
+        String viewerUsername = jwt.getClaimAsString("username");
+        System.out.println(viewerUsername);
+        System.out.println("MUCCA");
         if (viewerUsername == null || viewerUsername.isBlank())
             throw new RuntimeException("Username non disponibile");
 

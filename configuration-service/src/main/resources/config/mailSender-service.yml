@@ -6,7 +6,7 @@ spring:
       enabled: always
 
 server:
-  port: 8075
+  port: 0
 
 eureka:
   client:
@@ -19,8 +19,7 @@ cors:
 jwt:
   security:
     enabled: true
-    openService: true
-    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html
+    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /api/token/**
     protectedRoutes:
       - path: /api/mail/**
         roles:

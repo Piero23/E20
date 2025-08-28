@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2Aut
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +29,12 @@ public class TokenController {
 
     @GetMapping("/temp")
     String tempTest() {
-        return "Autenticato, ma magari";
+        return "Autenticato, speriamo. Ciao mamma." ;
+    }
+
+    @GetMapping("/jwtHandle")
+    String jwtHandle(JwtAuthenticationToken auth) {
+        return "Ciao " + auth.getName() + ". Questo e' l'auth: " + auth.getToken().getClaims();
     }
 
     @GetMapping("/user")

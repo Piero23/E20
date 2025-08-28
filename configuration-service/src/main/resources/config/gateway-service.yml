@@ -14,35 +14,48 @@ spring:
     ansi:
       enabled: always
   cloud:
+    discovery:
+      enabled: true
     gateway:
       discovery:
         locator:
-          enabled: true
+          enabled: false
       routes:
-        - id: gestioneOrdini-service
+        ## Gestione Oridni
+        - id: gestioneOrdini-ordine-service
           uri: lb://gestioneOrdini-service
           predicates:
             - Path=/api/ordine/**
+        - id: gestioneOrdini-biglietto-service
+          uri: lb://gestioneOrdini-service
+          predicates:
             - Path=/api/biglietto/**
+
+        ## Utenti
         - id: utente-service
           uri: lb://utente-service
           predicates:
             - Path=/api/utente/**
-        - id: eventoLocation-service
+
+        ## Evento Location
+        - id: eventoLocation-evento-service
           uri: lb://eventoLocation-service
           predicates:
             - Path=/api/evento/**
+        - id: eventoLocation-location-service
+          uri: lb://eventoLocation-service
+          predicates:
             - Path=/api/location/**
+        - id: eventoLocation-preferiti-service
+          uri: lb://eventoLocation-service
+          predicates:
             - Path=/api/preferiti/**
+
+        ## Mail Sender
         - id: mailSender-service
           uri: lb://mailSender-service
           predicates:
-            - Path=/api/mail/**
             - Path=/api/token/**
-        - id: authentication-service
-          uri: lb://authentication-service
-          predicates:
-            - Path=/api/authentication/**
 
         # Rotte per Swagger GestioneOrdini Service
         - id: gestioneOrdini-service-api-docs

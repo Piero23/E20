@@ -3,18 +3,17 @@ spring:
     oauth2:
       client:
         registration:
-          custom-oidc:
-            client-id: oidc-client
+          gateway-client:
+            client-id: gateway-client
             client-secret: secret
-            scope:
-              - openid
-              - profile
+            client-authentication-method: client_secret_basic
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8060/login/oauth2/code/custom-oidc
+            redirect-uri: http://localhost:8060/login/oauth2/code/gateway-client
+            scope: openid, profile
+
         provider:
-          custom-oidc:
-            #usare 127.0.0.1
-            issuer-uri: http://127.0.0.1:9000  # Sostituisci con il tuo issuer URL
+          gateway-client:
+            issuer-uri: http://127.0.0.1:9000
       resourceserver:
         jwt:
           issuer-uri: http://127.0.0.1:9000

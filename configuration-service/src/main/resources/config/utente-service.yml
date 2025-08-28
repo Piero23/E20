@@ -15,7 +15,6 @@ spring:
       ddl-auto: update
     show-sql: true
 
-
 server:
   port: 0
 
@@ -26,7 +25,6 @@ eureka:
 
 cors:
   allowed-origins: http://localhost:8060
-
 
 
 jwt:

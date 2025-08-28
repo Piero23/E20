@@ -9,7 +9,6 @@ import org.springframework.cloud.config.server.EnableConfigServer;
 public class ConfigApplication {
 
     ///TODO mettere tutto su git (chiedere a scalzo o dodaro)
-    //TODO Tolgiere la rotta dal gateway al authentication e mail
     public static void main(String[] args) {
         SpringApplication.run(ConfigApplication.class, args);
     }

@@ -20,8 +20,8 @@
         <module>gestioneOrdini-service</module>
         <module>mailSender-service</module>
         <module>utente-service</module>
-        <module>authentication-service</module>
         <module>eventoLocation-service</module>
+        <module>authentication-server</module>
     </modules>
 
     <properties>

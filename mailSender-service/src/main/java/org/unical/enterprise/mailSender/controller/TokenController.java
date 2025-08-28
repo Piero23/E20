@@ -1,7 +1,6 @@
 package org.unical.enterprise.mailSender.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,6 +25,11 @@ import java.util.stream.Collectors;
 public class TokenController {
 
     private JwtDecoder jwtDecoder;
+
+    @GetMapping("/temp")
+    String tempTest() {
+        return "Autenticato, ma magari";
+    }
 
     @GetMapping("/user")
     public ResponseEntity<Map<String, Object>> getUserInfo(@AuthenticationPrincipal OidcUser oidcUser) {
@@ -58,7 +62,7 @@ public class TokenController {
 
     @GetMapping("/testClaims")
     public ResponseEntity<Map<String, Object>> getClaims(
-            @RegisteredOAuth2AuthorizedClient("custom-oidc") OAuth2AuthorizedClient client) {
+            @RegisteredOAuth2AuthorizedClient("gateway-client") OAuth2AuthorizedClient client) {
 
         if (client == null || client.getAccessToken() == null) {
             return ResponseEntity.status(401).body(Map.of("error", "No access token available"));

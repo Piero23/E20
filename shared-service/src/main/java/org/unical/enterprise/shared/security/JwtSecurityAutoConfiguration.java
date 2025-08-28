@@ -106,7 +106,7 @@ public class JwtSecurityAutoConfiguration {
 
         // Configurazione OAuth2 Client per il redirect automatico
         http.oauth2Login(oauth2 -> oauth2
-                .defaultSuccessUrl("/api/utente/test", true)
+                .defaultSuccessUrl("/api/token/temp", true)
                 .failureUrl("/login?error")
         );
 

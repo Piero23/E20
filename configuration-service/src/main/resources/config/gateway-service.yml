@@ -4,10 +4,11 @@ server:
 
 eureka:
   client:
-    registry-fetch-interval-seconds: 10
-    fetch-registry: true
     serviceUrl:
       defaultZone: http://localhost:8061/eureka/
+    registry-fetch-interval-seconds: 10
+    fetch-registry: true
+
 
 spring:
   output:
@@ -23,6 +24,13 @@ spring:
         locator:
           enabled: false
       routes:
+
+        ## Autenticazione
+        - id: authorization-server
+          uri: lb://authorization-server
+          predicates:
+            - Path=/auth/**
+
         ## Gestione Oridni
         - id: gestioneOrdini-ordine-service
           uri: lb://gestioneOrdini-service

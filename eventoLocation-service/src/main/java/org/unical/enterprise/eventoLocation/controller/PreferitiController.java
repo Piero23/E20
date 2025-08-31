@@ -77,6 +77,13 @@ public class PreferitiController {
         return ResponseEntity.ok(preferitiService.getAllEventiByUtenteId(utenteId));
     }
 
+    @DeleteMapping("/utente/{utenteId}")
+    public ResponseEntity<?> deleteListaPreferiti(@PathVariable String utenteId) {
+        preferitiService.deleteListaUtente(utenteId);
+        return ResponseEntity.ok().build();
+    }
+
+
     @PostMapping("/utente/{utenteId}/evento/{eventoId}")
     public ResponseEntity<?> aggiungiAiPreferiti(@RequestHeader(value = "X-Internal-Request", required = false) String internal,
                                                  @PathVariable UUID utenteId,
@@ -88,6 +95,7 @@ public class PreferitiController {
         preferitiService.save(PreferitiDto.fromIds(String.valueOf(utenteId), eventoId));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
 
     @DeleteMapping("/utente/{utenteId}/evento/{eventoId}")
     public ResponseEntity<?> rimuoviDaiPreferiti(@RequestHeader(value = "X-Internal-Request", required = false) String internal,

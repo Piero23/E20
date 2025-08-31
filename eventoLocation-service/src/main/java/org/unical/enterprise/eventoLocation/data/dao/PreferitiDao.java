@@ -14,5 +14,6 @@ public interface PreferitiDao extends JpaRepository<Preferiti, Long> {
 
     Optional<Preferiti> findByUtenteIdAndEventoId(String utenteUUID, long eventoId);
 
+    void deleteAllByUtenteId(String utenteUUID);
 
 }

@@ -3,6 +3,7 @@ package org.unical.enterprise.utente.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.unical.enterprise.shared.dto.UtenteDTO;
 import org.unical.enterprise.utente.data.dao.SeguaceDAO;
 import org.unical.enterprise.utente.data.dao.UtenteDAO;
@@ -42,6 +43,20 @@ public class SeguaceService {
 
     public boolean isSeguitoDa(String utenteTestUsername, String utenteTargetUsername) {
         return seguaceDAO.existsByUtenteSeguace_UsernameAndUtenteSeguito_Username(utenteTargetUsername, utenteTestUsername);
+    }
+
+    // Updating & Deleting Methods
+    @Transactional
+    public void deleteUtenteByUsername(String username) {
+        try {
+            // Elminazione dei seguaci
+            seguaceDAO.deleteAllByUtenteSeguace_Username(username);
+
+            // Eliminazione dei seguiti
+            seguaceDAO.deleteAllByUtenteSeguito_Username(username);
+        }
+        catch (Exception e)
+        { throw new RuntimeException("Eliminazione Seguaci Fallita"); }
     }
 
 

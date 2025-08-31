@@ -23,6 +23,9 @@ public interface EventoServiceClient {
     @GetMapping("/api/preferiti/utente/{utenteId}")
     List<EventoBasicDto> getAllPreferiti(@PathVariable UUID utenteId);
 
+    @DeleteMapping("/api/preferiti/utente/{utenteId}")
+    void deleteListaPreferiti(@PathVariable UUID utenteId);
+
     @GetMapping(value="api/evento/{id}")
     EventoBasicDto findById(@PathVariable("id") Long id);
 

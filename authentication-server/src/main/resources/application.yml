@@ -5,7 +5,18 @@ logging:
   level:
     org.springframework.security: trace
 
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8061/eureka/
+
 spring:
+  application:
+    name: authorization-server
+  output:
+    ansi:
+      enabled: always
+
   security:
     oauth2:
       authorizationserver:
@@ -27,3 +38,14 @@ spring:
                 - "openid"
                 - "profile"
             require-authorization-consent: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5454/e20
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true

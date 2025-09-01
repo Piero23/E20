@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.unical.enterprise.gestioneOrdini.domain.Biglietto;
 import org.unical.enterprise.gestioneOrdini.domain.Ordine;
-import org.unical.enterprise.gestioneOrdini.dto.OrdineRequest;
+import org.unical.enterprise.shared.dto.OrdineRequest;
 import org.unical.enterprise.gestioneOrdini.service.BigliettoService;
 import org.unical.enterprise.gestioneOrdini.service.OrdineService;
 import org.unical.enterprise.shared.clients.MailServiceClient;
@@ -39,34 +39,8 @@ public class OrdineController {
 
     @PostMapping("/save")
     private ResponseEntity<String> save(@Valid @RequestBody OrdineRequest ordineRequest){
-        try {
-            String user= SecurityContextHolder.getContext().getAuthentication().getName();
-            UUID orderUser = ordineRequest.ordine().utenteId();
-
-            if (ordineService.checkUtente(UUID.fromString(user))){
-                if (ordineService.checkUtente(orderUser)){
-                    if (user.equals(orderUser.toString())) {
-                        logger.info("Iniziato Ordine da utente {}", user);
-                        ordineService.saveOrdine(ordineRequest.ordine(), ordineRequest.biglietti());
-                        logger.info("Ordine creato con successo");
-                        return ResponseEntity.ok("Ordine creato con successo");
-                    } else {
-                        logger.info("Utente {} non autorizzato", user);
-                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-                    }
-                } else {
-                    logger.error("Si sta tentando di effettuare un ordine per un utente inesistente");
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Si sta tentando di effettuare un ordine per un utente inesistente");
-                }
-            } else {
-                logger.error("Utente {} non registrato sulla piattaforma", user);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Utente "+user+" non registrato sulla piattaforma");
-            }
-
-        } catch (RuntimeException e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        ordineService.saveOrdine(ordineRequest.ordine(), ordineRequest.biglietti());
+        return ResponseEntity.ok("Ordine creato con successo");
     }
 
     @GetMapping(value="/{id}")

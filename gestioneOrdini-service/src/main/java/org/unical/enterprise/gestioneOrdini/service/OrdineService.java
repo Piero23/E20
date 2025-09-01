@@ -4,12 +4,12 @@ package org.unical.enterprise.gestioneOrdini.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.unical.enterprise.gestioneOrdini.EventoServiceClient;
+import org.unical.enterprise.shared.clients.EventoServiceClient;
 import org.unical.enterprise.gestioneOrdini.dao.OrdineDao;
 import org.unical.enterprise.gestioneOrdini.domain.Biglietto;
 import org.unical.enterprise.gestioneOrdini.domain.Ordine;
 import org.unical.enterprise.shared.dto.BigliettoDto;
-import org.unical.enterprise.gestioneOrdini.dto.OrdineDto;
+import org.unical.enterprise.shared.dto.OrdineDto;
 import org.unical.enterprise.shared.clients.MailServiceClient;
 import org.unical.enterprise.shared.clients.UtenteServiceClient;
 import org.unical.enterprise.shared.dto.MailTransferDto;
@@ -100,15 +100,7 @@ public class OrdineService {
         return ordineDao.findAllByUtenteId(utente);
     }
 
-    @Transactional
-    public boolean checkUtente(UUID utente){
-        try{
-            utenteServiceClient.getById(utente);
-            return true;
-        } catch (Exception e){
-            return false;
-        }
-    }
+
 
 
 

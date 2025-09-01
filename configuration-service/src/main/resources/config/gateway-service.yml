@@ -42,6 +42,10 @@ spring:
           uri: lb://authentication-service
           predicates:
             - Path=/api/authentication/**
+        - id: payment-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/stripe/**
 
         # Rotte per Swagger GestioneOrdini Service
         - id: gestioneOrdini-service-api-docs
@@ -103,6 +107,21 @@ spring:
           filters:
             - StripPrefix=1
 
+        # Rotte per Swagger Payment Service
+        - id: payment-service-api-docs
+          uri: lb://payment-service
+          predicates:
+            - Path=/payment-service/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+
+        - id: payment-service-swagger-ui
+          uri: lb://payment-service
+          predicates:
+            - Path=/payment-service/swagger-ui/**
+          filters:
+            - StripPrefix=1
+
         #TODO AUTH ROTTE SWAGGER
 
 springdoc:
@@ -116,3 +135,5 @@ springdoc:
         url: /gestioneOrdini-service/v3/api-docs
       - name: Mail Sender Service
         url: /mailSender-service/v3/api-docs
+      - name: Payment Service
+        url: /payment-service/v3/api-docs

@@ -10,7 +10,8 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @ComponentScan(basePackages = {
 		"org.unical.enterprise.auth",
-		"org.unical.enterprise.shared"
+		"org.unical.enterprise.shared.clients",
+		"org.unical.enterprise.shared.dto"
 })
 @EnableFeignClients(basePackages = {
 		"org.unical.enterprise.shared.clients"

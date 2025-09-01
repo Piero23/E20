@@ -4,12 +4,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
@@ -26,58 +30,53 @@ import java.util.stream.Collectors;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // TEST: Utenti in Memory
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new InMemoryUserDetailsManager(
-                User.withUsername("mario")
-                        .password("password")
-                        .roles("USER")
-                        .build(),
-                User.withUsername("admin")
-                        .password("admin")
-                        .roles("ADMIN", "USER")
-                        .build()
-        );
+    @Bean // Password Configuration
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(12);
+    }
+
+    @Bean // Per poterlo usare manualmente nel codice all'interno dei Services
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 
 
-    @Bean
-    @Order(1)
-    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
-
-        http.securityMatcher("/oauth2/**", "/login", "/logout", "/.well-known/**", "/auth/register")
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/oauth2/**", "/.well-known/**" , "/auth/register").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .with(new OAuth2AuthorizationServerConfigurer(), configurer ->
-                        configurer.oidc(Customizer.withDefaults())
-                )
-                .exceptionHandling(exceptions -> exceptions
-                        .defaultAuthenticationEntryPointFor(
-                                new LoginUrlAuthenticationEntryPoint("/login"),
-                                new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
-                        )
-                )
-                .oauth2ResourceServer(resourceServer -> resourceServer
-                        .jwt(Customizer.withDefaults())
-                );
-
-        return http.build();
-    }
-
-    @Bean
-    @Order(2)
-    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/actuator/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .formLogin(Customizer.withDefaults());
-
-        return http.build();
-    }
+//    @Bean
+//    @Order(1)
+//    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
+//
+//        http.securityMatcher("/oauth2/**", "/login", "/logout", "/.well-known/**", "/auth/register")
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers("/oauth2/**", "/.well-known/**" , "/auth/register").permitAll()
+//                        .anyRequest().authenticated()
+//                )
+//                .with(new OAuth2AuthorizationServerConfigurer(), configurer ->
+//                        configurer.oidc(Customizer.withDefaults())
+//                )
+//                .exceptionHandling(exceptions -> exceptions
+//                        .defaultAuthenticationEntryPointFor(
+//                                new LoginUrlAuthenticationEntryPoint("/login"),
+//                                new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
+//                        )
+//                )
+//                .oauth2ResourceServer(resourceServer -> resourceServer
+//                        .jwt(Customizer.withDefaults())
+//                );
+//
+//        return http.build();
+//    }
+//
+//    @Bean
+//    @Order(2)
+//    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+//        http.authorizeHttpRequests((authorize) -> authorize
+//                        .requestMatchers("/actuator/**").permitAll()
+//                        .anyRequest().authenticated()
+//                )
+//                .formLogin(Customizer.withDefaults());
+//
+//        return http.build();
+//    }
 
 
     @Bean

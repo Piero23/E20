@@ -1,16 +1,14 @@
 package org.unical.enterprise.utente.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
-import org.unical.enterprise.shared.clients.EventoServiceClient;
-import org.unical.enterprise.shared.dto.UtenteDTO;
-import org.unical.enterprise.utente.service.SeguaceService;
-import org.unical.enterprise.utente.service.UtenteService;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.unical.enterprise.shared.dto.UtenteDTO;
+import org.unical.enterprise.utente.service.UtenteService;
+
 import java.util.List;
 import java.util.UUID;
 

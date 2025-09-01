@@ -28,14 +28,6 @@ public class Utente {
     @Email
     private String email;
 
-    @Column(nullable = false)
-    private boolean organizzatore;
-
-    // TODO: Rimuovi Password, lasciala solo in AuthenticationServer.(...).UserAuth
-    @Column(length = 500, nullable = false)
-    @ToString.Exclude // Don't include password in toString
-    private String password;
-
     @Column(name = "data_nascita", nullable = false)
     private LocalDate dataNascita;
 

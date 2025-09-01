@@ -1,12 +1,10 @@
 package org.unical.enterprise.utente.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.unical.enterprise.shared.clients.EventoServiceClient;
 import org.unical.enterprise.utente.data.dao.UtenteDAO;
 import org.unical.enterprise.shared.dto.UtenteDTO;
-import org.unical.enterprise.utente.data.dto.UtenteRegistrationDTO;
 import org.unical.enterprise.utente.data.model.Utente;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;

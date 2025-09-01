@@ -1,6 +1,24 @@
 spring:
   application:
     name: eventoLocation-service
-
+  datasource:
+    username: ${username}
+    password: ${password}
   config:
-    import: "optional:configserver:http://localhost:8088"
+    import:
+      - configserver:http://localhost:8088
+      - vault://
+  cloud:
+    vault:
+      uri: https://127.0.0.1:8200
+      ssl:
+        trust-store: classpath:ca.jks
+        trust-store-password: ${TRUST_STORE_PASSWORD}
+      authentication: approle
+      app-role:
+        role-id: ${VAULT_ROLE_ID}
+        secret-id: ${VAULT_SECRET_ID}
+      kv:
+        enabled: true
+        backend: secret
+        default-context: e20

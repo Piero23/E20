@@ -3,7 +3,6 @@ package org.unical.enterprise.gestioneOrdini.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
-import java.util.Date;
 import java.util.UUID;
 
 

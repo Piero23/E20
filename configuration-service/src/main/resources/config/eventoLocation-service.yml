@@ -5,11 +5,6 @@ spring:
     ansi:
       enabled: always
 
-  datasource:
-    url: jdbc:postgresql://localhost:5454/e20
-    username: admin
-    password: admin
-    driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
@@ -22,7 +17,14 @@ server:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8061/eureka/
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    hostname: localhost
+    prefer-ip-address: false
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
 
 cors:
   allowed-origins: http://localhost:8060
@@ -66,14 +68,6 @@ jwt:
       - path: PUT:/api/location/{id}
         roles:
           - ROLE_MANAGER
-
-logging:
-  file:
-    name: logs/app.log
-  level:
-    demacs:
-      unical:
-        esse20: INFO
 
 springdoc:
   packages-to-scan: org.unical.enterprise.eventoLocation

@@ -13,6 +13,9 @@ import org.unical.enterprise.shared.dto.EventoBasicDto;
 
 import java.util.List;
 import java.util.UUID;
+import org.springframework.web.bind.annotation.*;
+import org.unical.enterprise.eventoLocation.data.dto.PreferitiDto;
+import org.unical.enterprise.eventoLocation.service.PreferitiService;
 
 @RestController
 @RequestMapping("/api/preferiti")

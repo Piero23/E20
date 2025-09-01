@@ -1,13 +1,13 @@
 package org.unical.enterprise.eventoLocation.service;
 
-import org.unical.enterprise.eventoLocation.ContentNotFoundException;
-import org.unical.enterprise.eventoLocation.data.dao.LocationDao;
-import org.unical.enterprise.eventoLocation.data.dto.LocationDto;
-import org.unical.enterprise.eventoLocation.data.entities.Location;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.unical.enterprise.eventoLocation.ContentNotFoundException;
+import org.unical.enterprise.eventoLocation.data.dao.LocationDao;
+import org.unical.enterprise.eventoLocation.data.dto.LocationDto;
+import org.unical.enterprise.eventoLocation.data.entities.Location;
 
 
 @Service

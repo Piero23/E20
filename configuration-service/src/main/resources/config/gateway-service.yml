@@ -1,13 +1,11 @@
-server:
-  port: 8060
-  max-http-header-size: 48KB  # Aumenta la dimensione massima dell'header HTTP
-
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8061/eureka/
     registry-fetch-interval-seconds: 10
     fetch-registry: true
+  instance:
+    hostname: localhost
 
 
 spring:
@@ -20,114 +18,129 @@ spring:
     gateway:
       default-filters:
         - TokenRelay
-      discovery:
-        locator:
-          enabled: false
-      routes:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: false
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowed-origins: "http://localhost:3000"
+                allowed-methods:
+                  - GET
+                  - POST
+                  - PUT
+                  - DELETE
+                  - OPTIONS
+                allowed-headers: "*"
+                allow-credentials: true
+                max-age: 3600
+          routes:
 
-        ## Autenticazione
-        - id: authorization-server
-          uri: lb://authorization-server
-          predicates:
-            - Path=/auth/**
+            ## Autenticazione
+            - id: authorization-server
+              uri: lb://authorization-server
+              predicates:
+                - Path=/auth/**
 
-        ## Gestione Oridni
-        - id: gestioneOrdini-ordine-service
-          uri: lb://gestioneOrdini-service
-          predicates:
-            - Path=/api/ordine/**
-        - id: gestioneOrdini-biglietto-service
-          uri: lb://gestioneOrdini-service
-          predicates:
-            - Path=/api/biglietto/**
+            ## Gestione Oridni
+            - id: gestioneOrdini-ordine-service
+              uri: lb://gestioneOrdini-service
+              predicates:
+                - Path=/api/ordine/**
+            - id: gestioneOrdini-biglietto-service
+              uri: lb://gestioneOrdini-service
+              predicates:
+                - Path=/api/biglietto/**
 
-        ## Utenti
-        - id: utente-service
-          uri: lb://utente-service
-          predicates:
-            - Path=/api/utente/**
+            ## Utenti
+            - id: utente-service
+              uri: lb://utente-service
+              predicates:
+                - Path=/api/utente/**
 
-        ## Evento Location
-        - id: eventoLocation-evento-service
-          uri: lb://eventoLocation-service
-          predicates:
-            - Path=/api/evento/**
-        - id: eventoLocation-location-service
-          uri: lb://eventoLocation-service
-          predicates:
-            - Path=/api/location/**
-        - id: eventoLocation-preferiti-service
-          uri: lb://eventoLocation-service
-          predicates:
-            - Path=/api/preferiti/**
+            ## Evento Location
+            - id: eventoLocation-evento-service
+              uri: lb://eventoLocation-service
+              predicates:
+                - Path=/api/evento/**
+            - id: eventoLocation-location-service
+              uri: lb://eventoLocation-service
+              predicates:
+                - Path=/api/location/**
+            - id: eventoLocation-preferiti-service
+              uri: lb://eventoLocation-service
+              predicates:
+                - Path=/api/preferiti/**
 
-        ## Mail Sender
-        - id: mailSender-service
-          uri: lb://mailSender-service
-          predicates:
-            - Path=/api/token/**
+            ## Mail Sender
+            - id: mailSender-service
+              uri: lb://mailSender-service
+              predicates:
+                - Path=/api/token/**
 
-        # Rotte per Swagger GestioneOrdini Service
-        - id: gestioneOrdini-service-api-docs
-          uri: lb://gestioneOrdini-service
-          predicates:
-            - Path=/gestioneOrdini-service/v3/api-docs/**
-          filters:
-            - StripPrefix=1
+            # Rotte per Swagger GestioneOrdini Service
+            - id: gestioneOrdini-service-api-docs
+              uri: lb://gestioneOrdini-service
+              predicates:
+                - Path=/gestioneOrdini-service/v3/api-docs/**
+              filters:
+                - StripPrefix=1
 
-        - id: gestioneOrdini-service-swagger-ui
-          uri: lb://gestioneOrdini-service
-          predicates:
-            - Path=/gestioneOrdini-service/swagger-ui/**
-          filters:
-            - StripPrefix=1
+            - id: gestioneOrdini-service-swagger-ui
+              uri: lb://gestioneOrdini-service
+              predicates:
+                - Path=/gestioneOrdini-service/swagger-ui/**
+              filters:
+                - StripPrefix=1
 
-        # Rotte per Swagger Utente Service
-        - id: utente-service-api-docs
-          uri: lb://utente-service
-          predicates:
-            - Path=/utente-service/v3/api-docs/**
-          filters:
-            - StripPrefix=1
+            # Rotte per Swagger Utente Service
+            - id: utente-service-api-docs
+              uri: lb://utente-service
+              predicates:
+                - Path=/utente-service/v3/api-docs/**
+              filters:
+                - StripPrefix=1
 
-        - id: utente-service-swagger-ui
-          uri: lb://utente-service
-          predicates:
-            - Path=/utente-service/swagger-ui/**
-          filters:
-            - StripPrefix=1
+            - id: utente-service-swagger-ui
+              uri: lb://utente-service
+              predicates:
+                - Path=/utente-service/swagger-ui/**
+              filters:
+                - StripPrefix=1
 
-        # Rotte per Swagger EventoLocation Service
-        - id: eventoLocation-service-api-docs
-          uri: lb://eventoLocation-service
-          predicates:
-            - Path=/eventoLocation-service/v3/api-docs/**
-          filters:
-            - StripPrefix=1
+            # Rotte per Swagger EventoLocation Service
+            - id: eventoLocation-service-api-docs
+              uri: lb://eventoLocation-service
+              predicates:
+                - Path=/eventoLocation-service/v3/api-docs/**
+              filters:
+                - StripPrefix=1
 
-        - id: eventoLocation-service-swagger-ui
-          uri: lb://eventoLocation-service
-          predicates:
-            - Path=/eventoLocation-service/swagger-ui/**
-          filters:
-            - StripPrefix=1
+            - id: eventoLocation-service-swagger-ui
+              uri: lb://eventoLocation-service
+              predicates:
+                - Path=/eventoLocation-service/swagger-ui/**
+              filters:
+                - StripPrefix=1
 
-        # Rotte per Swagger MailSender Service
-        - id: mailSender-service-api-docs
-          uri: lb://mailSender-service
-          predicates:
-            - Path=/mailSender-service/v3/api-docs/**
-          filters:
-            - StripPrefix=1
+            # Rotte per Swagger MailSender Service
+            - id: mailSender-service-api-docs
+              uri: lb://mailSender-service
+              predicates:
+                - Path=/mailSender-service/v3/api-docs/**
+              filters:
+                - StripPrefix=1
 
-        - id: mailSender-service-swagger-ui
-          uri: lb://mailSender-service
-          predicates:
-            - Path=/mailSender-service/swagger-ui/**
-          filters:
-            - StripPrefix=1
+            - id: mailSender-service-swagger-ui
+              uri: lb://mailSender-service
+              predicates:
+                - Path=/mailSender-service/swagger-ui/**
+              filters:
+                - StripPrefix=1
 
-        #TODO AUTH ROTTE SWAGGER
+            #TODO AUTH ROTTE SWAGGER
 
 springdoc:
   swagger-ui:
@@ -140,3 +153,12 @@ springdoc:
         url: /gestioneOrdini-service/v3/api-docs
       - name: Mail Sender Service
         url: /mailSender-service/v3/api-docs
+
+rate-limiter:
+  permits-per-second: 5
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

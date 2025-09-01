@@ -1,10 +1,10 @@
 package org.unical.enterprise.eventoLocation;
 
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 import org.unical.enterprise.eventoLocation.data.dao.EventoDao;
 import org.unical.enterprise.eventoLocation.data.dao.LocationDao;
 import org.unical.enterprise.eventoLocation.data.dao.PreferitiDao;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 
 @Component
 public class Test implements CommandLineRunner {

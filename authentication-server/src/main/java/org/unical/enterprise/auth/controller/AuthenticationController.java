@@ -15,14 +15,13 @@ import org.unical.enterprise.auth.exceptions.UsernameAlreadyExistsException;
 import org.unical.enterprise.auth.service.AuthService;
 
 @RestController
-@RequestMapping("/auth")
 @AllArgsConstructor
 public class AuthenticationController {
 
     private final AuthService authService;
     private final PasswordEncoder passwordEncoder;
 
-    @PostMapping("/register")
+    @PostMapping("/auth/register")
     public ResponseEntity<?> registerNewUser(@Valid @RequestBody UtenteRegistrationDTO utenteRegistrationDTO) {
 
         try {
@@ -38,11 +37,16 @@ public class AuthenticationController {
 
     }
 
-    @DeleteMapping("/me")
+    @DeleteMapping("/api/utente/me")
     public ResponseEntity<Void> deleteUser(Authentication authentication) {
         String username = authentication.getName();
         authService.deleteUser(username);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("auth/ciao")
+    String greeting() {
+        return "Ciao";
     }
 
 }

@@ -26,6 +26,11 @@ spring:
       routes:
 
         ## Autenticazione
+        - id: delete-user-account
+          uri: lb://authorization-server
+          predicates:
+            - Path=/api/utente/me/temp
+            - Method=DELETE
         - id: authorization-server
           uri: lb://authorization-server
           predicates:

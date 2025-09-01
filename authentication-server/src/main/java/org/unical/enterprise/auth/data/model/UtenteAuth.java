@@ -1,8 +1,10 @@
 package org.unical.enterprise.auth.data.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-import org.unical.enterprise.auth.data.dao.UtenteAuthDAO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.unical.enterprise.shared.dto.UtenteAuthDTO;
 
 import java.util.HashSet;

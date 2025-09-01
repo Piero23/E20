@@ -60,7 +60,7 @@ public class GatewaySecurityConfig {
                 .cors(cors -> cors.configurationSource(exchange -> new CorsConfiguration().applyPermitDefaultValues()))
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/api/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .pathMatchers("/auth/**", "/api/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyExchange().authenticated()
                 )
                 .oauth2Login(Customizer.withDefaults())

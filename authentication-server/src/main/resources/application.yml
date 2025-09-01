@@ -10,6 +10,12 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:8061/eureka/
 
+jwt:
+  security:
+    enabled: true
+    publicPaths: /oauth2/**, /.well-known/**, /login, /auth/register
+
+
 spring:
   application:
     name: authorization-server

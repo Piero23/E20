@@ -60,7 +60,7 @@ public class JwtSecurityAutoConfiguration {
 
         http.authorizeHttpRequests(auth -> {
             // Aggiungi endpoint pubblici per OAuth2
-            auth.requestMatchers("/login/**", "/oauth2/**", "/error").permitAll();
+            auth.requestMatchers("/login/**", "/oauth2/**", "/error" ).permitAll();
 
             if (securityProperties.getPublicPaths() != null) {
                 for (String path : securityProperties.getPublicPaths()) {

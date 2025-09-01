@@ -31,53 +31,53 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         return new InMemoryUserDetailsManager(
                 User.withUsername("mario")
-                        .password("{noop}password")
+                        .password("password")
                         .roles("USER")
                         .build(),
                 User.withUsername("admin")
-                        .password("{noop}admin")
+                        .password("admin")
                         .roles("ADMIN", "USER")
                         .build()
         );
     }
 
 
-//    @Bean
-//    @Order(1)
-//    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
-//
-//        http.securityMatcher("/oauth2/**", "/login", "/logout", "/.well-known/**")
-//                .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers("/oauth2/**", "/.well-known/**").permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .with(new OAuth2AuthorizationServerConfigurer(), configurer ->
-//                        configurer.oidc(Customizer.withDefaults())
-//                )
-//                .exceptionHandling(exceptions -> exceptions
-//                        .defaultAuthenticationEntryPointFor(
-//                                new LoginUrlAuthenticationEntryPoint("/login"),
-//                                new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
-//                        )
-//                )
-//                .oauth2ResourceServer(resourceServer -> resourceServer
-//                        .jwt(Customizer.withDefaults())
-//                );
-//
-//        return http.build();
-//    }
-//
-//    @Bean
-//    @Order(2)
-//    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-//        http.authorizeHttpRequests((authorize) -> authorize
-//                        .requestMatchers("/actuator/**").permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .formLogin(Customizer.withDefaults());
-//
-//        return http.build();
-//    }
+    @Bean
+    @Order(1)
+    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
+
+        http.securityMatcher("/oauth2/**", "/login", "/logout", "/.well-known/**", "/auth/register")
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/oauth2/**", "/.well-known/**" , "/auth/register").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .with(new OAuth2AuthorizationServerConfigurer(), configurer ->
+                        configurer.oidc(Customizer.withDefaults())
+                )
+                .exceptionHandling(exceptions -> exceptions
+                        .defaultAuthenticationEntryPointFor(
+                                new LoginUrlAuthenticationEntryPoint("/login"),
+                                new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
+                        )
+                )
+                .oauth2ResourceServer(resourceServer -> resourceServer
+                        .jwt(Customizer.withDefaults())
+                );
+
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
+    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/actuator/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin(Customizer.withDefaults());
+
+        return http.build();
+    }
 
 
     @Bean

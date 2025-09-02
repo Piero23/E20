@@ -1,4 +1,10 @@
 
+jwt:
+  security:
+    enabled: true
+    publicPaths: /oauth2/**, /.well-known/**, /login, /auth/register
+
+
 spring:
   application:
     name: authorization-server

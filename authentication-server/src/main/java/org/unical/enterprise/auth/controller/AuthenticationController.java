@@ -19,7 +19,6 @@ import org.unical.enterprise.auth.service.AuthService;
 public class AuthenticationController {
 
     private final AuthService authService;
-    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/auth/register")
     public ResponseEntity<?> registerNewUser(@Valid @RequestBody UtenteRegistrationDTO utenteRegistrationDTO) {
@@ -44,9 +43,14 @@ public class AuthenticationController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("auth/ciao")
+    @GetMapping("/auth/ciao")
     String greeting() {
         return "Ciao";
+    }
+
+    @GetMapping("/auth/ciao/auth")
+    String greeting(Authentication auth) {
+        return "Ciao " + auth.getName();
     }
 
 }

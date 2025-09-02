@@ -20,6 +20,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,7 +43,12 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain publicSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/auth/register", "/actuator/**", "/auth/ciao")
+                .securityMatcher(
+                        "/auth/register",
+                        "/auth/login",
+                        "/actuator/**",
+                        "/auth/ciao"
+                )
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> authorize
                         .anyRequest().permitAll()
@@ -54,8 +61,7 @@ public class SecurityConfig {
     @Order(2)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
 
-        OAuth2AuthorizationServerConfigurer authServerConfigurer =
-                new OAuth2AuthorizationServerConfigurer();
+        OAuth2AuthorizationServerConfigurer authServerConfigurer = new OAuth2AuthorizationServerConfigurer();
 
         http
                 // Paths Per OAuth2
@@ -115,10 +121,25 @@ public class SecurityConfig {
 
 
     @Bean
-    public OAuth2TokenCustomizer<JwtEncodingContext> jwtTokenCustomizer() {
+    public OAuth2TokenCustomizer<JwtEncodingContext> jwtTokenCustomizer(TokenProperties properties, TokenProperties tokenProperties) {
         return context -> {
+
+            System.out.println("\n\n" +
+                    "Props:"+
+//                    "\n  Issuer:" + properties.getIssuer() +
+//                    "\n  Expire:" + properties.getExpiration() +
+//                    "\n  Secret:" + properties.getSecret() +
+                    "\n\n");
+
             Authentication principal = context.getPrincipal();
-            if (principal == null) return;
+            if (principal == null || !context.getTokenType().getValue().equals("id_token")) return;
+
+            // Aggiungi Campi di Riconoscimento
+            context.getClaims().claim("username", principal.getName());
+            context.getClaims().claim("preferred_username", principal.getName());
+
+            // Aggiungi lo scope (per /userinfo)
+            context.getClaims().claim("scope", String.join(" ", tokenProperties.getScopes()));
 
             // Aggiungi le Authorities
             Set<String> authorities = principal.getAuthorities()
@@ -128,12 +149,16 @@ public class SecurityConfig {
 
             context.getClaims().claim("roles", authorities);
 
-            // Aggiungi lo scope (per /userinfo)
-            context.getClaims().claim("scope", "openid roles");
+            // Impostazioni Temporali
+            Instant issuedAt = Instant.now().truncatedTo(ChronoUnit.SECONDS); // Creato adesso
+            context.getClaims().issuedAt(issuedAt);
+            context.getClaims().notBefore(issuedAt);
+            context.getClaims().expiresAt(issuedAt.plus(tokenProperties.getExpiration(), ChronoUnit.SECONDS));
 
-            // Aggiungi Campi Secondari di Riconoscimento
-            context.getClaims().claim("username", principal.getName());
-            context.getClaims().claim("preferred_username", principal.getName());
+            // Issuer
+            context.getClaims().issuer(properties.getIssuer());
+
+
         };
     }
 

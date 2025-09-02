@@ -1,13 +1,18 @@
 package org.unical.enterprise.utente.data.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
-import lombok.*;
-import org.unical.enterprise.shared.dto.UtenteAuthDTO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.unical.enterprise.shared.dto.UtenteDTO;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "utente")

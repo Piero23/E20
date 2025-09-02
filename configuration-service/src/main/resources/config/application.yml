@@ -1,6 +1,22 @@
+
+## Logging
+logging:
+  level:
+    org.springframework.security.oauth2.server.resource.authentication: DEBUG
+    org.springframework.security.oauth2.jwt: DEBUG
+    org.springframework.security.authentication: DEBUG
+
+
+## Common Token Properties
+auth:
+  token:
+    issuer: "http://127.0.0.1:9000"
+    expiration: 3600
+    secret: "mS6QTX_6tt-JAhJTf5VzgY_XrKfLbEC4LLMBj8B02R8"
+
 spring:
   security:
-    oauth2:
+    oauth2: ## OAuth2 Clients
       client:
         registration:
           gateway-client:
@@ -13,13 +29,7 @@ spring:
 
         provider:
           gateway-client:
-            issuer-uri: http://127.0.0.1:9000
+            issuer-uri: ${auth.token.issuer}
       resourceserver:
         jwt:
-          issuer-uri: http://127.0.0.1:9000
-
-logging:
-  level:
-    org.springframework.security.oauth2.server.resource.authentication: DEBUG
-    org.springframework.security.oauth2.jwt: DEBUG
-    org.springframework.security.authentication: DEBUG
+          issuer-uri: ${auth.token.issuer}

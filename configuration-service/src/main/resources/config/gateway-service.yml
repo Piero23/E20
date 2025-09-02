@@ -14,6 +14,8 @@ spring:
   output:
     ansi:
       enabled: always
+
+
   cloud:
     discovery:
       enabled: true

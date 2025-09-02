@@ -2,14 +2,9 @@ package org.unical.enterprise.utente.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.shared.clients.EventoServiceClient;
 import org.unical.enterprise.shared.dto.EventoBasicDto;
@@ -29,19 +24,13 @@ public class EventoPreferitoController {
     private final UtenteService utenteService;
     private final SeguaceService seguaceService;
 
-    private JwtDecoder jwtDecoder;
-
     // Handling della Relazione Seguiti rispetto ad UtenteCorrente
     @GetMapping("/preferiti")
-    public ResponseEntity<List<EventoBasicDto>> getPreferiti(@PathVariable String username,
-                                                             @RegisteredOAuth2AuthorizedClient("custom-oidc") OAuth2AuthorizedClient client) {
+    public ResponseEntity<List<EventoBasicDto>> getPreferiti(@PathVariable String username, Authentication authentication) {
 
-        String tokenValue = client.getAccessToken().getTokenValue();
 
-        // Decodifica il token con il decoder di Spring
-        Jwt jwt = jwtDecoder.decode(tokenValue);
 
-        String viewerUsername = jwt.getClaimAsString("username");
+        String viewerUsername = authentication.getName();
         System.out.println(viewerUsername);
         System.out.println("MUCCA");
         if (viewerUsername == null || viewerUsername.isBlank())

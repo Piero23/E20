@@ -8,13 +8,18 @@ spring:
     username: ${username}
     password: ${password}
     url: jdbc:postgresql://localhost:5454/e20
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+      idle-timeout: 600000
+
   config:
     import:
-      - "configserver:http://localhost:8088"
+      - "optional:configserver:http://localhost:8088"
       - "vault://"
   cloud:
-    config:
-      fail-fast: true
     vault:
       uri: https://127.0.0.1:8200
       ssl:
@@ -29,7 +34,88 @@ spring:
         backend: secret
         default-context: ${spring.application.name}
 
-jwt:
-  secret: ${jwt.secret}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
   security:
-    enabled: false
+    oauth2:
+      client:
+        registration:
+          gateway-client:
+            client-id: gateway-client
+            client-secret: secret
+            client-authentication-method: client_secret_basic
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8060/login/oauth2/code/gateway-client
+            scope: openid, profile
+
+        provider:
+          gateway-client:
+            issuer-uri: http://127.0.0.1:9000
+      resourceserver:
+        jwt:
+          issuer-uri: http://127.0.0.1:9000
+
+logging:
+  file:
+    name: logs/app.log
+  level:
+    demacs:
+      unical:
+        esse20: INFO
+    org.springframework.security.oauth2.server.resource.authentication: DEBUG
+    org.springframework.security.oauth2.jwt: DEBUG
+    org.springframework.security.authentication: DEBUG
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8061/eureka/
+      fetch-registry: true
+      register-with-eureka: true
+#    instance:
+#      hostname: localhost
+#      prefer-ip-address: false
+#      lease-renewal-interval-in-seconds: 10
+#      lease-expiration-duration-in-seconds: 30
+
+
+cors:
+  allowed-origins: http://localhost:8060
+
+
+jwt:
+  security:
+    enabled: true
+    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /api/utente/register, /api/utente/test
+    protectedRoutes:
+      - path: /api/utente
+        roles:
+          - ROLE_ADMIN
+      - path: /api/utente/{username}
+        roles:
+          - ROLE_USER
+      - path: DELETE:/api/utente/{username}
+        roles:
+          - ROLE_USER
+      - path: PUT:/api/utente/{username}
+        roles:
+          - ROLE_USER
+      - path: /api/utente/getById
+        roles:
+          - ROLE_ADMIN
+
+springdoc:
+  packages-to-scan: org.unical.enterprise.utente
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    groups:
+      enabled: true

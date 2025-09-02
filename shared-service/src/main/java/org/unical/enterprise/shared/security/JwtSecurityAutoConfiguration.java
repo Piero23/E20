@@ -120,12 +120,15 @@ public class JwtSecurityAutoConfiguration {
     }
 
 
+    //TODO
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
             System.out.println("=== JWT AUTHENTICATION CONVERTER ===");
             System.out.println("JWT Claims: " + jwt.getClaims());
+
+            System.out.println("JWT Claims: " + jwt.getTokenValue());
 
             // Prima prova con il formato del tuo custom auth server (claim "roles")
             Object rolesObj = jwt.getClaim("roles");

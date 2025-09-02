@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.client.*;
+import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -30,6 +32,7 @@ public class GatewaySecurityConfig {
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
             System.out.println("=== JWT AUTHENTICATION CONVERTER - REACTIVE ===");
             System.out.println("JWT Claims: " + jwt.getClaims());
+
 
             // Prima prova con il formato del tuo custom auth server (claim "roles")
             Object rolesObj = jwt.getClaim("roles");
@@ -68,6 +71,8 @@ public class GatewaySecurityConfig {
 //
 //        return NimbusReactiveJwtDecoder.withSecretKey(secretKey).build();
 //    }
+
+
 
     @Bean
     public ServerRequestCache requestCache() {

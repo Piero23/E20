@@ -19,7 +19,6 @@ import org.unical.enterprise.auth.service.AuthService;
 public class AuthenticationController {
 
     private final AuthService authService;
-    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/auth/register")
     public ResponseEntity<?> registerNewUser(@Valid @RequestBody UtenteRegistrationDTO utenteRegistrationDTO) {
@@ -37,16 +36,21 @@ public class AuthenticationController {
 
     }
 
-    @DeleteMapping("/api/utente/me/temp")
+    @DeleteMapping("/api/utente/me")
     public ResponseEntity<Void> deleteUser(Authentication authentication) {
         String username = authentication.getName();
         authService.deleteUser(username);
         return ResponseEntity.noContent().build();
     }
 
-
-    @GetMapping("auth/ciao")
+    @GetMapping("/auth/ciao")
     String greeting() {
         return "Ciao";
     }
+
+    @GetMapping("/auth/ciao/auth")
+    String greeting(Authentication auth) {
+        return "Ciao " + auth.getName();
+    }
+
 }

@@ -2,7 +2,7 @@ package org.unical.enterprise.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,8 +10,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.savedrequest.ServerRequestCache;
+import org.springframework.security.web.server.savedrequest.WebSessionServerRequestCache;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.server.WebSession;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,20 +59,71 @@ public class GatewaySecurityConfig {
     }
 
     @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+    public ServerRequestCache requestCache() {
+        return new WebSessionServerRequestCache();
+    }
+
+    @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http,
+                                                         ServerRequestCache requestCache,
+                                                         ReactiveJwtAuthenticationConverterAdapter jwtAuthConverter)
+    {
         http
                 .cors(cors -> cors.configurationSource(exchange -> new CorsConfiguration().applyPermitDefaultValues()))
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/api/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        // Endpoint Tecnici
+                        .pathMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
+                        // Endpoint Autenticazione
+                        .pathMatchers("/auth/register").permitAll()
+
                         .anyExchange().authenticated()
                 )
-                .oauth2Login(Customizer.withDefaults())
-                .oauth2ResourceServer(resourceServer -> resourceServer
-                        .jwt(jwtSpec ->
-                                jwtSpec.jwtAuthenticationConverter(reactiveJwtAuthenticationConverter())
+                .oauth2Login(oauth2 -> oauth2
+                        // On Success -> Go to the Original Requested URL
+                        .authenticationSuccessHandler((webFilterExchange, authentication) ->
+
+                                // Recupera l'URL iniziale
+                                requestCache.getRedirectUri(webFilterExchange.getExchange())
+                                        .defaultIfEmpty(URI.create("/api/gateway/me")) // Temporaneo -> utente/me
+                                        .flatMap(uri -> {
+                                            var response = webFilterExchange.getExchange().getResponse();
+
+                                            // Segnala il FOUND della Richiesta
+                                            response.setStatusCode(HttpStatus.FOUND);
+
+                                            // Rimanda all'URL Originale della Richiesta
+                                            response.getHeaders().setLocation(uri);
+
+                                            // Concludi il Processo di Login + Reindizzamento
+                                            return response.setComplete();
+                                        })
                         )
-                );
+
+                        // On Fail Authorization -> Invalidate Session
+                        .authenticationFailureHandler((webFilterExchange, exception) -> {
+
+                            return webFilterExchange.getExchange()
+                                    // Invalida la Sessione Corrente
+                                    .getSession()
+                                    .doOnNext(WebSession::invalidate)
+                                    .flatMap(session -> {
+                                        // Rimanda Unauthorizaed
+                                        webFilterExchange.getExchange()
+                                                .getResponse()
+                                                .setStatusCode(HttpStatus.UNAUTHORIZED);
+                                        // Concludi il Processo di Fallimento
+                                        return webFilterExchange.getExchange()
+                                                .getResponse()
+                                                .setComplete();
+                                    });
+                        })
+                )
+                .oauth2ResourceServer(resourceServer -> resourceServer
+                        .jwt(jwtSpec -> jwtSpec.jwtAuthenticationConverter(jwtAuthConverter))
+                )
+                .csrf(ServerHttpSecurity.CsrfSpec::disable);
 
         return http.build();
     }

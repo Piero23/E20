@@ -30,7 +30,7 @@ spring:
           gateway-client:
             registration:
               client-id: "gateway-client"
-              client-secret: "{noop}secret"
+              client-secret: "$2a$12$oOagAoNYyMcpzY602Zqtj.YT/P1MuZUm/BraPQpHSNeWLIapyBOWq"
               client-authentication-methods:
                 - "client_secret_basic"
               authorization-grant-types:
@@ -43,7 +43,8 @@ spring:
               scopes:
                 - "openid"
                 - "profile"
-            require-authorization-consent: true
+            # Tolgo il Consenso per il Profile
+            # require-authorization-consent: true
 
   datasource:
     url: jdbc:postgresql://localhost:5454/e20
@@ -55,3 +56,8 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+jwt:
+  security:
+    enabled: true
+    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /auth/register

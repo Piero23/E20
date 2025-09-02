@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/e20
+    url: jdbc:postgresql://localhost:5454/e20
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -61,7 +61,7 @@ logging:
     demacs:
       unical:
         esse20: INFO
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://localhost:8061/eureka/
     fetch-registry: true
     register-with-eureka: true
   instance:

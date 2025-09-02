@@ -7,10 +7,10 @@ spring:
   datasource:
     username: ${username}
     password: ${password}
-    url: jdbc:postgresql://localhost:5432/e20
+    url: jdbc:postgresql://localhost:5454/e20
   config:
     import:
-      - "configserver:http://localhost:8080"
+      - "configserver:http://localhost:8088"
       - "vault://"
   cloud:
     config:

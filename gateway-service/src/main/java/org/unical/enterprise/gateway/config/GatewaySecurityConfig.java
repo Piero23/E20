@@ -102,9 +102,9 @@ public class GatewaySecurityConfig {
                         )
 
                         // On Fail Authorization -> Invalidate Session
-                        .authenticationFailureHandler((webFilterExchange, exception) -> {
+                        .authenticationFailureHandler((webFilterExchange, exception) ->
 
-                            return webFilterExchange.getExchange()
+                                webFilterExchange.getExchange()
                                     // Invalida la Sessione Corrente
                                     .getSession()
                                     .doOnNext(WebSession::invalidate)
@@ -117,8 +117,8 @@ public class GatewaySecurityConfig {
                                         return webFilterExchange.getExchange()
                                                 .getResponse()
                                                 .setComplete();
-                                    });
-                        })
+                                    })
+                        )
                 )
                 .oauth2ResourceServer(resourceServer -> resourceServer
                         .jwt(jwtSpec -> jwtSpec.jwtAuthenticationConverter(jwtAuthConverter))

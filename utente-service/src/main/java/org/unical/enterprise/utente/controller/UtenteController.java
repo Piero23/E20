@@ -21,6 +21,7 @@ public class UtenteController {
     @GetMapping("/me")
     public ResponseEntity<UtenteDTO> me(Authentication auth) {
         String username = auth.getName();
+        auth.getAuthorities().forEach(System.out::println);
         return ResponseEntity.ok(utenteService.getUtenteByUsername(username));
     }
 

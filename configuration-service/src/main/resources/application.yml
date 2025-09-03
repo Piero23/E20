@@ -11,12 +11,6 @@ spring:
         git:
           uri: ${HOME}/config
 
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8085/realms/esse20
-
 management:
   endpoints:
     web:

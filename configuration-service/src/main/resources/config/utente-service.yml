@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+      idle-timeout: 600000
+
+  security:
+    oauth2:
+      client:
+        registration:
+          gateway-client:
+            client-secret: secret
+            client-authentication-method: client_secret_basic
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8060/login/oauth2/code/gateway-client
+            scope: openid, profile
+
+  jpa:
+    hibernate:
+      show-sql: false
+      properties:
+        hibernate:
+          format_sql: true
+
+cors:
+  allowed-origins: http://localhost:8060
+
+springdoc:
+  packages-to-scan: org.unical.enterprise.utente
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    groups:
+      enabled: true
+
+logging:
+  file:
+    name: logs/app.log
+  level:
+    demacs:
+      unical:
+        esse20: INFO
+    org.springframework.security.oauth2.server.resource.authentication: DEBUG
+    org.springframework.security.oauth2.jwt: DEBUG
+    org.springframework.security.authentication: DEBUG

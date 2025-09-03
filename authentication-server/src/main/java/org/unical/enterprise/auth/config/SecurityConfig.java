@@ -123,16 +123,24 @@ public class SecurityConfig {
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> jwtTokenCustomizer(TokenProperties properties, TokenProperties tokenProperties) {
         return context -> {
+            
+            System.out.println(" === JWT Token Customizer === ");
 
-            System.out.println("\n\n" +
-                    "Props:"+
-//                    "\n  Issuer:" + properties.getIssuer() +
-//                    "\n  Expire:" + properties.getExpiration() +
-//                    "\n  Secret:" + properties.getSecret() +
-                    "\n\n");
+            if (context.getTokenType() == null || !"access_token".equals(context.getTokenType().getValue())) {
+                System.out.println("Not access token");
+                return;
+            }
+
+            System.out.println(" Token Type: " + context.getTokenType().getValue());
 
             Authentication principal = context.getPrincipal();
-            if (principal == null || !context.getTokenType().getValue().equals("id_token")) return;
+            if (principal == null || principal.getAuthorities() == null) {
+                System.out.println(" Principal is " + principal);
+
+                if (principal != null) System.out.println(", Authorities are " + principal.getAuthorities());
+
+                return;
+            }
 
             // Aggiungi Campi di Riconoscimento
             context.getClaims().claim("username", principal.getName());
@@ -157,6 +165,11 @@ public class SecurityConfig {
 
             // Issuer
             context.getClaims().issuer(properties.getIssuer());
+
+            System.out.println("JWT Claims: ");
+            context.getClaims().build()
+                    .getClaims()
+                    .forEach((k, v) -> System.out.printf(" %s: %s\n", k, v));
 
 
         };

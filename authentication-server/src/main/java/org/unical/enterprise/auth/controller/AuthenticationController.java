@@ -5,33 +5,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.token.TokenService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
-import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
-import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
-import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeAuthenticationToken;
-import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationGrantAuthenticationToken;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.token.DefaultOAuth2TokenContext;
-import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenContext;
-import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.auth.data.dto.UtenteRegistrationDTO;
 import org.unical.enterprise.auth.data.model.UtenteAuth;
 import org.unical.enterprise.auth.exceptions.UserProfileCreationException;
 import org.unical.enterprise.auth.exceptions.UsernameAlreadyExistsException;
 import org.unical.enterprise.auth.service.AuthService;
-import org.unical.enterprise.auth.service.JwtTokenService;
 import org.unical.enterprise.shared.dto.UtenteAuthDTO;
-
-import java.time.Instant;
-import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -40,9 +21,9 @@ public class AuthenticationController {
     private final AuthService authService;
     private final AuthenticationManager authenticationManager;
     //private final JwtTokenService jwtTokenService;
-    private final OAuth2AuthorizationService authorizationService;
-    private final OAuth2TokenGenerator<?> tokenGenerator;
-    private final RegisteredClientRepository registeredClientRepository;
+//    private final OAuth2AuthorizationService authorizationService;
+//    private final OAuth2TokenGenerator<?> tokenGenerator;
+//    private final RegisteredClientRepository registeredClientRepository;
 
     @PostMapping("/auth/register")
     public ResponseEntity<?> registerNewUser(@Valid @RequestBody UtenteRegistrationDTO utenteRegistrationDTO) {

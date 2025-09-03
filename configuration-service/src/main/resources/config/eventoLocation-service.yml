@@ -1,25 +1,6 @@
 spring:
 
 
-  security:
-    oauth2: ## OAuth2 Clients
-      client:
-        registration:
-          gateway-client:
-            client-id: gateway-client
-            client-secret: secret
-            client-authentication-method: client_secret_basic
-            authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8060/login/oauth2/code/gateway-client
-            scope: openid, profile
-
-        provider:
-          gateway-client:
-            issuer-uri: ${auth.token.issuer}
-      resourceserver:
-        jwt:
-          issuer-uri: ${auth.token.issuer}
-
   application:
     name: eventoLocation-service
   output:

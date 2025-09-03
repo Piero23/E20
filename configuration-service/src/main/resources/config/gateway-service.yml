@@ -28,12 +28,12 @@ spring:
 
         ## Autenticazione
         - id: delete-account
-          uri: lb://authorization-server
+          uri: lb://authentication-server
           predicates:
             - Path=/api/utente/me
             - Method=DELETE
-        - id: authorization-server
-          uri: lb://authorization-server
+        - id: authentication-server
+          uri: lb://authentication-server
           predicates:
             - Path=/auth/**
 

@@ -13,6 +13,5 @@ public class TokenProperties {
 
     private String issuer;
     private Long expiration;
-    private String secret;
     private List<String> scopes;
 }

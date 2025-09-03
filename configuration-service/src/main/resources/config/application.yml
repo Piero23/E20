@@ -13,23 +13,3 @@ auth:
     issuer: "http://127.0.0.1:9000"
     expiration: 3600
     secret: "mS6QTX_6tt-JAhJTf5VzgY_XrKfLbEC4LLMBj8B02R8"
-
-spring:
-  security:
-    oauth2: ## OAuth2 Clients
-      client:
-        registration:
-          gateway-client:
-            client-id: gateway-client
-            client-secret: secret
-            client-authentication-method: client_secret_basic
-            authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8060/login/oauth2/code/gateway-client
-            scope: openid, profile
-
-        provider:
-          gateway-client:
-            issuer-uri: ${auth.token.issuer}
-      resourceserver:
-        jwt:
-          issuer-uri: ${auth.token.issuer}

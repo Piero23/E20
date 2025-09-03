@@ -1,13 +1,13 @@
 package org.unical.enterprise.utente.service;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.unical.enterprise.shared.clients.EventoServiceClient;
-import org.unical.enterprise.utente.data.dao.UtenteDAO;
 import org.unical.enterprise.shared.dto.UtenteDTO;
+import org.unical.enterprise.utente.data.dao.UtenteDAO;
 import org.unical.enterprise.utente.data.model.Utente;
-import jakarta.validation.Valid;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;

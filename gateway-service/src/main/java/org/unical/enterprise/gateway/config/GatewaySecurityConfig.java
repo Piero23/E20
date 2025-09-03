@@ -58,17 +58,6 @@ public class GatewaySecurityConfig {
         return new ReactiveJwtAuthenticationConverterAdapter(converter);
     }
 
-//    @Bean
-//    public ReactiveJwtDecoder jwtDecoder(TokenProperties tokenProperties) {
-//        System.out.println(tokenProperties.getSecret());
-//
-//        SecretKey secretKey = Keys.hmacShaKeyFor(
-//                Base64.getUrlDecoder().decode(tokenProperties.getSecret())
-//        );
-//
-//        return NimbusReactiveJwtDecoder.withSecretKey(secretKey).build();
-//    }
-
     @Bean
     public ServerRequestCache requestCache() {
         return new WebSessionServerRequestCache();

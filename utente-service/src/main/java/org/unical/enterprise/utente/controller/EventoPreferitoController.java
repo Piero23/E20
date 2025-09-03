@@ -24,15 +24,15 @@ public class EventoPreferitoController {
     private final UtenteService utenteService;
     private final SeguaceService seguaceService;
 
+
     // Handling della Relazione Seguiti rispetto ad UtenteCorrente
     @GetMapping("/preferiti")
-    public ResponseEntity<List<EventoBasicDto>> getPreferiti(@PathVariable String username, Authentication authentication) {
-
-
+    public ResponseEntity<List<EventoBasicDto>> getPreferiti(@PathVariable String username,
+                                                             Authentication authentication) {
 
         String viewerUsername = authentication.getName();
         System.out.println(viewerUsername);
-        System.out.println("MUCCA");
+
         if (viewerUsername == null || viewerUsername.isBlank())
             throw new RuntimeException("Username non disponibile");
 

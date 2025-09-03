@@ -33,6 +33,7 @@ jwt:
       - path: /api/ordine
         roles:
           - ROLE_ADMIN
+      # TODO: controlla indirizzo
       - path: POST:/api/ordine
         roles:
           - ROLE_USER
@@ -51,6 +52,15 @@ jwt:
       - path: /api/biglietto/evento
         roles:
           - ROLE_MANAGER
+
+
+logging:
+  file:
+    name: logs/app.log
+  level:
+    demacs:
+      unical:
+        esse20: INFO
 
 springdoc:
   packages-to-scan: org.unical.enterprise.gestioneOrdini

@@ -22,6 +22,14 @@ jwt:
         roles:
           - ROLE_ADMIN
 
+logging:
+  file:
+    name: logs/app.log
+  level:
+    demacs:
+      unical:
+        esse20: INFO
+
 springdoc:
   swagger-ui:
     tags-sorter: alpha

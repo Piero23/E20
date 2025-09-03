@@ -5,8 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
-import lombok.*;
-import org.unical.enterprise.shared.dto.UtenteAuthDTO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.unical.enterprise.shared.dto.UtenteDTO;
 
 import java.time.LocalDate;
@@ -30,14 +32,6 @@ public class Utente {
     @Column(nullable = false, unique = true)
     @Email
     private String email;
-
-    @Column(nullable = false)
-    private boolean organizzatore;
-
-    // TODO: Rimuovi Password, lasciala solo in AuthenticationServer.(...).UserAuth
-    @Column(length = 500, nullable = false)
-    @ToString.Exclude // Don't include password in toString
-    private String password;
 
     @Column(name = "data_nascita", nullable = false)
     private LocalDate dataNascita;

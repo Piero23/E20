@@ -32,7 +32,7 @@ public class AuthService {
         // Controlla se lo username è gia presente
         if (utenteAuthDAO.existsByUsername(utenteRegistrationDTO.getUsername()))
             throw new UsernameAlreadyExistsException(
-                    String.format("Username \"%s\"già in uso", utenteRegistrationDTO.getUsername())
+                    String.format("Username \"%s\" già in uso", utenteRegistrationDTO.getUsername())
             );
 
 

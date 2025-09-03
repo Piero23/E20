@@ -21,6 +21,7 @@
         <module>mailSender-service</module>
         <module>utente-service</module>
         <module>eventoLocation-service</module>
+        <module>payment-service</module>
         <module>authentication-server</module>
     </modules>
 

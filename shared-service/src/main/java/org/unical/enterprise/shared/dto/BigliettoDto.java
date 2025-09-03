@@ -2,9 +2,11 @@ package org.unical.enterprise.shared.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 
 import java.util.Date;
 
+@Builder
 public record BigliettoDto(
 
         @NotBlank

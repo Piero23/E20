@@ -21,8 +21,8 @@ public class UtenteController {
     private final UtenteService utenteService;
 
     @GetMapping("/me")
-    public ResponseEntity<UtenteDTO> me(Authentication authentication) {
-        String username = authentication.getName();
+    public ResponseEntity<UtenteDTO> me(Authentication auth) {
+        String username = auth.getName();
         return ResponseEntity.ok(utenteService.getUtenteByUsername(username));
     }
 

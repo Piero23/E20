@@ -120,6 +120,8 @@ public class SecurityConfig {
     }
 
 
+
+
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> jwtTokenCustomizer(TokenProperties properties, TokenProperties tokenProperties) {
         return context -> {

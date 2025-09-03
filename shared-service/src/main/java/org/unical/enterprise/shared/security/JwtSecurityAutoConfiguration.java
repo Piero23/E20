@@ -119,7 +119,6 @@ public class JwtSecurityAutoConfiguration {
     }
 
 
-    //TODO
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
@@ -127,7 +126,6 @@ public class JwtSecurityAutoConfiguration {
             System.out.println("=== JWT AUTHENTICATION CONVERTER ===");
 
             System.out.println("JWT Token: " + jwt.getTokenValue() + "\n");
-
 
             System.out.println("JWT Claims:");
             jwt.getClaims().forEach((k, v) -> System.out.printf(" %s: %s\n", k, v));

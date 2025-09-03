@@ -37,7 +37,7 @@ public class OrdineController {
         return ResponseEntity.ok(ordineService.findAll());
     }
 
-    @PostMapping("/save")
+    @PostMapping
     private ResponseEntity<String> save(@Valid @RequestBody OrdineRequest ordineRequest){
         try {
             String user= SecurityContextHolder.getContext().getAuthentication().getName();

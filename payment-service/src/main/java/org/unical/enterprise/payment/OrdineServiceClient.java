@@ -11,6 +11,6 @@ import javax.validation.Valid;
 @FeignClient(name = "gestioneOrdini-service")
 public interface OrdineServiceClient {
 
-    @PostMapping(value="api/ordine/save")
+    @PostMapping(value="api/ordine")
     ResponseEntity<String> save(@RequestBody OrdineRequest ordineRequest);
 }

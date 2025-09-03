@@ -13,9 +13,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.payment.service.PagamentoService;
+import org.unical.enterprise.shared.clients.UtenteServiceClient;
 import org.unical.enterprise.shared.dto.CheckoutRequest;
 import org.unical.enterprise.shared.dto.OrdineRequest;
 
@@ -29,6 +32,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PagamentoController {
     private static final Logger logger = LoggerFactory.getLogger(PagamentoController.class);
+    private final UtenteServiceClient utenteServiceClient;
 
 
     /*
@@ -61,9 +65,12 @@ public class PagamentoController {
     private final PagamentoService pagamentoService;
 
     @PostMapping("/checkout")
-    public ResponseEntity<?> checkout(@RequestBody CheckoutRequest request) {
+    public ResponseEntity<?> checkout(@RequestBody CheckoutRequest request, Authentication auth) {
         try {
-            String user= SecurityContextHolder.getContext().getAuthentication().getName();
+            String user = auth.getName();
+
+            // TODO: sistema questa cosa
+            // String userUUID = utenteServiceClient.getByUsername(user).id().toString();
             UUID orderUser = request.getOrdine().utenteId();
 
             if (pagamentoService.checkUtente(UUID.fromString(user))){

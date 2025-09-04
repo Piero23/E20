@@ -40,8 +40,8 @@ public class BigliettoService {
     }
 
     @Transactional
-    public boolean findTicketByData(Biglietto biglietto){
-        if (bigliettoDao.existsByEmailAndIdEvento(biglietto.getEmail(), biglietto.getIdEvento()))
+    public boolean findTicketByData(String email, Long evento){
+        if (bigliettoDao.existsByEmailAndIdEvento(email, evento))
             return true;
         return false;
     }

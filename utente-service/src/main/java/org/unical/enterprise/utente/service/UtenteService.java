@@ -32,7 +32,7 @@ public class UtenteService {
     @Transactional
     public UtenteDTO registerUtente(UtenteDTO dto) {
         if (utenteDAO.findByEmail(dto.getEmail()).isPresent()) {
-            // Due utenti non possono usare la stessa mail
+            // Due utenti non possono usare la stessa eMail
             throw new RuntimeException("Esiste già un utente con questa email.");
         }
 

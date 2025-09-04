@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.gestioneOrdini.domain.Biglietto;
 import org.unical.enterprise.shared.dto.BigliettoDto;
 import org.unical.enterprise.gestioneOrdini.service.BigliettoService;
+import org.unical.enterprise.shared.dto.TicketCheck;
 
 import java.net.URISyntaxException;
 import java.util.*;
@@ -47,9 +48,13 @@ public class BigliettoController {
         return bigliettoService.findAllByEvento(id);
     }
 
-
     @GetMapping("/test")
     private String test() {
         return "Sono BigliettoController";
+    }
+
+    @PostMapping("/duplicate")
+    public boolean findByData(@RequestBody TicketCheck ticketCheck){
+        return bigliettoService.findTicketByData(ticketCheck.eMail(), ticketCheck.eventID());
     }
 }

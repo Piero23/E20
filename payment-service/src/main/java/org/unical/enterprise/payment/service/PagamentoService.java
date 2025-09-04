@@ -133,6 +133,8 @@ public class PagamentoService {
                 throw new RuntimeException("Dati ordine non trovati per session: " + sessionId);
             }
 
+            System.out.println(sessionId);
+
             EventoBasicDto datiEvento = eventoServiceClient.findById(ordineTransferDto.biglietti().getFirst().idEvento());
 
             ordineServiceClient.save(
@@ -144,7 +146,6 @@ public class PagamentoService {
                             )
                             .biglietti(ordineTransferDto.biglietti())
                             .build()
-
             );
 
             // Rimuovi i dati dalla cache
@@ -186,5 +187,17 @@ public class PagamentoService {
         } catch (Exception e){
             return false;
         }
+    }
+
+    @Transactional
+    public UUID getUserIDByUsername(String username) {
+        return utenteServiceClient.getUtenteByUsername(username).getBody().getId();
+    }
+
+    public boolean findByData(String email, Long evento) {
+        return ordineServiceClient.findByData(TicketCheck.builder()
+                .eventID(evento)
+                .eMail(email)
+                .build());
     }
 }

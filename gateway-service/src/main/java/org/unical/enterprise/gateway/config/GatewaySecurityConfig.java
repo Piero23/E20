@@ -89,6 +89,8 @@ public class GatewaySecurityConfig {
                         // Endpoint Registrazione, Autenticazione Stateless
                         .pathMatchers("/auth/register", "/auth/login").permitAll()
 
+                        .pathMatchers("/stripe/**").permitAll()
+
                         .anyExchange().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2

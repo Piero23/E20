@@ -2,6 +2,7 @@ package org.unical.enterprise.shared.clients;
 
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.shared.dto.UtenteDTO;
 
@@ -13,10 +14,14 @@ public interface UtenteServiceClient {
     @GetMapping("/api/utente/id/{utenteId}")
     UtenteDTO getById(@PathVariable UUID utenteId);
 
-    @PostMapping("api/utente/register")
+    @GetMapping("/api/utente/{username}")
+    ResponseEntity<UtenteDTO> getUtenteByUsername(@PathVariable String username);
+
+    @PostMapping("/api/utente/register")
     UtenteDTO register(@RequestBody UtenteDTO utenteDTO);
 
-    @DeleteMapping("api/utente/{username}")
+    @DeleteMapping("/api/utente/{username}")
     void delete(@PathVariable String username);
+
 
 }

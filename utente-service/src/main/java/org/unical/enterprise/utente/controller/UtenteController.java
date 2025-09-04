@@ -31,7 +31,7 @@ public class UtenteController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<UtenteDTO> getUtenteById(@PathVariable String username) {
+    public ResponseEntity<UtenteDTO> getUtenteByUsername(@PathVariable String username) {
         return ResponseEntity.ok(utenteService.getUtenteByUsername(username));
     }
 

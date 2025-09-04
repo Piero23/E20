@@ -6,7 +6,6 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +18,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.payment.service.PagamentoService;
 import org.unical.enterprise.shared.clients.UtenteServiceClient;
+import org.unical.enterprise.shared.dto.BigliettoDto;
 import org.unical.enterprise.shared.dto.CheckoutRequest;
 import org.unical.enterprise.shared.dto.OrdineRequest;
 
@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/stripe")
+@RequestMapping("/api/stripe")
 @RequiredArgsConstructor
 public class PagamentoController {
     private static final Logger logger = LoggerFactory.getLogger(PagamentoController.class);
@@ -67,15 +67,17 @@ public class PagamentoController {
     @PostMapping("/checkout")
     public ResponseEntity<?> checkout(@RequestBody CheckoutRequest request, Authentication auth) {
         try {
-            String user = auth.getName();
-
-            // TODO: sistema questa cosa
-            // String userUUID = utenteServiceClient.getByUsername(user).id().toString();
+            //TODO controllo data nascita per eventi 18+
+            UUID user = pagamentoService.getUserIDByUsername(auth.getName());
             UUID orderUser = request.getOrdine().utenteId();
 
-            if (pagamentoService.checkUtente(UUID.fromString(user))){
+            if (pagamentoService.checkUtente(user)){
                 if (pagamentoService.checkUtente(orderUser)){
-                    if (user.equals(orderUser.toString())) {
+                    if (user.equals(orderUser)) {
+                        for (BigliettoDto biglietto: request.getOrdine().biglietti()){
+                            if(pagamentoService.findByData(biglietto.email(), biglietto.idEvento()))
+                                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Esiste già un biglietto per evento " + biglietto.idEvento() + " per " + biglietto.nome() + " " + biglietto.cognome());
+                        }
                         logger.info("Iniziato Ordine da utente {}", user);
                         Session session = pagamentoService.createPaymentSession(
                                 request.getOrdine(),
@@ -105,6 +107,11 @@ public class PagamentoController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Errore sconosciuto: " + e.getMessage()));
         }
+    }
+
+    @GetMapping("/test")
+    public String test(Authentication auth) {
+        return "Ciao" + auth.getName();
     }
 
     @PostMapping("/webhook")

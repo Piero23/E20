@@ -66,11 +66,6 @@ public class OrdineService {
                     .idEvento(bigliettoDto.idEvento())
                     .build();
 
-
-            if(bigliettoService.findTicketByData(newBiglietto))
-                throw new RuntimeException("Esiste già un biglietto per evento " + newBiglietto.getIdEvento() + " per " + newBiglietto.getNome() + " " + newBiglietto.getCognome());
-
-
             newBiglietti.add(newBiglietto);
         }
 
@@ -85,6 +80,8 @@ public class OrdineService {
 
         MailTransferDto mailSended = new MailTransferDto(newOrdine.getId() , newOrdine.getData_pagamento(), newOrdine.getImporto(), toUtente.getEmail(), toUtente.getUsername());
         mailServiceClient.sendMail(mailSended);
+
+        //TODO: mandare mail qrcode a biglietti
     }
 
     @Transactional
@@ -100,8 +97,10 @@ public class OrdineService {
         return ordineDao.findAllByUtenteId(utente);
     }
 
-
-
+    @Transactional
+    public UUID getUserIDByUsername(String username) {
+        return utenteServiceClient.getUtenteByUsername(username).getBody().getId();
+    }
 
 
 }

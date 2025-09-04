@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -44,13 +45,13 @@ public class OrdineController {
     }
 
     @GetMapping(value="/{id}")
-    private ResponseEntity<Ordine> findById(@PathVariable("id") UUID id){
+    private ResponseEntity<Ordine> findById(@PathVariable("id") UUID id, Authentication auth){
         logger.info("Ricevuta richiesta di ricerca ordine tramite ID Ordine");
 
         if (ordineService.findById(id)!=null) {
-            String user= SecurityContextHolder.getContext().getAuthentication().getName();
-            String orderId=ordineService.findById(id).getId().toString();
-            if (user.equals(orderId)) {
+            UUID user = ordineService.getUserIDByUsername(auth.getName());
+            UUID orderUserId = ordineService.findById(id).getUtenteId();
+            if (user.equals(orderUserId)) {
                 logger.info("Ricerca andata a buon fine");
                 return ResponseEntity.ok(ordineService.findById(id));
             }
@@ -64,11 +65,10 @@ public class OrdineController {
     }
 
     @GetMapping(value="/utente")
-    private ResponseEntity<List<Ordine>> findAllByUtente(@RequestParam("utente") UUID utente){
+    private ResponseEntity<List<Ordine>> findAllByUtente(@RequestParam("utente") UUID utente, Authentication auth){
         logger.info("Ricevuta richiesta di ricerca Ordini tramite ID Utente");
-
-        String user= SecurityContextHolder.getContext().getAuthentication().getName();
-        if (user.equals(utente.toString())) {
+        UUID user = ordineService.getUserIDByUsername(auth.getName());
+        if (user.equals(utente)) {
             logger.info("Ricerca andata a buon fine");
             return ResponseEntity.ok(ordineService.findAllByUtente(utente));
         }
@@ -79,12 +79,12 @@ public class OrdineController {
     }
 
     @GetMapping(value="/biglietti")
-    private ResponseEntity<List<Biglietto>> findAllBigliettiByOrdine(@RequestParam("ordine") UUID ordine){
+    private ResponseEntity<List<Biglietto>> findAllBigliettiByOrdine(@RequestParam("ordine") UUID ordine, Authentication auth){
         logger.info("Ricevuta richiesta di ricerca Biglietti tramite ID Ordine");
 
         if (ordineService.findById(ordine)!=null) {
-            String user= SecurityContextHolder.getContext().getAuthentication().getName();
-            String utenteOrderId=ordineService.findById(ordine).getUtenteId().toString();
+            UUID user = ordineService.getUserIDByUsername(auth.getName());
+            UUID utenteOrderId=ordineService.findById(ordine).getUtenteId();
 
             if (user.equals(utenteOrderId)) {
                 logger.info("Ricerca andata a buon fine");
@@ -98,7 +98,6 @@ public class OrdineController {
         logger.info("Nessun dato");
         return ResponseEntity.notFound().build();
     }
-
 
     @GetMapping("/test")
     private String test() {

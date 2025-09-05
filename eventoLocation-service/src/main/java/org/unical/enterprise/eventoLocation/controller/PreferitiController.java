@@ -74,6 +74,7 @@ public class PreferitiController {
 
     @GetMapping("/utente/{utenteId}")
     public ResponseEntity<List<EventoBasicDto>> getAllPreferiti(@PathVariable String utenteId) {
+        System.out.println("SONO ARRIVATO IN EVENTO");
         return ResponseEntity.ok(preferitiService.getAllEventiByUtenteId(utenteId));
     }
 

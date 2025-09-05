@@ -18,6 +18,12 @@ import java.util.UUID;
 public class UtenteController {
     private final UtenteService utenteService;
 
+    // TODO: Togli Admin
+    @GetMapping
+    public List<UtenteDTO> getAllUtenti() {
+        return utenteService.getAllUtenti();
+    }
+
     @GetMapping("/me")
     public ResponseEntity<UtenteDTO> me(Authentication auth) {
         String username = auth.getName();
@@ -25,27 +31,19 @@ public class UtenteController {
         return ResponseEntity.ok(utenteService.getUtenteByUsername(username));
     }
 
-    @GetMapping
-    public List<UtenteDTO> getAllUtenti() {
-        return utenteService.getAllUtenti();
+    @PutMapping("/me")
+    public ResponseEntity<UtenteDTO> updateUtente(@Valid @RequestBody UtenteDTO utenteDTO, Authentication auth) {
+        if (auth == null || !auth.getName().equals(utenteDTO.getUsername())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(utenteService.updateUtenteByUsername(auth.getName(), utenteDTO));
     }
 
+    // TODO: Posso vedere solo se ci seguiamo a vicenda
     @GetMapping("/{username}")
     public ResponseEntity<UtenteDTO> getUtenteByUsername(@PathVariable String username) {
         return ResponseEntity.ok(utenteService.getUtenteByUsername(username));
     }
-
-    @PutMapping("/{username}")
-    public ResponseEntity<UtenteDTO> updateUtente(@PathVariable String username, @Valid @RequestBody UtenteDTO utenteDTO) {
-        return ResponseEntity.ok(utenteService.updateUtenteByUsername(username, utenteDTO));
-    }
-
-
-    @GetMapping("/test")
-    private String test() {
-        return "Sono UtenteController";
-    }
-
 
     //////// franci l'ho fatto io <3
     @GetMapping("/id/{utenteId}")

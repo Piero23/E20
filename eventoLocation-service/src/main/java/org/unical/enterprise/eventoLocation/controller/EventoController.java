@@ -45,6 +45,7 @@ public class EventoController {
         return eventoService.getByIdNoLocation(id);
     }
 
+    // TODO non funziona
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<EventoBasicDto> createEvento(@Valid @RequestBody EventoBasicDto evento) {

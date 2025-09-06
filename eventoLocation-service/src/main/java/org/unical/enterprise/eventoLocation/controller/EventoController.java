@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.unical.enterprise.shared.clients.UtenteServiceClient;
@@ -18,7 +17,6 @@ import org.unical.enterprise.eventoLocation.service.EventoService;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 
 @RequestMapping("/api/evento")
@@ -34,18 +32,9 @@ public class EventoController {
         return eventoService.getPagable(pageable);
     }
 
-    //Non mi ricordo cosa ho fatto co sta roba
+    // TODO: Guarda qua Carlo
     @GetMapping(value="/{id}")
     private EventoBasicDto findById(@PathVariable("id") Long id /* @RequestParam Map<String, String> allParams*/){
-
-        /*
-            if (!allParams.isEmpty() && allParams.containsKey("locationFormat") && allParams.size() == 1)
-                if (allParams.get("locationFormat").equals("true"))
-                    return new ResponseEntity<>(eventoService.getByIdWithLocation(id), HttpStatus.OK);
-
-            else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-         */
-
         return eventoService.getByIdNoLocation(id);
     }
 
@@ -122,4 +111,4 @@ public class EventoController {
     "b_nominativo": false,
     "data" : "2040-10-10"
 }
- */
+*/

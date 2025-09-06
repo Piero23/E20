@@ -17,6 +17,7 @@ import org.unical.enterprise.eventoLocation.service.EventoService;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 
 @RequestMapping("/api/evento")
@@ -42,8 +43,8 @@ public class EventoController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<EventoBasicDto> createEvento(@Valid @RequestBody EventoBasicDto evento, Authentication auth) {
         String user = String.valueOf(Objects.requireNonNull(utenteServiceClient.getUtenteByUsername(auth.getName()).getBody()).getId());
-        String eventoOrganizzatore=evento.getOrganizzatore();
-        if (user.equals(eventoOrganizzatore)) {
+        UUID eventoOrganizzatore=evento.getOrganizzatore();
+        if (user.equals(eventoOrganizzatore.toString())) {
             return new ResponseEntity<>(eventoService.save(evento), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -55,8 +56,8 @@ public class EventoController {
     public void deleteEvento(@PathVariable("id") Long id, Authentication auth) {
         if (eventoService.getByIdNoLocation(id) != null) {
             String user = String.valueOf(Objects.requireNonNull(utenteServiceClient.getUtenteByUsername(auth.getName()).getBody()).getId());
-            String eventoOrganizzatore=eventoService.getByIdNoLocation(id).getOrganizzatore();
-            if (user.equals(eventoOrganizzatore)) {
+            UUID eventoOrganizzatore=eventoService.getByIdNoLocation(id).getOrganizzatore();
+            if (user.equals(eventoOrganizzatore.toString())) {
                 eventoService.delete(id);
             } else {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
@@ -72,8 +73,8 @@ public class EventoController {
     public ResponseEntity<Evento> replacePerson(@PathVariable("id") Long id, @RequestBody Evento evento, Authentication auth) {
         if (eventoService.getByIdNoLocation(id) != null) {
             String user = String.valueOf(Objects.requireNonNull(utenteServiceClient.getUtenteByUsername(auth.getName()).getBody()).getId());
-            String eventoOrganizzatore=eventoService.getByIdNoLocation(id).getOrganizzatore();
-            if (user.equals(eventoOrganizzatore)) {
+            UUID eventoOrganizzatore=eventoService.getByIdNoLocation(id).getOrganizzatore();
+            if (user.equals(eventoOrganizzatore.toString())) {
                 return new ResponseEntity<>(eventoService.update(evento,id), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -88,8 +89,8 @@ public class EventoController {
     public ResponseEntity<List<BigliettoDto>> getBookings(@RequestParam Long id, Authentication auth){
         if (eventoService.getByIdNoLocation(id) != null) {
             String user = String.valueOf(Objects.requireNonNull(utenteServiceClient.getUtenteByUsername(auth.getName()).getBody()).getId());
-            String eventoOrganizzatore=eventoService.getByIdNoLocation(id).getOrganizzatore();
-            if (user.equals(eventoOrganizzatore)) {
+            UUID eventoOrganizzatore=eventoService.getByIdNoLocation(id).getOrganizzatore();
+            if (user.equals(eventoOrganizzatore.toString())) {
                 return ResponseEntity.ok(eventoService.getBigliettiByEvento(id));
             } else {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

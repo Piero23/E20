@@ -22,11 +22,7 @@ import java.util.*;
 public class OrdineService {
 
     private final OrdineDao ordineDao;
-    private final BigliettoService bigliettoService;
 
-
-
-    //TODO fare in modo che non siano "istanze volanti" ma che vengano chiamate da un solo punto
     private final MailServiceClient mailServiceClient;
 
     private final UtenteServiceClient utenteServiceClient;
@@ -74,14 +70,10 @@ public class OrdineService {
 
         ordineDao.save(newOrdine);
 
-        //TODO Tutto da pulire non deve stare qua a volare
-
         UtenteDTO toUtente = utenteServiceClient.getById(newOrdine.getUtenteId());
 
         MailTransferDto mailSended = new MailTransferDto(newOrdine.getId() , newOrdine.getData_pagamento(), newOrdine.getImporto(), toUtente.getEmail(), toUtente.getUsername());
         mailServiceClient.sendMail(mailSended);
-
-        //TODO: mandare mail qrcode a biglietti
     }
 
     @Transactional

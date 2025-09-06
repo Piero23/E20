@@ -63,7 +63,7 @@ public class EventoService {
         evento.setNome(dto.getNome());
         evento.setDescrizione(dto.getDescrizione());
 
-        UtenteDTO u = utenteServiceClient.getById(UUID.fromString(dto.getOrganizzatore()));
+        UtenteDTO u = utenteServiceClient.getById(dto.getOrganizzatore());
         System.out.println(u);
 
 

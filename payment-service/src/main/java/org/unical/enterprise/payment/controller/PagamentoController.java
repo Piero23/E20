@@ -24,8 +24,15 @@ import org.unical.enterprise.shared.dto.OrdineRequest;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
+
+import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
 
 @RestController
 @RequestMapping("/api/stripe")
@@ -67,7 +74,6 @@ public class PagamentoController {
     @PostMapping("/checkout")
     public ResponseEntity<?> checkout(@RequestBody CheckoutRequest request, Authentication auth) {
         try {
-            //TODO controllo data nascita per eventi 18+
             UUID user = pagamentoService.getUserIDByUsername(auth.getName());
             UUID orderUser = request.getOrdine().utenteId();
 
@@ -77,6 +83,8 @@ public class PagamentoController {
                         for (BigliettoDto biglietto: request.getOrdine().biglietti()){
                             if(pagamentoService.findByData(biglietto.email(), biglietto.idEvento()))
                                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Esiste già un biglietto per evento " + biglietto.idEvento() + " per " + biglietto.nome() + " " + biglietto.cognome());
+                            else if (pagamentoService.isAgeRestricted(biglietto.idEvento()) && !isMaggiorenne(biglietto.dataNascita()))
+                                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(biglietto.nome() + " " + biglietto.cognome() + " non ha l'età adatta per accedere all'evento.");
                         }
                         logger.info("Iniziato Ordine da utente {}", user);
                         Session session = pagamentoService.createPaymentSession(
@@ -140,5 +148,16 @@ public class PagamentoController {
         }
 
         return ResponseEntity.ok("Success");
+    }
+
+    private boolean isMaggiorenne(Date dataNascita) {
+
+        LocalDate nascita = dataNascita.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+
+        LocalDate oggiMeno18 = LocalDate.now().minusYears(18);
+
+        return !nascita.isAfter(oggiMeno18);
     }
 }

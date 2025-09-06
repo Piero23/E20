@@ -11,6 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.unical.enterprise.shared.dto.EventoBasicDto;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Table(name = "evento")
@@ -20,7 +21,7 @@ import java.util.Date;
 @ToString
 public class Evento extends DomainObject<Long> {
 
-    public Evento(String descrizione, Location location , String nome, String organizzatore, Long posti, boolean b_riutilizzabile, boolean b_nominativo,Double prezzo) {
+    public Evento(String descrizione, Location location , String nome, UUID organizzatore, Long posti, boolean b_riutilizzabile, boolean b_nominativo, boolean a_r, Double prezzo) {
         this.descrizione = descrizione;
         this.location = location;
         this.organizzatore = organizzatore;
@@ -29,6 +30,7 @@ public class Evento extends DomainObject<Long> {
         this.b_riutilizzabile = b_riutilizzabile;
         this.b_nominativo = b_nominativo;
         this.prezzo = prezzo;
+        this.age_restricted = a_r;
     }
 
     @Id
@@ -45,7 +47,7 @@ public class Evento extends DomainObject<Long> {
 
     @Size(min = 36, max = 36)
     @Column(nullable = false, length = 36)
-    private String organizzatore;
+    private UUID organizzatore;
 
     @Column(nullable = false)
     private String nome;
@@ -58,6 +60,9 @@ public class Evento extends DomainObject<Long> {
 
     @Column(nullable = false)
     private boolean b_nominativo;
+
+    @Column(nullable = false)
+    private boolean age_restricted;
 
     @Column(nullable = false)
     private Date data;
@@ -78,6 +83,7 @@ public class Evento extends DomainObject<Long> {
                 .locationId(evento.getLocation().getId())
                 .data(evento.getData())
                 .prezzo(evento.getPrezzo())
+                .age_restricted(evento.isAge_restricted())
                 .build();
     }
 }

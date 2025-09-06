@@ -1,0 +1,240 @@
+
+
+## All Services
+services:
+
+  ## ------------------------------------------------------------------------------- Basic
+  ## Discovery Service
+  discovery-service:
+    build: ./discovery-service
+    container_name: discovery-service
+    ports:
+      - "8061:8061"
+    environment:
+      - SERVER_PORT=8061
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://localhost:8061/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ## Configuration Service
+  configuration-service:
+    build: ./configuration-service
+    container_name: configuration-service
+    expose:
+      - "8088"
+    environment:
+      - SERVER_PORT=8088
+      - AUTH_TOKEN_ISSUER=http://authentication-server:9000
+
+  ## Authentication Server
+  authentication-server:
+    build: ./authentication-server
+    container_name: authentication-server
+    ports:
+      - "9000:9000"
+    environment:
+      - SERVER_PORT=9000
+      - AUTH_TOKEN_ISSUER=http://authentication-server:9000
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+
+  ## ------------------------------------------------------------------------------- Internal Services
+  ## Utente Service
+  utente-service:
+    build: ./utente-service
+    container_name: utente-service
+    expose:
+      - "8080"
+    environment:
+      - SERVER_PORT=8080
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
+      - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8088
+
+        ## Database Info
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://utente-db:5432/e20-utenti
+      - SPRING_DATASOURCE_USERNAME=utenti_user
+      - SPRING_DATASOURCE_PASSWORD=utenti_password
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      configuration-service:
+        condition: service_started
+      utente-db:
+        condition: service_started
+
+  ## Evento Location Service
+  eventoLocation-service:
+    build: ./eventoLocation-service
+    container_name: eventoLocation-service
+    expose:
+      - "8080"
+    environment:
+      - SERVER_PORT=8080
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
+      - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8088
+      ## Database Info
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://eventoLocation-db:5432/e20-eventi
+      - SPRING_DATASOURCE_USERNAME=eventi_user
+      - SPRING_DATASOURCE_PASSWORD=eventi_password
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      configuration-service:
+        condition: service_started
+      eventoLocation-db:
+        condition: service_started
+
+
+  ## Gestione Ordini Service
+  gestioneOrdini-service:
+    build: ./gestioneOrdini-service
+    container_name: gestioneOrdini-service
+    expose:
+      - "8080"
+    environment:
+      - SERVER_PORT=8080
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
+      - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8088
+      ## Database Info
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://gestioneOrdini-db:5432/e20-ordini
+      - SPRING_DATASOURCE_USERNAME=ordini_user
+      - SPRING_DATASOURCE_PASSWORD=ordini_password
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      configuration-service:
+        condition: service_started
+      gestioneOrdini-db:
+        condition: service_started
+
+  ## Payment Service
+  payment-service:
+    build: ./payment-service
+    container_name: payment-service
+    expose:
+      - "8080"
+    environment:
+      - SERVER_PORT=8080
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
+      - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8088
+      ## Database Info
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://payment-db:5432/e20-pagamenti
+      - SPRING_DATASOURCE_USERNAME=pagamenti_user
+      - SPRING_DATASOURCE_PASSWORD=pagamenti_password
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      configuration-service:
+        condition: service_started
+      payment-db:
+        condition: service_started
+
+  ## Mail Sender Service
+  mailSender-service:
+    build: ./mailSender-service
+    container_name: mailSender-service
+    expose:
+      - "8080"
+    environment:
+      - SERVER_PORT=8080
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
+      - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8088
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      configuration-service:
+        condition: service_started
+
+  ## ------------------------------------------------------------------------------- Gateway
+  ## Gateway Service
+  gateway-service:
+    build: ./gateway-service
+    container_name: gateway-service
+    ports:
+      - "8060:8060"
+    environment:
+      - SERVER_PORT=8060
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      configuration-service:
+        condition: service_started
+      utente-service:
+        condition: service_started
+      eventoLocation-service:
+        condition: service_started
+      gestioneOrdini-service:
+        condition: service_started
+      payment-service:
+        condition: service_started
+      mailSender-service:
+        condition: service_started
+
+  ## ------------------------------------------------------------------------------- Databases
+  ## Utente Service DB
+  utente-db:
+    image: postgres:16
+    container_name: utente-db
+    restart: always
+    environment:
+      - POSTGRES_DB=e20-utenti
+      - POSTGRES_USER=utenti_user
+      - POSTGRES_PASSWORD=utenti_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - utente_data:/var/lib/postgresql/data
+
+  ## Evento Location Service DB
+  eventoLocation-db:
+    image: postgres:16
+    container_name: eventoLocation-db
+    restart: always
+    environment:
+      - POSTGRES_DB=e20-eventi
+      - POSTGRES_USER=eventi_user
+      - POSTGRES_PASSWORD=eventi_password
+    ports:
+      - "5434:5432"
+    volumes:
+      - eventoLocation_data:/var/lib/postgresql/data
+
+  ## Gestione Ordini Service DB
+  gestioneOrdini-db:
+    image: postgres:16
+    container_name: gestioneOrdini-db
+    restart: always
+    environment:
+      - POSTGRES_DB=e20-ordini
+      - POSTGRES_USER=ordini_user
+      - POSTGRES_PASSWORD=ordini_password
+    ports:
+      - "5435:5432"
+    volumes:
+      - gestioneOrdini_data:/var/lib/postgresql/data
+
+  ## Payment Service DB
+  payment-db:
+    image: postgres:16
+    container_name: payment-db
+    restart: always
+    environment:
+      - POSTGRES_DB=e20-pagamenti
+      - POSTGRES_USER=pagamenti_user
+      - POSTGRES_PASSWORD=pagamenti_password
+    ports:
+      - "5436:5432"
+    volumes:
+      - payment_data:/var/lib/postgresql/data
+
+## Volumes for Databases
+volumes:
+  utente_data:
+  eventoLocation_data:
+  gestioneOrdini_data:
+  payment_data:

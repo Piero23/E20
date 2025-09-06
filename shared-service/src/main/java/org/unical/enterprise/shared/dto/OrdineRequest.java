@@ -1,10 +1,11 @@
-package org.unical.enterprise.gestioneOrdini.dto;
+package org.unical.enterprise.shared.dto;
 
-import org.unical.enterprise.shared.dto.BigliettoDto;
+import lombok.Builder;
 
 import java.util.List;
 
+@Builder
 public record OrdineRequest(
         OrdineDto ordine,
         List<BigliettoDto> biglietti
-) {}
+){}

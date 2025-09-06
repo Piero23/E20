@@ -1,4 +1,6 @@
 spring:
+
+
   application:
     name: gestioneOrdini-service
   output:
@@ -58,6 +60,9 @@ jwt:
       - path: /api/biglietto/evento
         roles:
           - ROLE_MANAGER
+      - path: /api/biglietto/duplicate
+        roles:
+          - ROLE_ADMIN
 
 
 logging:

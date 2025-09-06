@@ -31,6 +31,7 @@ public class MailService {
 
     @Value("${mail.username}")
     private String username;
+
     @Value("${mail.password}")
     private String password;
 

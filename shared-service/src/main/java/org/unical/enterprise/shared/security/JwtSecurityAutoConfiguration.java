@@ -1,9 +1,5 @@
 package org.unical.enterprise.shared.security;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -23,6 +19,9 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -60,7 +59,7 @@ public class JwtSecurityAutoConfiguration {
 
         http.authorizeHttpRequests(auth -> {
             // Aggiungi endpoint pubblici per OAuth2
-            auth.requestMatchers("/login/**", "/oauth2/**", "/error").permitAll();
+            auth.requestMatchers("/login/**", "/oauth2/**", "/error" ).permitAll();
 
             if (securityProperties.getPublicPaths() != null) {
                 for (String path : securityProperties.getPublicPaths()) {
@@ -125,7 +124,11 @@ public class JwtSecurityAutoConfiguration {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
             System.out.println("=== JWT AUTHENTICATION CONVERTER ===");
-            System.out.println("JWT Claims: " + jwt.getClaims());
+
+            System.out.println("JWT Token: " + jwt.getTokenValue() + "\n");
+
+            System.out.println("JWT Claims:");
+            jwt.getClaims().forEach((k, v) -> System.out.printf(" %s: %s\n", k, v));
 
             // Prima prova con il formato del tuo custom auth server (claim "roles")
             Object rolesObj = jwt.getClaim("roles");

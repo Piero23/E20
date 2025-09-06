@@ -41,6 +41,7 @@ public class SeguaceController {
 
     }
 
+    // TODO: poter bloccare un utente (delete)
     // Handling della Relazione Seguaci rispetto ad UtenteCorrente
     @GetMapping("/seguaci")
     public ResponseEntity<List<UtenteDTO>> getSeguaci(@PathVariable String username) {

@@ -1,12 +1,18 @@
 package org.unical.enterprise.utente.data.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.unical.enterprise.shared.dto.UtenteDTO;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "utente")
@@ -27,13 +33,6 @@ public class Utente {
     @Email
     private String email;
 
-    @Column(nullable = false)
-    private boolean organizzatore;
-
-    @Column(length = 500, nullable = false)
-    @ToString.Exclude // Don't include password in toString
-    private String password;
-
     @Column(name = "data_nascita", nullable = false)
     private LocalDate dataNascita;
 
@@ -43,7 +42,8 @@ public class Utente {
                 .id(utente.getId())
                 .username(utente.getUsername())
                 .email(utente.getEmail())
-                .data_nascita(utente.getDataNascita())
+                .dataNascita(utente.getDataNascita())
                 .build();
     }
+
 }

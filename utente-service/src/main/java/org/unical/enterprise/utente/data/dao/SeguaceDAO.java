@@ -20,5 +20,9 @@ public interface SeguaceDAO extends JpaRepository<Seguace, Long>  {
 
     Optional<Seguace> findByUtenteSeguace_UsernameAndUtenteSeguito_Username(String usernameUtenteSeguace, String usernameUtenteSeguito);
 
+    // Delete
+    void deleteAllByUtenteSeguace_Username(String usernameUtenteSeguace);
+    void deleteAllByUtenteSeguito_Username(String usernameUtenteSeguito);
+
 
 }

@@ -1,19 +1,38 @@
+
 server:
   port: 9000
 
-logging:
-  level:
-    org.springframework.security: trace
-
 spring:
+  cloud:
+    config:
+      enabled: false
+  application:
+    name: authentication-server
+  output:
+    ansi:
+      enabled: always
+
+  ## Database Properties
+  datasource:
+    url: jdbc:postgresql://localhost:5454/e20
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  ## Security
   security:
     oauth2:
-      authorizationserver:
+      authorizationserver: ## Clients
         client:
           gateway-client:
             registration:
               client-id: "gateway-client"
-              client-secret: "{noop}secret"
+              client-secret: "$2a$12$oOagAoNYyMcpzY602Zqtj.YT/P1MuZUm/BraPQpHSNeWLIapyBOWq"
               client-authentication-methods:
                 - "client_secret_basic"
               authorization-grant-types:
@@ -26,4 +45,28 @@ spring:
               scopes:
                 - "openid"
                 - "profile"
-            require-authorization-consent: true
+            # Tolgo il Consenso per il Profile
+            # require-authorization-consent: true
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8061/eureka/
+
+## Authentication Token Properties
+auth:
+  token:
+    scopes: openid, roles
+    issuer: "http://127.0.0.1:9000"
+    expiration: 3600
+
+
+jwt:
+  security:
+    enabled: true
+    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /auth/register
+
+logging:
+  level:
+    org.springframework.security: trace

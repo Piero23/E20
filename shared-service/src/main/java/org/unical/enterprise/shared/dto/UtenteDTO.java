@@ -17,6 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class UtenteDTO {
+
     private UUID id;
 
     @NotBlank(message = "Il campo username non può essere vuoto.")
@@ -28,6 +29,6 @@ public class UtenteDTO {
     private String email;
 
     @NotNull(message = "La data di nascita è obbligatoria.")
-    private LocalDate data_nascita;
+    private LocalDate dataNascita;
 
 }

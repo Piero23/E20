@@ -1,5 +1,6 @@
 package org.unical.enterprise.eventoLocation.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.unical.enterprise.eventoLocation.ContentNotFoundException;
 import org.unical.enterprise.eventoLocation.data.dao.EventoDao;
 import org.unical.enterprise.eventoLocation.data.dao.PreferitiDao;
@@ -70,6 +71,12 @@ public class PreferitiService {
 
         relazionePreferiti.ifPresent(preferiti -> preferitiDao.delete(preferiti));
 
+    }
+
+    @Transactional
+    public void deleteListaUtente(String utenteUUID) {
+        try { preferitiDao.deleteAllByUtenteId(utenteUUID); }
+        catch (Exception e) { throw new RuntimeException("Eliminazione Lista Preferiti Fallita"); }
     }
 
 }

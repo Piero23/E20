@@ -2,7 +2,6 @@ package org.unical.enterprise.shared.clients;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
-import org.unical.enterprise.shared.FeignConfig;
 import org.unical.enterprise.shared.dto.MailTransferDto;
 
 @FeignClient(name = "mailSender-service", configuration = FeignConfig.class)

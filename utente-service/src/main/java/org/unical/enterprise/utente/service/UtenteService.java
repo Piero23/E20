@@ -1,62 +1,65 @@
 package org.unical.enterprise.utente.service;
 
-import org.unical.enterprise.utente.data.dao.UtenteDAO;
-import org.unical.enterprise.shared.dto.UtenteDTO;
-import org.unical.enterprise.utente.data.dto.UtenteRegistrationDTO;
-import org.unical.enterprise.utente.data.model.Utente;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.unical.enterprise.shared.clients.EventoServiceClient;
+import org.unical.enterprise.shared.dto.UtenteDTO;
+import org.unical.enterprise.utente.data.dao.UtenteDAO;
+import org.unical.enterprise.utente.data.model.Utente;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UtenteService {
-    private final UtenteDAO utenteDAO;
 
-    public UtenteService(UtenteDAO utenteDAO) {
-        this.utenteDAO = utenteDAO;
-    }
+    private final UtenteDAO utenteDAO;
+    private final EventoServiceClient eventoServiceClient;
+    private final SeguaceService seguaceService;
+
 
     public List<UtenteDTO> getAllUtenti() {
         return utenteDAO.findAll().stream()
-                .map(this::toDTO)
+                .map(Utente::toSharedDTO)
                 .collect(Collectors.toList());
     }
 
     // create
-    public UtenteDTO registerUtente(UtenteRegistrationDTO dto) {
+    @Transactional
+    public UtenteDTO registerUtente(UtenteDTO dto) {
         if (utenteDAO.findByEmail(dto.getEmail()).isPresent()) {
+            // Due utenti non possono usare la stessa eMail
             throw new RuntimeException("Esiste già un utente con questa email.");
         }
 
-        if (utenteDAO.findByUsername(dto.getUsername()).isPresent()) {
-            throw new RuntimeException("Esiste già un utente con questo username.");
-        }
-
         Utente u = Utente.builder()
-                //TODO Prendere l'id di keycloack
-                .id(UUID.randomUUID())
+                .id(dto.getId())
                 .username(dto.getUsername())
                 .email(dto.getEmail())
-                .password(dto.getPassword())
                 .dataNascita(dto.getDataNascita())
                 .build();
 
-        return toDTO(utenteDAO.save(u));
+        try {
+            return Utente.toSharedDTO(utenteDAO.save(u));
+        }
+        catch (Exception e)
+        { throw new RuntimeException("Errore durante la registrazione lato Utente-Service", e); }
     }
 
     // read
     public UtenteDTO getUtenteById(UUID id) {
         return utenteDAO.findById(id)
-        .map(this::toDTO)
+        .map(Utente::toSharedDTO)
         .orElseThrow(() -> new RuntimeException("Utente non trovato."));
     }
 
     public UtenteDTO getUtenteByUsername(String username) {
         return utenteDAO.findByUsername(username)
-        .map(this::toDTO)
+        .map(Utente::toSharedDTO)
         .orElseThrow(() -> new RuntimeException("Utente non trovato."));
     }
 
@@ -67,9 +70,9 @@ public class UtenteService {
 
         utente.setUsername(utenteDTO.getUsername());
         utente.setEmail(utenteDTO.getEmail());
-        utente.setDataNascita(utenteDTO.getData_nascita());
+        utente.setDataNascita(utenteDTO.getDataNascita());
 
-        return toDTO(utenteDAO.save(utente));
+        return Utente.toSharedDTO(utenteDAO.save(utente));
     }
 
     public UtenteDTO updateUtenteByUsername(String username, @Valid UtenteDTO utenteDTO) {
@@ -78,9 +81,9 @@ public class UtenteService {
 
         utente.setUsername(utenteDTO.getUsername());
         utente.setEmail(utenteDTO.getEmail());
-        utente.setDataNascita(utenteDTO.getData_nascita());
+        utente.setDataNascita(utenteDTO.getDataNascita());
 
-        return toDTO(utenteDAO.save(utente));
+        return Utente.toSharedDTO(utenteDAO.save(utente));
     }
 
     // delete
@@ -90,10 +93,22 @@ public class UtenteService {
         utenteDAO.delete(utente);
     }
 
-    public void deleteUtenteByUsername(String username) {
-        Utente utente = utenteDAO.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Utente non trovato."));
-        utenteDAO.delete(utente);
+    @Transactional
+    public void handleEliminazioneUtente(String username) {
+        // Cerca l'Utente tramite lo Username
+        UtenteDTO utenteDaElinimare = getUtenteByUsername(username);
+
+        try {
+            // Elimina Info dell'Utente
+            eventoServiceClient.deleteListaPreferiti(utenteDaElinimare.getId());
+            seguaceService.deleteUtenteByUsername(username);
+
+            // Eliminazione Utente
+            utenteDAO.deleteByUsername(username);
+        }
+        catch (Exception e)
+        { throw new RuntimeException("Elinimazione Fallita: " + e.getMessage(), e); }
+
     }
 
     public UUID resolveIdFromUsername(String username) {
@@ -103,13 +118,5 @@ public class UtenteService {
         return utente.getId();
     }
 
-    private UtenteDTO toDTO(Utente utente) {
-    return UtenteDTO.builder()
-        .id(utente.getId())
-        .username(utente.getUsername())
-        .email(utente.getEmail())
-        .data_nascita(utente.getDataNascita())
-        .build();
-    }
 
 }

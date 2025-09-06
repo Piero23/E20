@@ -1,4 +1,4 @@
-package org.unical.enterprise.shared;
+package org.unical.enterprise.shared.clients;
 
 import feign.RequestInterceptor;
 import org.springframework.context.annotation.Bean;

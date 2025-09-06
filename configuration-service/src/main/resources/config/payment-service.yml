@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: payment-service
+  output:
+    ansi:
+      enabled: always
+
+  datasource:
+    url: jdbc:postgresql://localhost:5454/e20
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 8083
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8061/eureka/
+
+cors:
+  allowed-origins: http://localhost:8060
+
+jwt:
+  security:
+    enabled: true
+    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /api/stripe/**
+
+springdoc:
+  packages-to-scan: org.unical.enterprise.payment
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    groups:
+      enabled: true
+
+stripe:
+  api:
+    secret: sk_test_51RFjSkP6wuNuFoXfwTOPhTkziWj1DDXYpCwLLkxKQFAZaojXuPeh8FX5DHOMvPjvmTgMkoMhPGNa9oIrGoKYO7Sb00ZNYIN3FZ
+    webhook: whsec_f2befde884f2bb5c1cb8b9a05947c0365f5b93c10f97e9ffec105d30dfaf1377
+

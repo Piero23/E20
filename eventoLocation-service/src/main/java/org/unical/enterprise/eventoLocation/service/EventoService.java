@@ -55,7 +55,7 @@ public class EventoService {
 
     @Transactional
     public EventoBasicDto save(EventoBasicDto dto){
-
+        System.out.println("Palle ciao pure qua");
         System.out.println("dto = " + dto);
 
         Evento evento = new Evento();
@@ -65,6 +65,7 @@ public class EventoService {
 
         UtenteDTO u = utenteServiceClient.getById(UUID.fromString(dto.getOrganizzatore()));
         System.out.println(u);
+
 
         evento.setOrganizzatore(dto.getOrganizzatore());
         evento.setPosti(dto.getPosti());

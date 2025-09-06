@@ -1,12 +1,12 @@
-package org.unical.enterprise.gestioneOrdini.dto;
+package org.unical.enterprise.shared.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+import lombok.Builder;
 
-import java.util.Date;
 import java.util.UUID;
 
-
+@Builder
 public record OrdineDto(
         UUID utenteId,
 

@@ -6,15 +6,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.unical.enterprise.shared.clients.UtenteServiceClient;
 import org.unical.enterprise.shared.dto.BigliettoDto;
 import org.unical.enterprise.shared.dto.EventoBasicDto;
 import org.unical.enterprise.eventoLocation.data.entities.Evento;
 import org.unical.enterprise.eventoLocation.service.EventoService;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -24,6 +27,7 @@ import java.util.UUID;
 public class EventoController {
 
     private final EventoService eventoService;
+    private final UtenteServiceClient utenteServiceClient;
 
     @GetMapping
     public Page<EventoBasicDto> findAllPagable(Pageable pageable) {
@@ -45,11 +49,10 @@ public class EventoController {
         return eventoService.getByIdNoLocation(id);
     }
 
-    // TODO non funziona
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<EventoBasicDto> createEvento(@Valid @RequestBody EventoBasicDto evento) {
-        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+    public ResponseEntity<EventoBasicDto> createEvento(@Valid @RequestBody EventoBasicDto evento, Authentication auth) {
+        String user = String.valueOf(Objects.requireNonNull(utenteServiceClient.getUtenteByUsername(auth.getName()).getBody()).getId());
         String eventoOrganizzatore=evento.getOrganizzatore();
         if (user.equals(eventoOrganizzatore)) {
             return new ResponseEntity<>(eventoService.save(evento), HttpStatus.CREATED);
@@ -60,57 +63,52 @@ public class EventoController {
 
     @DeleteMapping(path="/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteEvento(@PathVariable("id") Long id) {
+    public void deleteEvento(@PathVariable("id") Long id, Authentication auth) {
         if (eventoService.getByIdNoLocation(id) != null) {
-            String user= SecurityContextHolder.getContext().getAuthentication().getName();
+            String user = String.valueOf(Objects.requireNonNull(utenteServiceClient.getUtenteByUsername(auth.getName()).getBody()).getId());
             String eventoOrganizzatore=eventoService.getByIdNoLocation(id).getOrganizzatore();
             if (user.equals(eventoOrganizzatore)) {
                 eventoService.delete(id);
             } else {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
             }
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 
+
+    // TODO: Non poter modificare prezzo, organizzatore, riutilizzabile, nominativo
     @PutMapping(path="/{id}", consumes = "application/json")
-    //TODO vedere se serve
-    public ResponseEntity<Evento> replacePerson(@PathVariable("id") Long id, @RequestBody Evento evento) {
+    public ResponseEntity<Evento> replacePerson(@PathVariable("id") Long id, @RequestBody Evento evento, Authentication auth) {
         if (eventoService.getByIdNoLocation(id) != null) {
-            String user= SecurityContextHolder.getContext().getAuthentication().getName();
+            String user = String.valueOf(Objects.requireNonNull(utenteServiceClient.getUtenteByUsername(auth.getName()).getBody()).getId());
             String eventoOrganizzatore=eventoService.getByIdNoLocation(id).getOrganizzatore();
             if (user.equals(eventoOrganizzatore)) {
                 return new ResponseEntity<>(eventoService.update(evento,id), HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
+    // TODO: Domenico
     @GetMapping("/bookings")
-    public ResponseEntity<List<BigliettoDto>> getBookings(@RequestParam Long id){
+    public ResponseEntity<List<BigliettoDto>> getBookings(@RequestParam Long id, Authentication auth){
         if (eventoService.getByIdNoLocation(id) != null) {
-            String user= SecurityContextHolder.getContext().getAuthentication().getName();
+            String user = String.valueOf(Objects.requireNonNull(utenteServiceClient.getUtenteByUsername(auth.getName()).getBody()).getId());
             String eventoOrganizzatore=eventoService.getByIdNoLocation(id).getOrganizzatore();
             if (user.equals(eventoOrganizzatore)) {
                 return ResponseEntity.ok(eventoService.getBigliettiByEvento(id));
             } else {
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-    @GetMapping("/test")
-    private String test() {
-        return "Sono EventoController";
-    }
-
-
 }
 
 /*

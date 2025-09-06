@@ -10,6 +10,9 @@ public interface MailServiceClient {
     @PostMapping(value = "/api/mail/sendMail", consumes = "application/json")
     void sendMail(@RequestBody MailTransferDto dto);
 
+    @PostMapping("/api/mail/{email}")
+    void sendQrCodeMail(@PathVariable String email, @RequestBody String image);
+
     @GetMapping("api/mail/test")
     String test();
 }

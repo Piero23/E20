@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.unical.enterprise.gestioneOrdini.domain.Biglietto;
@@ -70,7 +69,7 @@ public class OrdineController {
         UUID user = ordineService.getUserIDByUsername(auth.getName());
         if (user.equals(utente)) {
             logger.info("Ricerca andata a buon fine");
-            return ResponseEntity.ok(ordineService.findAllByUtente(utente));
+            return ResponseEntity.ok(ordineService.findAllByUtente(user));
         }
         else{
             logger.info("Utente {} non autorizzato", user);

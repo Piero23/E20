@@ -71,6 +71,7 @@ public class EventoService {
         evento.setPosti(dto.getPosti());
         evento.setB_riutilizzabile(dto.isB_riutilizzabile());
         evento.setB_nominativo(dto.isB_nominativo());
+        evento.setAge_restricted(dto.isAge_restricted());
         evento.setData(dto.getData());
 
         Location location = locationDao.findById(dto.getLocationId())
@@ -109,6 +110,7 @@ public class EventoService {
                 posti(evento.getPosti()).
                 b_riutilizzabile(evento.isB_riutilizzabile()).
                 b_nominativo(evento.isB_nominativo()).
+                age_restricted(evento.isAge_restricted()).
                 locationId(evento.getId()).
                 data(evento.getData()).
                 prezzo(evento.getPrezzo()).build();

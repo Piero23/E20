@@ -84,7 +84,6 @@ public class EventoController {
         }
     }
 
-    // TODO: Domenico
     @GetMapping("/bookings")
     public ResponseEntity<List<BigliettoDto>> getBookings(@RequestParam Long id, Authentication auth){
         if (eventoService.getByIdNoLocation(id) != null) {

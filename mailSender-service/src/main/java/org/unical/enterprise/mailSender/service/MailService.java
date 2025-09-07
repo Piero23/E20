@@ -1,6 +1,7 @@
 package org.unical.enterprise.mailSender.service;
 
 import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeBodyPart;
@@ -14,8 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.unical.enterprise.shared.dto.MailTransferDto;
 import org.unical.enterprise.shared.dto.TicketMailDTO;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -95,48 +95,89 @@ public class MailService {
         try {
             Message message = setupMessage(to);
             message.setSubject(subject);
+            Multipart multipart = new MimeMultipart("related");
 
-            Multipart multipart = new MimeMultipart();
-
-            // Parte HTML con template
-            MimeBodyPart htmlPart = new MimeBodyPart();
+            // === CARICA E PROCESSA TEMPLATE HTML ===
             InputStream inputStream = getClass().getClassLoader().getResourceAsStream("ticketMail.html");
             if (inputStream == null) {
-                throw new FileNotFoundException("ticketMail.html non trovato.");
+                throw new FileNotFoundException("ticketMail.html non trovato in resources/");
             }
-            String htmlTemplate = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-            htmlPart.setContent(htmlTemplate, "text/html; charset=utf-8");
 
-            htmlTemplate
-                    .replace("${nome}", ticketMailDTO.nome())
-                    .replace("${cognome}", ticketMailDTO.cognome())
-                    .replace("${nomeEvento}", ticketMailDTO.nomeEvento())
+            String htmlTemplate;
+            try (inputStream) {
+                htmlTemplate = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            }
+
+            // Sostituisci variabili e escape HTML
+            String processedHtml = htmlTemplate
+                    .replace("${nome}", ticketMailDTO.nome() != null ?
+                            ticketMailDTO.nome().replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") : "")
+                    .replace("${cognome}", ticketMailDTO.cognome() != null ?
+                            ticketMailDTO.cognome().replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") : "")
+                    .replace("${nomeEvento}", ticketMailDTO.nomeEvento() != null ?
+                            ticketMailDTO.nomeEvento().replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") : "")
                     .replace("${qrCodeUrl}", "cid:qr-code-inline");
 
-            // Parte QR Code come allegato
+            // === PARTE HTML ===
+            MimeBodyPart htmlPart = new MimeBodyPart();
+            htmlPart.setContent(processedHtml, "text/html; charset=utf-8");
+
+            // === QR CODE INLINE ===
+            MimeBodyPart qrInlinePart = new MimeBodyPart();
+            byte[] qrBytes = Base64.getDecoder().decode(ticketMailDTO.qr());
+            qrInlinePart.setDataHandler(new DataHandler(new DataSource() {
+                @Override
+                public InputStream getInputStream() throws IOException {
+                    return new ByteArrayInputStream(qrBytes);
+                }
+                @Override
+                public OutputStream getOutputStream() throws IOException {
+                    throw new IOException("Cannot write to this DataSource");
+                }
+                @Override
+                public String getContentType() { return "image/png"; }
+                @Override
+                public String getName() { return "qr-code"; }
+            }));
+            qrInlinePart.setDisposition(MimeBodyPart.INLINE);
+            qrInlinePart.setHeader("Content-ID", "<qr-code-inline>");
+
+            // === QR CODE ALLEGATO ===
             MimeBodyPart qrAttachmentPart = new MimeBodyPart();
-            DataHandler qrAttachment = new DataHandler(Base64.getDecoder().decode(ticketMailDTO.qr()), "image/png");
-            qrAttachmentPart.setDataHandler(qrAttachment);
-            qrAttachmentPart.setFileName("biglietto-" + ticketMailDTO.nomeEvento().replaceAll("[^a-zA-Z0-9]", "-") + ".png");
+            qrAttachmentPart.setDataHandler(new DataHandler(new DataSource() {
+                @Override
+                public InputStream getInputStream() throws IOException {
+                    return new ByteArrayInputStream(qrBytes);
+                }
+                @Override
+                public OutputStream getOutputStream() throws IOException {
+                    throw new IOException("Cannot write to this DataSource");
+                }
+                @Override
+                public String getContentType() { return "image/png"; }
+                @Override
+                public String getName() { return "qr-attachment"; }
+            }));
+            qrAttachmentPart.setFileName("biglietto-" +
+                    ticketMailDTO.nomeEvento().replaceAll("[^a-zA-Z0-9\\-_]", "-") + ".png");
             qrAttachmentPart.setDisposition(MimeBodyPart.ATTACHMENT);
 
-            // QR Code inline per visualizzazione nel corpo email
-            MimeBodyPart qrInlinePart = new MimeBodyPart();
-            DataHandler qrInline = new DataHandler(Base64.getDecoder().decode(ticketMailDTO.qr()), "image/png");
-            qrInlinePart.setDataHandler(qrInline);
-            qrInlinePart.setDisposition(MimeBodyPart.INLINE);
-            qrInlinePart.setContentID("<qr-code-inline>");
-
+            // === ASSEMBLA EMAIL ===
             multipart.addBodyPart(htmlPart);
-            multipart.addBodyPart(qrAttachmentPart);
             multipart.addBodyPart(qrInlinePart);
+            multipart.addBodyPart(qrAttachmentPart);
 
             message.setContent(multipart);
             Transport.send(message);
 
+            System.out.println("✅ Email biglietto inviata con successo a: " + to +
+                    " per evento: " + ticketMailDTO.nomeEvento());
 
         } catch (Exception e) {
+            System.err.println("❌ Errore durante invio email biglietto a: " + to +
+                    " per evento: " + ticketMailDTO.nomeEvento());
             e.printStackTrace();
+            throw new RuntimeException("Impossibile inviare email biglietto", e);
         }
     }
 

@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EventoPreferitoRequestDTO {
 
-    @NotBlank(message = "Lo username è obbligatorio.")
     private Long eventoId;
 }

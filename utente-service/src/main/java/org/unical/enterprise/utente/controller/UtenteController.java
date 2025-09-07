@@ -39,7 +39,6 @@ public class UtenteController {
         return ResponseEntity.ok(utenteService.updateUtenteByUsername(auth.getName(), utenteDTO));
     }
 
-    // TODO: Posso vedere solo se ci seguiamo a vicenda
     @GetMapping("/{username}")
     public ResponseEntity<UtenteDTO> getUtenteByUsername(@PathVariable String username) {
         return ResponseEntity.ok(utenteService.getUtenteByUsername(username));

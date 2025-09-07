@@ -68,11 +68,20 @@ public class OrdineService {
 
         ordineDao.save(newOrdine);
 
-        MailTransferDto mailSended = new MailTransferDto(newOrdine.getId() , newOrdine.getData_pagamento(), newOrdine.getImporto(), ordineRequest.mailTo(), ordineRequest.nome());
+        UtenteDTO user = utenteServiceClient.getById(ordineRequest.ordine().utenteId());
+
+        MailTransferDto mailSended = new MailTransferDto(newOrdine.getId() , newOrdine.getData_pagamento(), newOrdine.getImporto(), user.getEmail(), user.getUsername());
         mailServiceClient.sendMail(mailSended);
 
+        String nomeEvento = eventoServiceClient.findById(ordineRequest.biglietti().getFirst().idEvento()).getNome();
         for (Biglietto biglietto : newBiglietti) {
-            mailServiceClient.sendQrCodeMail(biglietto.getEmail(), bigliettoService.getQrCode(biglietto.getId()));
+            mailServiceClient.sendQrCodeMail(biglietto.getEmail(),
+                    TicketMailDTO.builder()
+                            .nomeEvento(nomeEvento)
+                            .nome(biglietto.getNome())
+                            .cognome(biglietto.getCognome())
+                            .qr(bigliettoService.getQrCode(biglietto.getId()))
+                            .build());
         }
     }
 

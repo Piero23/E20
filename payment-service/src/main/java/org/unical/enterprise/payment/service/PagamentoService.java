@@ -139,8 +139,6 @@ public class PagamentoService {
 
             ordineServiceClient.save(
                     OrdineRequest.builder()
-                            .mailTo(session.getCustomerEmail())
-                            .nome(session.getCustomerDetails().getName())
                             .ordine(
                                     OrdineDto.builder()
                                             .importo(datiEvento.getPrezzo()*ordineTransferDto.biglietti().size())

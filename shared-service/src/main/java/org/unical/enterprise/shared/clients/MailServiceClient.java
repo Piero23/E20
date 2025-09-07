@@ -3,6 +3,7 @@ package org.unical.enterprise.shared.clients;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.shared.dto.MailTransferDto;
+import org.unical.enterprise.shared.dto.TicketMailDTO;
 
 @FeignClient(name = "mailSender-service", configuration = FeignConfig.class)
 public interface MailServiceClient {
@@ -11,7 +12,7 @@ public interface MailServiceClient {
     void sendMail(@RequestBody MailTransferDto dto);
 
     @PostMapping("/api/mail/{email}")
-    void sendQrCodeMail(@PathVariable String email, @RequestBody String image);
+    void sendQrCodeMail(@PathVariable String email, @RequestBody TicketMailDTO ticketMailDTO);
 
     @GetMapping("api/mail/test")
     String test();

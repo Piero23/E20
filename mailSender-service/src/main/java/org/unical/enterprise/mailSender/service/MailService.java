@@ -7,10 +7,12 @@ import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.input.TaggedInputStream;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.unical.enterprise.shared.dto.MailTransferDto;
+import org.unical.enterprise.shared.dto.TicketMailDTO;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -55,9 +57,9 @@ public class MailService {
             LocalDate data = instant.atZone(zoneId).toLocalDate();
             LocalTime ora = instant.atZone(zoneId).toLocalTime();
 
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("index.html");
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("orderMail.html");
             if (inputStream == null) {
-                throw new FileNotFoundException("index.html non trovato nel classpath.");
+                throw new FileNotFoundException("orderMail.html non trovato.");
             }
             String htmlTemplate = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
 
@@ -87,48 +89,55 @@ public class MailService {
     }
 
     @Transactional
-    public void sendQrCodeMail(String to, String image) {
+    public void sendQrCodeMail(String to, TicketMailDTO ticketMailDTO) {
+        String subject = "🎫 Il tuo biglietto per " + ticketMailDTO.nomeEvento() + " è pronto!";
 
-        String subject = "Ecco Il Tuo Biglietto!";
-
-        //TODO farla un po meglio che fa cacare
         try {
             Message message = setupMessage(to);
             message.setSubject(subject);
 
             Multipart multipart = new MimeMultipart();
 
-            MimeBodyPart textPart = new MimeBodyPart();
-            String body = """
-            <html>
-                <body>
-                    <h2>Grazie per il tuo acquisto!</h2>
-                    <p>In allegato trovi il tuo biglietto con QR Code. Mostralo all'ingresso.</p>
-                    <p>Buon divertimento!</p>
-                    <br>
-                </body>
-            </html>
-            """;
-            textPart.setContent(body, "text/html; charset=utf-8");
+            // Parte HTML con template
+            MimeBodyPart htmlPart = new MimeBodyPart();
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("ticketMail.html");
+            if (inputStream == null) {
+                throw new FileNotFoundException("ticketMail.html non trovato.");
+            }
+            String htmlTemplate = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            htmlPart.setContent(htmlTemplate, "text/html; charset=utf-8");
 
-            MimeBodyPart imgPart = new MimeBodyPart();
-            DataHandler dh = new DataHandler(Base64.getDecoder().decode(image), "image/png");
-            imgPart.setDataHandler(dh);
-            imgPart.setDisposition( MimeBodyPart.INLINE );
-            imgPart.addHeader("Content-ID", "<image>");
+            htmlTemplate
+                    .replace("${nome}", ticketMailDTO.nome())
+                    .replace("${cognome}", ticketMailDTO.cognome())
+                    .replace("${nomeEvento}", ticketMailDTO.nomeEvento())
+                    .replace("${qrCodeUrl}", "cid:qr-code-inline");
 
-            multipart.addBodyPart(textPart);
-            multipart.addBodyPart(imgPart);
+            // Parte QR Code come allegato
+            MimeBodyPart qrAttachmentPart = new MimeBodyPart();
+            DataHandler qrAttachment = new DataHandler(Base64.getDecoder().decode(ticketMailDTO.qr()), "image/png");
+            qrAttachmentPart.setDataHandler(qrAttachment);
+            qrAttachmentPart.setFileName("biglietto-" + ticketMailDTO.nomeEvento().replaceAll("[^a-zA-Z0-9]", "-") + ".png");
+            qrAttachmentPart.setDisposition(MimeBodyPart.ATTACHMENT);
+
+            // QR Code inline per visualizzazione nel corpo email
+            MimeBodyPart qrInlinePart = new MimeBodyPart();
+            DataHandler qrInline = new DataHandler(Base64.getDecoder().decode(ticketMailDTO.qr()), "image/png");
+            qrInlinePart.setDataHandler(qrInline);
+            qrInlinePart.setDisposition(MimeBodyPart.INLINE);
+            qrInlinePart.setContentID("<qr-code-inline>");
+
+            multipart.addBodyPart(htmlPart);
+            multipart.addBodyPart(qrAttachmentPart);
+            multipart.addBodyPart(qrInlinePart);
 
             message.setContent(multipart);
-
             Transport.send(message);
-            System.out.println("Email inviata con successo!");
+
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private Properties setupProperties() {

@@ -39,7 +39,7 @@ public class OrdineController {
 
     @PostMapping
     private ResponseEntity<String> save(@Valid @RequestBody OrdineRequest ordineRequest){
-        ordineService.saveOrdine(ordineRequest.ordine(), ordineRequest.biglietti());
+        ordineService.saveOrdine(ordineRequest);
         return ResponseEntity.ok("Ordine creato con successo");
     }
 

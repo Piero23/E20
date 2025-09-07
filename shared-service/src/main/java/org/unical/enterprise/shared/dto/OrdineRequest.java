@@ -6,6 +6,9 @@ import java.util.List;
 
 @Builder
 public record OrdineRequest(
+        String mailTo,
+
+        String nome,
         OrdineDto ordine,
         List<BigliettoDto> biglietti
 ){}

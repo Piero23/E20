@@ -39,7 +39,7 @@ spring:
                 - "authorization_code"
                 - "refresh_token"
               redirect-uris:
-                -  "com.example.myapp://oauth2redirect" #"http://localhost:8060/login/oauth2/code/gateway-client"
+                -  "http://localhost:8060/login/oauth2/code/gateway-client"
               post-logout-redirect-uris:
                 - "http://localhost:8060/"
               scopes:

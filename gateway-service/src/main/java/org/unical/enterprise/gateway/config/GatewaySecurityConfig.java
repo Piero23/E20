@@ -2,6 +2,7 @@ package org.unical.enterprise.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -12,7 +13,8 @@ import org.springframework.security.oauth2.server.resource.authentication.Reacti
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.savedrequest.ServerRequestCache;
 import org.springframework.security.web.server.savedrequest.WebSessionServerRequestCache;
-import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.server.WebSession;
 
 import java.net.URI;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebFluxSecurity
+@Import(CorsWebFilter.class)
 public class GatewaySecurityConfig {
 
     // Ispirato da Shared - JWT Authentication Converter
@@ -58,17 +61,6 @@ public class GatewaySecurityConfig {
         return new ReactiveJwtAuthenticationConverterAdapter(converter);
     }
 
-//    @Bean
-//    public ReactiveJwtDecoder jwtDecoder(TokenProperties tokenProperties) {
-//        System.out.println(tokenProperties.getSecret());
-//
-//        SecretKey secretKey = Keys.hmacShaKeyFor(
-//                Base64.getUrlDecoder().decode(tokenProperties.getSecret())
-//        );
-//
-//        return NimbusReactiveJwtDecoder.withSecretKey(secretKey).build();
-//    }
-
     @Bean
     public ServerRequestCache requestCache() {
         return new WebSessionServerRequestCache();
@@ -80,7 +72,7 @@ public class GatewaySecurityConfig {
                                                          ReactiveJwtAuthenticationConverterAdapter jwtAuthConverter)
     {
         http
-                .cors(cors -> cors.configurationSource(exchange -> new CorsConfiguration().applyPermitDefaultValues()))
+                // Cors Configuration Source (Web - Flux)
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
                         // Endpoint Tecnici
@@ -89,6 +81,7 @@ public class GatewaySecurityConfig {
                         // Endpoint Registrazione, Autenticazione Stateless
                         .pathMatchers("/auth/register", "/auth/login").permitAll()
 
+                        // Endpoint Stripe per Servizio Pagamenti
                         .pathMatchers("/stripe/**").permitAll()
 
                         .anyExchange().authenticated()

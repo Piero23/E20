@@ -10,14 +10,17 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.List;
@@ -40,15 +43,15 @@ public class JwtSecurityAutoConfiguration {
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http,
-            @Qualifier("corsConfigurationSource") CorsConfigurationSource corsSource,
-            JwtAuthFilter jwtAuthFilter
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   @Qualifier("corsConfigurationSource") CorsConfigurationSource corsConfigSource,
+                                                   JwtAuthFilter jwtAuthFilter
     ) throws Exception {
 
         http
-                .cors(c -> c.configurationSource(corsSource))
-                .csrf(csrf -> csrf.disable())
+                // Cors Configuration Source (Web - MVC)
+                .cors(cors -> cors.configurationSource(corsConfigSource))
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 
         if (securityProperties.isOpenService()) {
@@ -134,10 +137,9 @@ public class JwtSecurityAutoConfiguration {
             Object rolesObj = jwt.getClaim("roles");
             System.out.println("Roles claim: " + rolesObj);
 
-            if (rolesObj instanceof List) {
-                @SuppressWarnings("unchecked")
-                List<String> roles = (List<String>) rolesObj;
+            if (rolesObj instanceof List<?> roles) {
                 List<GrantedAuthority> authorities = roles.stream()
+                        .map(String::valueOf)
                         .map(r -> {
                             String authority = "ROLE_" + r.toUpperCase();
                             System.out.println("Adding authority: " + authority);

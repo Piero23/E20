@@ -45,6 +45,7 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain publicSecurityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(Customizer.withDefaults())
                 .securityMatcher(
                         "/auth/register",
                         "/auth/login",
@@ -66,6 +67,7 @@ public class SecurityConfig {
         OAuth2AuthorizationServerConfigurer authServerConfigurer = new OAuth2AuthorizationServerConfigurer();
 
         http
+                .cors(Customizer.withDefaults())
                 // Paths Per OAuth2
                 .securityMatcher("/oauth2/**", "/login", "/logout", "/.well-known/**", "/userinfo")
                 .authorizeHttpRequests(authorize -> authorize

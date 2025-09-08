@@ -2,6 +2,9 @@
 server:
   port: 9000
 
+cors:
+  allowed-origins: //localhost:3000, http://localhost:8060
+
 spring:
   cloud:
     config:

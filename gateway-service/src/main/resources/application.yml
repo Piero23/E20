@@ -3,3 +3,14 @@ spring:
     name: gateway-service
   config:
     import: "optional:configserver:http://localhost:8088"
+
+server:
+  port: 8060
+#  max-http-request-header-size: 48KB
+  ssl:
+    key-store: classpath:server.p12
+    key-store-password: changeit
+    key-alias: server
+    key-store-type: PKCS12
+    enabled: true
+    key-password: changeit

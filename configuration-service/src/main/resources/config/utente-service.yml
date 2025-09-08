@@ -15,16 +15,14 @@ spring:
       ddl-auto: update
     show-sql: true
 
-server:
-  port: 0
-
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8061/eureka/
+  
 
 cors:
-  allowed-origins: http://localhost:8060
+  allowed-origins: https://localhost:8060
 
 
 jwt:

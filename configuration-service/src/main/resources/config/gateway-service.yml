@@ -1,7 +1,3 @@
-server:
-  port: 8060
-  max-http-header-size: 48KB  # Aumenta la dimensione massima dell'header HTTP
-
 eureka:
   client:
     serviceUrl:

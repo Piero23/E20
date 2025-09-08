@@ -49,7 +49,9 @@ public class SecurityConfig {
                         "/auth/register",
                         "/auth/login",
                         "/actuator/**",
-                        "/auth/ciao"
+                        "/auth/ciao",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**"
                 )
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> authorize

@@ -1,6 +1,13 @@
-
 server:
   port: 9000
+  ssl:
+    key-store: classpath:server.p12
+    key-store-password: changeit
+    key-alias: server
+    key-store-type: PKCS12
+    enabled: true
+    key-password: changeit
+
 
 spring:
   cloud:
@@ -39,9 +46,9 @@ spring:
                 - "authorization_code"
                 - "refresh_token"
               redirect-uris:
-                - "http://localhost:8060/login/oauth2/code/gateway-client"
+                - "https://localhost:8060/login/oauth2/code/gateway-client"
               post-logout-redirect-uris:
-                - "http://localhost:8060/"
+                - "https://localhost:8060/"
               scopes:
                 - "openid"
                 - "profile"
@@ -50,6 +57,11 @@ spring:
 
 
 eureka:
+  instance:
+    secure-port: 9000
+    secure-port-enabled: true
+    non-secure-port-enabled: false
+
   client:
     serviceUrl:
       defaultZone: http://localhost:8061/eureka/
@@ -58,7 +70,7 @@ eureka:
 auth:
   token:
     scopes: openid, roles
-    issuer: "http://127.0.0.1:9000"
+    issuer: "https://localhost:9000"
     expiration: 3600
 
 

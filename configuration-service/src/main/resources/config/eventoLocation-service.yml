@@ -1,6 +1,4 @@
 spring:
-
-
   application:
     name: eventoLocation-service
   output:
@@ -9,8 +7,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5454/e20
-    username: admin
-    password: admin
+    username: ${db_username}
+    password: ${db_password}
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -24,7 +22,7 @@ eureka:
       defaultZone: http://localhost:8061/eureka/
 
 cors:
-  allowed-origins: http://localhost:8060
+  allowed-origins: https://localhost:8060
 
 jwt:
   security:

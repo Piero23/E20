@@ -6,8 +6,8 @@ spring:
       enabled: always
   datasource:
     url: jdbc:postgresql://localhost:5454/e20
-    username: admin
-    password: admin
+    username: ${db_username}
+    password: ${db_password}
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect

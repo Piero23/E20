@@ -1,8 +1,13 @@
 spring:
   application:
     name: mailSender-service
-
-
   config:
-    import: "optional:configserver:http://localhost:8088"
-
+    import:
+      - "optional:configserver:http://localhost:8088"
+      - "optional:file:.env[.properties]"
+      - "vault://"
+  cloud:
+    vault:
+      token: ${VAULT_TOKEN}
+      uri: ${VAULT_ADDR}
+      application-name: application

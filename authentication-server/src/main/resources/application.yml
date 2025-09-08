@@ -10,7 +10,15 @@ server:
 
 
 spring:
+  config:
+    import:
+      - "optional:file:.env[.properties]"
+      - "vault://"
   cloud:
+    vault:
+      token: ${VAULT_TOKEN}
+      uri: ${VAULT_ADDR}
+      application-name: application
     config:
       enabled: false
   application:
@@ -22,8 +30,8 @@ spring:
   ## Database Properties
   datasource:
     url: jdbc:postgresql://localhost:5454/e20
-    username: admin
-    password: admin
+    username: ${db_username}
+    password: ${db_password}
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -39,7 +47,7 @@ spring:
           gateway-client:
             registration:
               client-id: "gateway-client"
-              client-secret: "$2a$12$oOagAoNYyMcpzY602Zqtj.YT/P1MuZUm/BraPQpHSNeWLIapyBOWq"
+              client-secret: ${client_secret}
               client-authentication-methods:
                 - "client_secret_basic"
               authorization-grant-types:

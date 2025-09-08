@@ -7,8 +7,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5454/e20
-    username: admin
-    password: admin
+    username: ${db_username}
+    password: ${db_password}
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -25,7 +25,7 @@ eureka:
       defaultZone: http://localhost:8061/eureka/
 
 cors:
-  allowed-origins: http://localhost:8060
+  allowed-origins: https://localhost:8060
 
 jwt:
   security:
@@ -43,6 +43,6 @@ springdoc:
 
 stripe:
   api:
-    secret: sk_test_51RFjSkP6wuNuFoXfwTOPhTkziWj1DDXYpCwLLkxKQFAZaojXuPeh8FX5DHOMvPjvmTgMkoMhPGNa9oIrGoKYO7Sb00ZNYIN3FZ
-    webhook: whsec_f2befde884f2bb5c1cb8b9a05947c0365f5b93c10f97e9ffec105d30dfaf1377
+    secret: ${stripe_secret}
+    webhook: ${stripe_webhook}
 

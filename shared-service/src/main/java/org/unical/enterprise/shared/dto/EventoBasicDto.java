@@ -3,6 +3,7 @@ package org.unical.enterprise.shared.dto;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.UUID;
@@ -44,6 +45,8 @@ public class EventoBasicDto {
 
     @PositiveOrZero
     private double prezzo;
+
+    private byte[] immagine;
 
     /*
     public EventoBasicDto(Evento event) {

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.unical.enterprise.eventoLocation.ContentNotFoundException;
 import org.unical.enterprise.eventoLocation.data.dao.EventoDao;
 import org.unical.enterprise.eventoLocation.data.dao.LocationDao;
@@ -17,6 +18,7 @@ import org.unical.enterprise.eventoLocation.data.entities.Evento;
 import org.unical.enterprise.eventoLocation.data.entities.Location;
 import org.unical.enterprise.shared.dto.UtenteDTO;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -73,6 +75,7 @@ public class EventoService {
         evento.setB_nominativo(dto.isB_nominativo());
         evento.setAge_restricted(dto.isAge_restricted());
         evento.setData(dto.getData());
+        evento.setImmagine(dto.getImmagine());
 
         Location location = locationDao.findById(dto.getLocationId())
                 .orElseThrow(() -> new ContentNotFoundException("location with id " + dto.getLocationId() + " not found"));
@@ -120,6 +123,25 @@ public class EventoService {
         return bigliettoServiceClient.getBigliettoEvento(id);
     }
 
+    public void setImage(MultipartFile immagine, Long id) {
+        Evento evento= eventoDao.findById(id).orElseThrow(() ->
+                new ContentNotFoundException("location with id " + id + " not found")
+        );
 
+        try {
+            evento.setImmagine(immagine.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
+        eventoDao.save(evento);
+    }
+
+    public byte[] getImage(Long id) {
+        Evento evento= eventoDao.findById(id).orElseThrow(() ->
+                new ContentNotFoundException("location with id " + id + " not found")
+        );
+
+        return evento.getImmagine();
+    }
 }

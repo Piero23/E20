@@ -83,8 +83,13 @@ public class PagamentoController {
                         for (BigliettoDto biglietto: request.getOrdine().biglietti()){
                             if(pagamentoService.findByData(biglietto.email(), biglietto.idEvento()))
                                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Esiste già un biglietto per evento " + biglietto.idEvento() + " per " + biglietto.nome() + " " + biglietto.cognome());
-                            else if (pagamentoService.isAgeRestricted(biglietto.idEvento()) && !isMaggiorenne(biglietto.dataNascita()))
+                            if (pagamentoService.isAgeRestricted(biglietto.idEvento()) && !isMaggiorenne(biglietto.dataNascita()))
                                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(biglietto.nome() + " " + biglietto.cognome() + " non ha l'età adatta per accedere all'evento.");
+                            boolean cond1 = pagamentoService.needsName(biglietto.idEvento()) && (biglietto.nome()==null || biglietto.cognome()==null);
+                            boolean cond2 = !pagamentoService.needsName(biglietto.idEvento()) && (biglietto.nome()!=null || biglietto.cognome()!=null);
+                            if (cond1 || cond2) {
+                                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La richiesta presenta dei campi errati");
+                            }
                         }
                         //TODO se il numero di biglietti richiesti è più di quelli disponibili errore
                         logger.info("Iniziato Ordine da utente {}", user);

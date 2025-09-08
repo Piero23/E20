@@ -84,7 +84,18 @@ public class GatewaySecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
                         // Endpoint Tecnici
-                        .pathMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .pathMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/swagger-resources/**",
+                                "/v3/api-docs/**",
+                                "/utente-service/v3/api-docs/**",
+                                "/eventoLocation-service/v3/api-docs",
+                                "/gestioneOrdini-service/v3/api-docs",
+                                "/mailSender-service/v3/api-docs",
+                                "/payment-service/v3/api-docs",
+                                "/authentication-server/v3/api-docs"
+                        ).permitAll()
 
                         // Endpoint Registrazione, Autenticazione Stateless
                         .pathMatchers("/auth/register", "/auth/login").permitAll()

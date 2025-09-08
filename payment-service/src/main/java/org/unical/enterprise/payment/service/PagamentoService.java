@@ -205,4 +205,9 @@ public class PagamentoService {
     public boolean isAgeRestricted(Long idEvento){
         return eventoServiceClient.findById(idEvento).isAge_restricted();
     }
+    public boolean needsName(Long idEvento){
+        return eventoServiceClient.findById(idEvento).isB_nominativo();
+    }
+
+
 }

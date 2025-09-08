@@ -46,8 +46,6 @@ public class EventoBasicDto {
     @PositiveOrZero
     private double prezzo;
 
-    private byte[] immagine;
-
     /*
     public EventoBasicDto(Evento event) {
         this.id = event.getId();

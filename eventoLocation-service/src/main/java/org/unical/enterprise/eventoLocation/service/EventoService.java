@@ -75,7 +75,6 @@ public class EventoService {
         evento.setB_nominativo(dto.isB_nominativo());
         evento.setAge_restricted(dto.isAge_restricted());
         evento.setData(dto.getData());
-        evento.setImmagine(dto.getImmagine());
 
         Location location = locationDao.findById(dto.getLocationId())
                 .orElseThrow(() -> new ContentNotFoundException("location with id " + dto.getLocationId() + " not found"));

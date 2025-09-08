@@ -15,8 +15,6 @@ import org.unical.enterprise.shared.dto.MailTransferDto;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -89,10 +87,11 @@ public class MailService {
     }
 
     @Transactional
-    public void sendQrCodeMail(String to /*, String image*/) {
+    public void sendQrCodeMail(String to, String image) {
 
         String subject = "Ecco Il Tuo Biglietto!";
 
+        //TODO farla un po meglio che fa cacare
         try {
             Message message = setupMessage(to);
             message.setSubject(subject);
@@ -112,7 +111,6 @@ public class MailService {
             """;
             textPart.setContent(body, "text/html; charset=utf-8");
 
-            /*
             MimeBodyPart imgPart = new MimeBodyPart();
             DataHandler dh = new DataHandler(Base64.getDecoder().decode(image), "image/png");
             imgPart.setDataHandler(dh);
@@ -125,9 +123,8 @@ public class MailService {
             message.setContent(multipart);
 
             Transport.send(message);
-            //System.out.println("Email inviata con successo!");
+            System.out.println("Email inviata con successo!");
 
-             */
         } catch (Exception e) {
             e.printStackTrace();
         }

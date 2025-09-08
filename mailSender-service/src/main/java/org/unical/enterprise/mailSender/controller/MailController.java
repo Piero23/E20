@@ -5,10 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.mailSender.service.MailService;
 import org.unical.enterprise.shared.dto.MailTransferDto;
 
-
-import java.awt.*;
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/api/mail")
 @AllArgsConstructor
@@ -17,8 +13,8 @@ public class MailController {
     MailService mailService;
 
     @PostMapping("/{email}")
-    public void sendQrCodeMail(@PathVariable String email) {
-        mailService.sendQrCodeMail(email);
+    public void sendQrCodeMail(@PathVariable String email, @RequestBody String image) {
+        mailService.sendQrCodeMail(email, image);
     }
 
     @PostMapping(value = "/sendMail", consumes = "application/json")

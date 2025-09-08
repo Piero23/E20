@@ -2,11 +2,9 @@ package org.unical.enterprise.auth;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
-import org.unical.enterprise.auth.config.TokenProperties;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -25,6 +23,8 @@ import java.util.Base64;
 })
 @EnableDiscoveryClient
 public class AuthServerApplication {
+
+    //TODO fare in modo che admin abbia tutti i ruoli sottostanti e anche manager
 
 	public static void main(String[] args) {
 		SpringApplication.run(AuthServerApplication.class, args);

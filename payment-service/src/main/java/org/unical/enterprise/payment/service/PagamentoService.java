@@ -200,4 +200,8 @@ public class PagamentoService {
                 .eMail(email)
                 .build());
     }
+
+    public boolean isAgeRestricted(Long idEvento){
+        return eventoServiceClient.findById(idEvento).isAge_restricted();
+    }
 }

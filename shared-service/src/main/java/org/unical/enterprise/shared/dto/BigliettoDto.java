@@ -18,10 +18,8 @@ public record BigliettoDto(
 
         boolean eValido,
 
-        @NotBlank(message = "Inserire Nome")
         String nome,
 
-        @NotBlank(message = "Inserire Cognome")
         String cognome,
 
         Date dataNascita

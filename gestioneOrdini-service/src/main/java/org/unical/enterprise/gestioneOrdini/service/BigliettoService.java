@@ -49,6 +49,7 @@ public class BigliettoService {
         return false;
     }
 
+    @Transactional
     public List<BigliettoDto> findAllByEvento(Long id) {
         List<Biglietto> biglietti = bigliettoDao.findAllByIdEvento(id);
 
@@ -60,6 +61,7 @@ public class BigliettoService {
         return bigliettiDto;
     }
 
+    @Transactional
     public boolean validate(UUID id){
         Biglietto ticket = bigliettoDao.findById(id).get();
         if (ticket.isE_valido() && !eventoServiceClient.findById(ticket.getIdEvento()).isB_riutilizzabile()){

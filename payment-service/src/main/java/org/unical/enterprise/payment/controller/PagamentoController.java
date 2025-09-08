@@ -86,6 +86,7 @@ public class PagamentoController {
                             else if (pagamentoService.isAgeRestricted(biglietto.idEvento()) && !isMaggiorenne(biglietto.dataNascita()))
                                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(biglietto.nome() + " " + biglietto.cognome() + " non ha l'età adatta per accedere all'evento.");
                         }
+                        //TODO se il numero di biglietti richiesti è più di quelli disponibili errore
                         logger.info("Iniziato Ordine da utente {}", user);
                         Session session = pagamentoService.createPaymentSession(
                                 request.getOrdine(),
@@ -96,7 +97,7 @@ public class PagamentoController {
                         return ResponseEntity.ok(Map.of("url", session.getUrl()));
                     } else {
                         logger.info("Utente {} non autorizzato", user);
-                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utente " + user + " non autorizzato");
                     }
                 } else {
                     logger.error("Si sta tentando di effettuare un ordine per un utente inesistente");

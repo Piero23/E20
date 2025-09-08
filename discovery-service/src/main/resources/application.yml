@@ -1,12 +1,5 @@
 server:
   port: 8061
-#  ssl:
-#    key-store: classpath:local_ssl.p12
-#    key-store-password: changeit
-#    key-alias: local_ssl
-#    key-store-type: PKCS12
-#    enabled: true
-#    key-password: changeit
 
 eureka:
   instance:

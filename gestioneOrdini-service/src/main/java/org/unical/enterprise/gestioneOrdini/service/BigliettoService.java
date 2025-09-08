@@ -8,6 +8,7 @@ import org.springframework.web.client.RestTemplate;
 import org.unical.enterprise.gestioneOrdini.dao.BigliettoDao;
 import org.unical.enterprise.gestioneOrdini.domain.Biglietto;
 import org.unical.enterprise.gestioneOrdini.domain.Ordine;
+import org.unical.enterprise.shared.clients.EventoServiceClient;
 import org.unical.enterprise.shared.dto.BigliettoDto;
 
 import java.net.URLEncoder;
@@ -22,6 +23,8 @@ import java.util.UUID;
 public class BigliettoService {
 
     private final BigliettoDao bigliettoDao;
+
+    private final EventoServiceClient eventoServiceClient;
 
     @Transactional
     public List<Biglietto> findAll(){return bigliettoDao.findAll();}
@@ -55,5 +58,19 @@ public class BigliettoService {
             bigliettiDto.add(b);
         }
         return bigliettiDto;
+    }
+
+    public boolean validate(UUID id){
+        Biglietto ticket = bigliettoDao.findById(id).get();
+        if (ticket.isE_valido() && !eventoServiceClient.findById(ticket.getIdEvento()).isB_riutilizzabile()){
+            ticket.setE_valido(false);
+            bigliettoDao.save(ticket);
+            return true;
+        }
+        else return eventoServiceClient.findById(ticket.getIdEvento()).isB_riutilizzabile();
+    }
+
+    public boolean checkExists(UUID id){
+        return bigliettoDao.existsById(id);
     }
 }

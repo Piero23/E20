@@ -3,6 +3,7 @@ package org.unical.enterprise.gestioneOrdini.controller;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.gestioneOrdini.domain.Biglietto;
@@ -31,16 +32,24 @@ public class BigliettoController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping(value="/{id}")
+    @GetMapping(value="/{id}/qr")
     private ResponseEntity<Map<String, String>> getQrCode(@PathVariable UUID id) throws URISyntaxException {
-        //potenzialmente sostituibile nel backend
-
-        //ritorna l'id del biglietto,
-        //implementare la validazione allo scan
         logger.info("Richiesta generazione QrCode Ordine");
         Map<String, String> response = new HashMap<>();
         response.put("imageBase64", bigliettoService.getQrCode(id));
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping(value="/{id}")
+    private ResponseEntity<String> validate(@PathVariable UUID id) {
+        logger.info("Inizio Validazione ticket "+ id);
+        if (bigliettoService.checkExists(id)){
+            if (bigliettoService.validate(id)){
+                return ResponseEntity.ok("BIglietto validato correttamente");
+            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Biglietto già utilizzato");
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Biglietto non esistente");
     }
 
     @GetMapping("/evento")

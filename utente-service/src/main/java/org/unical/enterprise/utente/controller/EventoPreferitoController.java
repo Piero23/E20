@@ -46,23 +46,30 @@ public class EventoPreferitoController {
 
     @PostMapping("/preferiti")
     public ResponseEntity<String> updateSeguiti(@PathVariable String username,
-                                                @Valid @RequestBody EventoPreferitoRequestDTO eventoPreferitoRequestDTO) {
+                                                @Valid @RequestBody EventoPreferitoRequestDTO eventoPreferitoRequestDTO,
+                                                Authentication auth) {
 
         UUID utenteId = utenteService.resolveIdFromUsername(username);
 
-        eventoServiceClient.aggiungiAiPreferiti(utenteId, eventoPreferitoRequestDTO.getEventoId());
-        return ResponseEntity.ok("Evento aggiunto ai Preferiti");
 
+        if(auth.getName().equals(username)) {
+            eventoServiceClient.aggiungiAiPreferiti(utenteId, eventoPreferitoRequestDTO.getEventoId());
+            return ResponseEntity.ok("Evento aggiunto ai Preferiti");
+        }else
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @DeleteMapping("/preferiti")
     public ResponseEntity<String> deleteUtenteFromSeguiti(@PathVariable String username,
-                                                          @Valid @RequestBody EventoPreferitoRequestDTO eventoPreferitoRequestDTO) {
+                                                          @Valid @RequestBody EventoPreferitoRequestDTO eventoPreferitoRequestDTO,
+                                                          Authentication auth) {
 
         UUID utenteId = utenteService.resolveIdFromUsername(username);
 
-        eventoServiceClient.rimuoviDaiPreferiti(utenteId, eventoPreferitoRequestDTO.getEventoId());
-        return ResponseEntity.ok("Evento rimosso ai Preferiti");
-
+        if(auth.getName().equals(username)) {
+            eventoServiceClient.rimuoviDaiPreferiti(utenteId, eventoPreferitoRequestDTO.getEventoId());
+            return ResponseEntity.ok("Evento rimosso ai Preferiti");
+        }else
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }

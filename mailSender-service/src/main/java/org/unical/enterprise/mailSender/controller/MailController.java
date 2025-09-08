@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.mailSender.service.MailService;
 import org.unical.enterprise.shared.dto.MailTransferDto;
-
-
-import java.awt.*;
-import java.util.UUID;
+import org.unical.enterprise.shared.dto.TicketMailDTO;
 
 @RestController
 @RequestMapping("/api/mail")
@@ -17,8 +14,8 @@ public class MailController {
     MailService mailService;
 
     @PostMapping("/{email}")
-    public void sendQrCodeMail(@PathVariable String email) {
-        mailService.sendQrCodeMail(email);
+    public void sendQrCodeMail(@PathVariable String email, @RequestBody TicketMailDTO ticketMailDTO) {
+        mailService.sendQrCodeMail(email, ticketMailDTO);
     }
 
     @PostMapping(value = "/sendMail", consumes = "application/json")

@@ -30,6 +30,7 @@ public class Preferiti extends DomainObject<Long> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //TODO mettere uuid
     @Size(min = 36, max = 36)
     @Column(length = 36 ,nullable = false)
     private String utenteId;

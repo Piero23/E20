@@ -46,13 +46,13 @@ jwt:
           - ROLE_USER
       - path: POST:/api/evento
         roles:
-          - ROLE_MANAGER
+          - ROLE_USER
       - path: DELETE:/api/evento/{id}
         roles:
-          - ROLE_MANAGER
+          - ROLE_USER
       - path: PUT:/api/evento/{id}
         roles:
-          - ROLE_MANAGER
+          - ROLE_USER
       - path: /api/evento/bookings
         roles:
           - ROLE_MANAGER
@@ -61,7 +61,7 @@ jwt:
           - ROLE_ADMIN
       - path: POST:/api/location
         roles:
-          - ROLE_MANAGER
+          - ROLE_USER # TODO: aooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
       - path: PUT:/api/location/{id}
         roles:
           - ROLE_MANAGER

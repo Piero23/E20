@@ -8,12 +8,9 @@ import org.unical.enterprise.shared.clients.EventoServiceClient;
 import org.unical.enterprise.gestioneOrdini.dao.OrdineDao;
 import org.unical.enterprise.gestioneOrdini.domain.Biglietto;
 import org.unical.enterprise.gestioneOrdini.domain.Ordine;
-import org.unical.enterprise.shared.dto.BigliettoDto;
-import org.unical.enterprise.shared.dto.OrdineDto;
+import org.unical.enterprise.shared.dto.*;
 import org.unical.enterprise.shared.clients.MailServiceClient;
 import org.unical.enterprise.shared.clients.UtenteServiceClient;
-import org.unical.enterprise.shared.dto.MailTransferDto;
-import org.unical.enterprise.shared.dto.UtenteDTO;
 
 import java.util.*;
 
@@ -24,9 +21,6 @@ public class OrdineService {
     private final OrdineDao ordineDao;
     private final BigliettoService bigliettoService;
 
-
-
-    //TODO fare in modo che non siano "istanze volanti" ma che vengano chiamate da un solo punto
     private final MailServiceClient mailServiceClient;
 
     private final UtenteServiceClient utenteServiceClient;
@@ -39,16 +33,16 @@ public class OrdineService {
     }
 
     @Transactional
-    public void saveOrdine(OrdineDto ordine, List<BigliettoDto> biglietti) {
+    public void saveOrdine(OrdineRequest ordineRequest) {
         Ordine newOrdine = Ordine.builder()
-                .utenteId(ordine.utenteId())
-                .importo(ordine.importo())
+                .utenteId(ordineRequest.ordine().utenteId())
+                .importo(ordineRequest.ordine().importo())
                 .data_pagamento(new Date())
                 .build();
 
 
         Set<Biglietto> newBiglietti = new HashSet<>();
-        for(BigliettoDto bigliettoDto : biglietti){
+        for(BigliettoDto bigliettoDto : ordineRequest.biglietti()){
 
             try {
                 eventoServiceClient.findById(bigliettoDto.idEvento());
@@ -74,14 +68,21 @@ public class OrdineService {
 
         ordineDao.save(newOrdine);
 
-        //TODO Tutto da pulire non deve stare qua a volare
+        UtenteDTO user = utenteServiceClient.getById(ordineRequest.ordine().utenteId());
 
-        UtenteDTO toUtente = utenteServiceClient.getById(newOrdine.getUtenteId());
-
-        MailTransferDto mailSended = new MailTransferDto(newOrdine.getId() , newOrdine.getData_pagamento(), newOrdine.getImporto(), toUtente.getEmail(), toUtente.getUsername());
+        MailTransferDto mailSended = new MailTransferDto(newOrdine.getId() , newOrdine.getData_pagamento(), newOrdine.getImporto(), user.getEmail(), user.getUsername());
         mailServiceClient.sendMail(mailSended);
 
-        //TODO: mandare mail qrcode a biglietti
+        String nomeEvento = eventoServiceClient.findById(ordineRequest.biglietti().getFirst().idEvento()).getNome();
+        for (Biglietto biglietto : newBiglietti) {
+            mailServiceClient.sendQrCodeMail(biglietto.getEmail(),
+                    TicketMailDTO.builder()
+                            .nomeEvento(nomeEvento)
+                            .nome(biglietto.getNome())
+                            .cognome(biglietto.getCognome())
+                            .qr(bigliettoService.getQrCode(biglietto.getId()))
+                            .build());
+        }
     }
 
     @Transactional

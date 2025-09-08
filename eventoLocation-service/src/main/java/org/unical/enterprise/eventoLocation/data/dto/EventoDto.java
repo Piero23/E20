@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,7 +17,7 @@ public class EventoDto {
     private Long id;
     private String nome;
     private String descrizione;
-    private String organizzatore;
+    private UUID organizzatore;
     private Long posti;
     private boolean b_riutilizzabile;
     private boolean b_nominativo;

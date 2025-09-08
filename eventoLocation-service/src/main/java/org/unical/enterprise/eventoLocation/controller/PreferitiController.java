@@ -1,5 +1,6 @@
 package org.unical.enterprise.eventoLocation.controller;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -9,6 +10,7 @@ import org.unical.enterprise.eventoLocation.service.PreferitiService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.unical.enterprise.shared.clients.UtenteServiceClient;
 import org.unical.enterprise.shared.dto.EventoBasicDto;
 
 import java.util.List;

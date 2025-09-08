@@ -133,12 +133,13 @@ public class PagamentoService {
                 throw new RuntimeException("Dati ordine non trovati per session: " + sessionId);
             }
 
-            System.out.println(sessionId);
+            //System.out.println(sessionId);
 
             EventoBasicDto datiEvento = eventoServiceClient.findById(ordineTransferDto.biglietti().getFirst().idEvento());
 
             ordineServiceClient.save(
-                    OrdineRequest.builder().ordine(
+                    OrdineRequest.builder()
+                            .ordine(
                                     OrdineDto.builder()
                                             .importo(datiEvento.getPrezzo()*ordineTransferDto.biglietti().size())
                                             .utenteId(ordineTransferDto.utenteId())
@@ -151,7 +152,7 @@ public class PagamentoService {
             // Rimuovi i dati dalla cache
             redisTemplate.delete("pending_order:" + sessionId);
 
-            System.out.println("Ordine confermato: " + ordineTransferDto.utenteId().toString());
+            //System.out.println("Ordine confermato: " + ordineTransferDto.utenteId().toString());
 
         } catch (Exception e) {
             System.err.println("Errore nella conferma ordine: " + e.getMessage());
@@ -199,5 +200,9 @@ public class PagamentoService {
                 .eventID(evento)
                 .eMail(email)
                 .build());
+    }
+
+    public boolean isAgeRestricted(Long idEvento){
+        return eventoServiceClient.findById(idEvento).isAge_restricted();
     }
 }

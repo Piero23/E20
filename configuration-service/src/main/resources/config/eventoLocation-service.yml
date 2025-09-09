@@ -39,7 +39,8 @@ jwt:
       GET:/api/location,
       GET:/api/location/{id},
       /api/location/test,
-      /api/preferiti/test
+      /api/preferiti/test,
+      /api/evento/search/{string}
     protectedRoutes:
       - path: /api/preferiti/**
         roles:

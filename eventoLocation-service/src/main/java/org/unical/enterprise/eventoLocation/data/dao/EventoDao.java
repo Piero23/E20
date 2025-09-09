@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface EventoDao extends JpaRepository<Evento, Long> {
 
     Page<Evento> findAll(Pageable pageable);
+    Page<Evento> findByNomeContainingIgnoreCase(String nome, Pageable pageable);
 }

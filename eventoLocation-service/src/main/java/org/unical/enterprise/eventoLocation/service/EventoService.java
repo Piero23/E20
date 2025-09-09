@@ -121,5 +121,11 @@ public class EventoService {
     }
 
 
+    public Page<EventoBasicDto> searchPagable(Pageable pageable, String string) {
+        Page<Evento> eventos = eventoDao.findByNomeContainingIgnoreCase(string, pageable);
 
+        Page<EventoBasicDto> basic = eventos.map(evento -> toDTO(evento));
+
+        return basic;
+    }
 }

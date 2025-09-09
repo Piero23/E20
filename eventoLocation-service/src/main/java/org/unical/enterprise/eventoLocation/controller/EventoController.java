@@ -33,6 +33,11 @@ public class EventoController {
         return eventoService.getPagable(pageable);
     }
 
+    @GetMapping("/search/{string}")
+    public Page<EventoBasicDto> search(Pageable pageable, @PathVariable String string) {
+        return eventoService.searchPagable(pageable, string);
+    }
+
     // TODO: Guarda qua Carlo
     @GetMapping(value="/{id}")
     private EventoBasicDto findById(@PathVariable("id") Long id /* @RequestParam Map<String, String> allParams*/){

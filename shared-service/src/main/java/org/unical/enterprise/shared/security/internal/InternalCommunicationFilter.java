@@ -23,7 +23,7 @@ public class InternalCommunicationFilter extends OncePerRequestFilter {
 
         String internalHeader = request.getHeader("X-Internal-Communication");
 
-        System.out.println("Sto controllando la comm Key:" + internalCommunicationKey);
+        System.out.println("Sto controllando la comm Key");
 
         if (internalHeader == null || !internalHeader.equals(internalCommunicationKey)) {
             System.out.println("Ci hai provato");

@@ -21,7 +21,7 @@ public class InternalHeaderFIlter {
                                     r.headers(
                                     h -> {
                                         h.add("X-Internal-Communication", internalCommunicationKey);
-                                        System.out.println("Sto mettendo da Gateway la comm Key: " + internalCommunicationKey);
+                                        System.out.println("Sto mettendo da Gateway la comm Key");
                                     })
                             )
                             .build()

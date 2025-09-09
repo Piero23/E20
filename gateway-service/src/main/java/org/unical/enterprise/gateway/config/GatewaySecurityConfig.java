@@ -12,7 +12,6 @@ import org.springframework.security.oauth2.server.resource.authentication.Reacti
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.savedrequest.ServerRequestCache;
 import org.springframework.security.web.server.savedrequest.WebSessionServerRequestCache;
-import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.server.WebSession;
 
 import java.net.URI;
@@ -58,17 +57,6 @@ public class GatewaySecurityConfig {
         return new ReactiveJwtAuthenticationConverterAdapter(converter);
     }
 
-//    @Bean
-//    public ReactiveJwtDecoder jwtDecoder(TokenProperties tokenProperties) {
-//        System.out.println(tokenProperties.getSecret());
-//
-//        SecretKey secretKey = Keys.hmacShaKeyFor(
-//                Base64.getUrlDecoder().decode(tokenProperties.getSecret())
-//        );
-//
-//        return NimbusReactiveJwtDecoder.withSecretKey(secretKey).build();
-//    }
-
     @Bean
     public ServerRequestCache requestCache() {
         return new WebSessionServerRequestCache();
@@ -80,7 +68,6 @@ public class GatewaySecurityConfig {
                                                          ReactiveJwtAuthenticationConverterAdapter jwtAuthConverter)
     {
         http
-                .cors(cors -> cors.configurationSource(exchange -> new CorsConfiguration().applyPermitDefaultValues()))
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
                         // Endpoint Tecnici
@@ -105,6 +92,7 @@ public class GatewaySecurityConfig {
                         // Endpoint Registrazione, Autenticazione Stateless
                         .pathMatchers("/auth/register", "/auth/login").permitAll()
 
+                        // Endpoint Stripe per Servizio Pagamenti
                         .pathMatchers("/stripe/**").permitAll()
 
                         .anyExchange().authenticated()

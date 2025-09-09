@@ -6,17 +6,13 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-
 
 @SpringBootApplication
 @ComponentScan(basePackages = {
 		"org.unical.enterprise.auth",
 		"org.unical.enterprise.shared.clients",
-		"org.unical.enterprise.shared.dto"
+		"org.unical.enterprise.shared.dto",
+        "org.unical.enterprise.shared.security.internal"
 })
 @EnableFeignClients(basePackages = {
 		"org.unical.enterprise.shared.clients"
@@ -28,13 +24,6 @@ public class AuthServerApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AuthServerApplication.class, args);
-	}
-
-	private static void temp() throws NoSuchAlgorithmException {
-		KeyGenerator keyGen = KeyGenerator.getInstance("HmacSha256");
-		SecretKey key = keyGen.generateKey();
-		String base64Key = Base64.getUrlEncoder().withoutPadding().encodeToString(key.getEncoded());
-		System.out.println("Secret to put in application.yml: " + base64Key);
 	}
 
 }

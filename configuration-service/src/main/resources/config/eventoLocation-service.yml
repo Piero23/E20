@@ -16,6 +16,9 @@ spring:
       ddl-auto: update
     show-sql: true
 
+server:
+  port: 0
+
 eureka:
   client:
     serviceUrl:
@@ -31,8 +34,8 @@ jwt:
       /v3/api-docs/**,
       /swagger-ui/**,
       /swagger-ui.html,
-      /api/evento/{id} ,
-      /api/evento ,
+      /api/evento/{id},
+      /api/evento,
       /api/evento/test,
       /api/location,
       /api/location/{id},

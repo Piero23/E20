@@ -13,6 +13,3 @@ spring:
       - "optional:configserver:http://localhost:8088"
       - "optional:file:.env[.properties]"
       - "vault://"
-
-server:
-  port: 0

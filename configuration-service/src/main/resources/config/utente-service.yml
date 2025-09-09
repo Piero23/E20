@@ -4,6 +4,7 @@ spring:
   output:
     ansi:
       enabled: always
+
   datasource:
     url: jdbc:postgresql://localhost:5454/e20
     username: ${db_username}
@@ -28,11 +29,12 @@ cors:
 jwt:
   security:
     enabled: true
-    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /api/utente/register, /api/utente/test
+    publicPaths:
+      /v3/api-docs/**, 
+      /swagger-ui/**, 
+      /swagger-ui.html,
+      /api/utente
     protectedRoutes:
-      - path: /api/utente
-        roles:
-          - ROLE_ADMIN
       - path: /api/utente/{username}
         roles:
           - ROLE_USER

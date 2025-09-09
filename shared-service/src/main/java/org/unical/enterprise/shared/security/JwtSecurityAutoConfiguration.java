@@ -1,6 +1,7 @@
 package org.unical.enterprise.shared.security;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -10,15 +11,19 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.unical.enterprise.shared.security.internal.InternalCommunicationFilter;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +36,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class JwtSecurityAutoConfiguration {
 
-    private final JwtSecurityProperties securityProperties;
+    private JwtSecurityProperties securityProperties;
 
     @Bean
     public JwtAuthFilter jwtAuthFilter() {
@@ -39,17 +44,21 @@ public class JwtSecurityAutoConfiguration {
     }
 
     @Bean
+    public InternalCommunicationFilter internalCommunicationFilter() { return new InternalCommunicationFilter(); };
+
+    @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http,
-            @Qualifier("corsConfigurationSource") CorsConfigurationSource corsSource,
-            JwtAuthFilter jwtAuthFilter
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   @Qualifier("corsConfigurationSource") CorsConfigurationSource corsConfigSource,
+                                                   JwtAuthFilter jwtAuthFilter,
+                                                   InternalCommunicationFilter internalCommunicationFilter
     ) throws Exception {
 
         http
-                .cors(c -> c.configurationSource(corsSource))
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
+                // Cors Configuration Source (Web - MVC)
+                .cors(cors -> cors.configurationSource(corsConfigSource))
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         if (securityProperties.isOpenService()) {
             return http
@@ -58,8 +67,8 @@ public class JwtSecurityAutoConfiguration {
         }
 
         http.authorizeHttpRequests(auth -> {
-            // Aggiungi endpoint pubblici per OAuth2
-            auth.requestMatchers("/login/**", "/oauth2/**", "/error" ).permitAll();
+            // Endpoint tecnici sempre pubblici
+            auth.requestMatchers("/health", "/actuator/**").permitAll();
 
             if (securityProperties.getPublicPaths() != null) {
                 for (String path : securityProperties.getPublicPaths()) {
@@ -103,17 +112,16 @@ public class JwtSecurityAutoConfiguration {
             auth.anyRequest().authenticated();
         });
 
-        // Configurazione OAuth2 Client per il redirect automatico
-        http.oauth2Login(oauth2 -> oauth2
-                .defaultSuccessUrl("/api/token/temp", true)
-                .failureUrl("/login?error")
-        );
 
         http.oauth2ResourceServer(oauth2 -> oauth2
                 .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
         );
 
+        // JWT Token Filter
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+        // Header per le Comunicazioni Interne
+        http.addFilterBefore(internalCommunicationFilter, JwtAuthFilter.class);
 
         return http.build();
     }
@@ -134,10 +142,9 @@ public class JwtSecurityAutoConfiguration {
             Object rolesObj = jwt.getClaim("roles");
             System.out.println("Roles claim: " + rolesObj);
 
-            if (rolesObj instanceof List) {
-                @SuppressWarnings("unchecked")
-                List<String> roles = (List<String>) rolesObj;
+            if (rolesObj instanceof List<?> roles) {
                 List<GrantedAuthority> authorities = roles.stream()
+                        .map(String::valueOf)
                         .map(r -> {
                             String authority = "ROLE_" + r.toUpperCase();
                             System.out.println("Adding authority: " + authority);

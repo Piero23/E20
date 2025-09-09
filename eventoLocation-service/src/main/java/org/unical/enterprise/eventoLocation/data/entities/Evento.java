@@ -69,7 +69,9 @@ public class Evento extends DomainObject<Long> {
     @Column(nullable = false)
     private double prezzo;
 
-    // to-DTO Conversion
+    @Column()
+    private byte[] immagine;
+
     public static EventoBasicDto toSharedDTO(Evento evento) {
         return EventoBasicDto.builder()
                 .id(evento.getId())

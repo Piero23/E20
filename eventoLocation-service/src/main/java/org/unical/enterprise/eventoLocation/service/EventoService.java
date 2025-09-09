@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.unical.enterprise.eventoLocation.ContentNotFoundException;
 import org.unical.enterprise.eventoLocation.data.dao.EventoDao;
 import org.unical.enterprise.eventoLocation.data.dao.LocationDao;
@@ -18,6 +19,7 @@ import org.unical.enterprise.eventoLocation.data.entities.Location;
 import org.unical.enterprise.shared.dto.UtenteDTO;
 
 import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -121,6 +123,27 @@ public class EventoService {
         return bigliettoServiceClient.getBigliettoEvento(id);
     }
 
+    public void setImage(MultipartFile immagine, Long id) {
+        Evento evento= eventoDao.findById(id).orElseThrow(() ->
+                new ContentNotFoundException("location with id " + id + " not found")
+        );
+
+        try {
+            evento.setImmagine(immagine.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        eventoDao.save(evento);
+    }
+
+    public byte[] getImage(Long id) {
+        Evento evento= eventoDao.findById(id).orElseThrow(() ->
+                new ContentNotFoundException("location with id " + id + " not found")
+        );
+
+        return evento.getImmagine();
+    }
 
     public Page<EventoBasicDto> searchPagable(Pageable pageable, String string) {
         Page<Evento> eventos = eventoDao.findAllByNomeContainingIgnoreCase(string, pageable);

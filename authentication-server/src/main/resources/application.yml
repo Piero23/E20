@@ -39,14 +39,27 @@ spring:
                 - "authorization_code"
                 - "refresh_token"
               redirect-uris:
-                - "http://localhost:8060/login/oauth2/code/gateway-client"
+                -  "http://localhost:8060/login/oauth2/code/gateway-client"
               post-logout-redirect-uris:
                 - "http://localhost:8060/"
               scopes:
                 - "openid"
                 - "profile"
-            # Tolgo il Consenso per il Profile
-            # require-authorization-consent: true
+          android-client:
+            registration:
+              client-id: "android-client"
+              client-authentication-methods:
+                - "none"
+              authorization-grant-types:
+                - "authorization_code"
+                - "refresh_token"
+              redirect-uris:
+                - "com.example.myapp://oauth2redirect"
+              post-logout-redirect-uris:
+                - "http://localhost:8060/"
+              scopes:
+                - "openid"
+                - "profile"
 
 
 eureka:

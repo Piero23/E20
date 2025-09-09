@@ -25,7 +25,7 @@ public class PreferitiController {
     private final EventoService eventoService;
 
     @GetMapping(value="/{id}")
-    private ResponseEntity<?> findById(@PathVariable("id") Long id){
+    public ResponseEntity<?> findById(@PathVariable("id") Long id){
         return new ResponseEntity<>(preferitiService.getById(id), HttpStatus.OK);
     }
 
@@ -69,7 +69,7 @@ public class PreferitiController {
 
 
     @GetMapping("/test")
-    private String test() {
+    public String test() {
         return "Sono PreferitiController";
     }
 

@@ -9,8 +9,10 @@ import org.unical.enterprise.gestioneOrdini.dao.BigliettoDao;
 import org.unical.enterprise.gestioneOrdini.domain.Biglietto;
 import org.unical.enterprise.gestioneOrdini.domain.Ordine;
 import org.unical.enterprise.shared.clients.EventoServiceClient;
+import org.unical.enterprise.shared.clients.UtenteServiceClient;
 import org.unical.enterprise.shared.dto.BigliettoDto;
 
+import java.net.CacheRequest;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -25,6 +27,8 @@ public class BigliettoService {
     private final BigliettoDao bigliettoDao;
 
     private final EventoServiceClient eventoServiceClient;
+
+    private final UtenteServiceClient utenteServiceClient;
 
     @Transactional
     public List<Biglietto> findAll(){return bigliettoDao.findAll();}
@@ -74,5 +78,14 @@ public class BigliettoService {
 
     public boolean checkExists(UUID id){
         return bigliettoDao.existsById(id);
+    }
+
+    @Transactional
+    public UUID getUserIDByUsername(String username) {
+        return utenteServiceClient.getUtenteByUsername(username).getBody().getId();
+    }
+
+    public UUID getOrganizzatoreEventoByTicket(UUID id) {
+        return eventoServiceClient.findById(bigliettoDao.findById(id).get().getIdEvento()).getOrganizzatore();
     }
 }

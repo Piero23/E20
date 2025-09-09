@@ -76,6 +76,7 @@ public class EventoService {
         evento.setB_nominativo(dto.isB_nominativo());
         evento.setAge_restricted(dto.isAge_restricted());
         evento.setData(dto.getData());
+        evento.setPrezzo(dto.getPrezzo());
 
         Location location = locationDao.findById(dto.getLocationId())
                 .orElseThrow(() -> new ContentNotFoundException("location with id " + dto.getLocationId() + " not found"));
@@ -114,7 +115,7 @@ public class EventoService {
                 b_riutilizzabile(evento.isB_riutilizzabile()).
                 b_nominativo(evento.isB_nominativo()).
                 age_restricted(evento.isAge_restricted()).
-                locationId(evento.getId()).
+                locationId(evento.getLocation().getId()).
                 data(evento.getData()).
                 prezzo(evento.getPrezzo()).build();
     }

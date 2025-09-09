@@ -30,11 +30,11 @@ cors:
 jwt:
   security:
     enabled: true
-    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /web/**
+    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /web/**, /api/stripe/webhook
     protectedRoutes:
-      - path: /api/stripe/**
+      - path: /api/stripe/checkout
         roles:
-          - ROLE_UTENTE
+          - ROLE_USER
 
 springdoc:
   packages-to-scan: org.unical.enterprise.payment

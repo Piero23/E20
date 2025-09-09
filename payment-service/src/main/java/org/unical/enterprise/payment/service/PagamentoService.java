@@ -62,13 +62,13 @@ public class PagamentoService {
         EventoBasicDto datiEvento = eventoServiceClient.findById(ordineTransferDto.biglietti().getFirst().idEvento());
 
 
-        String successUrl = UriComponentsBuilder.fromHttpUrl("http://localhost:8060/web/success")
+        String successUrl = UriComponentsBuilder.fromHttpUrl("https://localhost:8060/web/success")
                     .queryParam("eventName", datiEvento.getNome())
                     .queryParam("customerEmail", utenteServiceClient.getById(ordineTransferDto.utenteId()).getEmail())
                     .build()
                     .toUriString();
 
-        String failUrl = UriComponentsBuilder.fromHttpUrl("http://localhost:8060/web/fail").build()
+        String failUrl = UriComponentsBuilder.fromHttpUrl("https://localhost:8060/web/fail").build()
                 .toUriString();;
 
 
@@ -85,7 +85,7 @@ public class PagamentoService {
                                 .setPriceData(
                                         SessionCreateParams.LineItem.PriceData.builder()
                                                 .setCurrency(ordineTransferDto.valuta())
-                                                .setUnitAmount((long) datiEvento.getPrezzo() * 100)
+                                                .setUnitAmount((long) (datiEvento.getPrezzo() * 100))
                                                 .setProductData(
                                                         SessionCreateParams.LineItem.PriceData.ProductData.builder()
                                                                 .setName(datiEvento.getNome())

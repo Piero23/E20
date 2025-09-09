@@ -63,6 +63,9 @@ jwt:
       - path: /api/biglietto/duplicate
         roles:
           - ROLE_ADMIN
+      - path: POST:/api/biglietto/{id}
+        roles:
+          - ROLE_MANAGER
 
 
 logging:

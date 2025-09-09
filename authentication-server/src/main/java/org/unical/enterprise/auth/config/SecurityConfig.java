@@ -61,7 +61,9 @@ public class SecurityConfig {
                         "/payment-service/v3/api-docs",
                         "/authentication-server/v3/api-docs",
                         "/web/**",
-                        "/api/evento/search/{string}"
+                        "/api/evento/search/{string}",
+                        "/api/stripe/webhook"
+                        //TODO mettere pubblici gli endpoint pubblici
                 )
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> authorize

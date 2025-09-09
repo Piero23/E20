@@ -1,6 +1,4 @@
 spring:
-
-
   application:
     name: eventoLocation-service
   output:
@@ -18,6 +16,9 @@ spring:
       ddl-auto: update
     show-sql: true
 
+server:
+  port: 0
+
 eureka:
   client:
     serviceUrl:
@@ -33,7 +34,7 @@ jwt:
       /v3/api-docs/**,
       /swagger-ui/**,
       /swagger-ui.html,
-      GET:/api/evento/{id} ,
+      GET:/api/evento/{id},
       GET:/api/evento ,
       /api/evento/test,
       GET:/api/location,

@@ -3,7 +3,7 @@ server:
   port: 9000
 
 cors:
-  allowed-origins: //localhost:3000, http://localhost:8060
+  allowed-origins: http://localhost:3000, http://localhost:8060
 
 spring:
   cloud:
@@ -63,6 +63,10 @@ auth:
     scopes: openid, roles
     issuer: "http://127.0.0.1:9000"
     expiration: 3600
+
+## Internal Communication Key
+internal:
+  communication-key: SperoDavveroCheFunzioni
 
 
 jwt:

@@ -6,18 +6,13 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-
 
 @SpringBootApplication
 @ComponentScan(basePackages = {
 		"org.unical.enterprise.auth",
 		"org.unical.enterprise.shared.clients",
 		"org.unical.enterprise.shared.dto",
-		"org.unical.enterprise.shared.security.cors"
+        "org.unical.enterprise.shared.security.internal"
 })
 @EnableFeignClients(basePackages = {
 		"org.unical.enterprise.shared.clients"

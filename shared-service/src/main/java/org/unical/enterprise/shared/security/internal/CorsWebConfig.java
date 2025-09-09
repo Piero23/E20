@@ -1,4 +1,4 @@
-package org.unical.enterprise.shared.security.cors;
+package org.unical.enterprise.shared.security.internal;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -28,8 +28,8 @@ public class CorsWebConfig {
 
         CorsConfiguration cfg = new CorsConfiguration();
         cfg.setAllowedOriginPatterns(origins);
-        cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-        cfg.setAllowedHeaders(List.of("*"));
+        cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        cfg.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
         cfg.setAllowCredentials(true);
         cfg.setMaxAge(3600L);
 

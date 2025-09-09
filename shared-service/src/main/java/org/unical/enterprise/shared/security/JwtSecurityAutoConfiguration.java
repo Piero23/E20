@@ -22,6 +22,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.unical.enterprise.shared.security.internal.InternalCommunicationFilter;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,17 +43,21 @@ public class JwtSecurityAutoConfiguration {
     }
 
     @Bean
+    public InternalCommunicationFilter internalCommunicationFilter() { return new InternalCommunicationFilter(); };
+
+    @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                    @Qualifier("corsConfigurationSource") CorsConfigurationSource corsConfigSource,
-                                                   JwtAuthFilter jwtAuthFilter
+                                                   JwtAuthFilter jwtAuthFilter,
+                                                   InternalCommunicationFilter internalCommunicationFilter
     ) throws Exception {
 
         http
                 // Cors Configuration Source (Web - MVC)
                 .cors(cors -> cors.configurationSource(corsConfigSource))
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         if (securityProperties.isOpenService()) {
             return http
@@ -61,8 +66,8 @@ public class JwtSecurityAutoConfiguration {
         }
 
         http.authorizeHttpRequests(auth -> {
-            // Aggiungi endpoint pubblici per OAuth2
-            auth.requestMatchers("/login/**", "/oauth2/**", "/error" ).permitAll();
+            // Endpoint tecnici sempre pubblici
+            auth.requestMatchers("/health", "/actuator/**").permitAll();
 
             if (securityProperties.getPublicPaths() != null) {
                 for (String path : securityProperties.getPublicPaths()) {
@@ -106,17 +111,16 @@ public class JwtSecurityAutoConfiguration {
             auth.anyRequest().authenticated();
         });
 
-        // Configurazione OAuth2 Client per il redirect automatico
-        http.oauth2Login(oauth2 -> oauth2
-                .defaultSuccessUrl("/api/token/temp", true)
-                .failureUrl("/login?error")
-        );
 
         http.oauth2ResourceServer(oauth2 -> oauth2
                 .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
         );
 
+        // JWT Token Filter
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+        // Header per le Comunicazioni Interne
+        http.addFilterBefore(internalCommunicationFilter, JwtAuthFilter.class);
 
         return http.build();
     }

@@ -32,3 +32,8 @@ auth:
   token:
     issuer: "http://127.0.0.1:9000"
     expiration: 3600
+
+
+## Internal Communication Key
+internal:
+  communication-key: SperoDavveroCheFunzioni

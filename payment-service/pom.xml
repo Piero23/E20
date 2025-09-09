@@ -98,6 +98,13 @@
             <artifactId>embedded-redis</artifactId>
             <version>0.6</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+            <version>4.0.0-M2</version>
+        </dependency>
     </dependencies>
 
     <profiles>

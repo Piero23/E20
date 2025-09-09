@@ -31,13 +31,14 @@ jwt:
       /v3/api-docs/**,
       /swagger-ui/**,
       /swagger-ui.html,
-      GET:/api/evento/{id} ,
-      GET:/api/evento ,
+      /api/evento/{id} ,
+      /api/evento ,
       /api/evento/test,
-      GET:/api/location,
-      GET:/api/location/{id},
+      /api/location,
+      /api/location/{id},
       /api/location/test,
-      /api/preferiti/test
+      /api/preferiti/test,
+      /api/evento/search/{string}
     protectedRoutes:
       - path: /api/preferiti/**
         roles:
@@ -61,6 +62,9 @@ jwt:
         roles:
           - ROLE_USER # TODO: aooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
       - path: PUT:/api/location/{id}
+        roles:
+          - ROLE_MANAGER
+      - path: GET:/api/evento/myEvents
         roles:
           - ROLE_MANAGER
 

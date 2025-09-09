@@ -7,6 +7,14 @@ spring:
       uri: ${VAULT_ADDR}
       application-name: application
 
+  thymeleaf:
+    enabled: true
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+    encoding: UTF-8
+    mode: HTML
+
   config:
     import:
       - "optional:configserver:http://localhost:8088"

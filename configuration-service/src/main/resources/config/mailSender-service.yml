@@ -19,7 +19,7 @@ cors:
 jwt:
   security:
     enabled: true
-    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /api/token/**
+    publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html
     protectedRoutes:
       - path: /api/mail/**
         roles:

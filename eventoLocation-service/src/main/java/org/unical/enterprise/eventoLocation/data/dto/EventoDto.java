@@ -21,6 +21,7 @@ public class EventoDto {
     private Long posti;
     private boolean b_riutilizzabile;
     private boolean b_nominativo;
+    private boolean age_restricted;
     private LocationDto location;
     private Date data;
     private double prezzo;
@@ -35,6 +36,7 @@ public class EventoDto {
         this.setPosti(evento.getPosti());
         this.setB_riutilizzabile(evento.isB_riutilizzabile());
         this.setB_nominativo(evento.isB_nominativo());
+        this.setAge_restricted(evento.isAge_restricted());
         this.setData(evento.getData());
         this.setPrezzo(evento.getPrezzo());
 

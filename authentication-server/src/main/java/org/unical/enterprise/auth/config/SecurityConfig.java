@@ -50,8 +50,21 @@ public class SecurityConfig {
                         "/auth/login",
                         "/actuator/**",
                         "/auth/ciao",
+                        "/v3/api-docs/**",
                         "/swagger-ui/**",
-                        "/v3/api-docs/**"
+                        "/swagger-ui.html",
+                        "/swagger-resources/**",
+                        "/utente-service/v3/api-docs/**",
+                        "/eventoLocation-service/v3/api-docs",
+                        "/gestioneOrdini-service/v3/api-docs",
+                        "/mailSender-service/v3/api-docs",
+                        "/payment-service/v3/api-docs",
+                        "/authentication-server/v3/api-docs",
+                        "/web/**",
+                        "/api/evento/search/{string}",
+                        "/api/stripe/webhook",
+                        "/api/evento/{id}",
+                        "/api/evento"
                 )
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> authorize

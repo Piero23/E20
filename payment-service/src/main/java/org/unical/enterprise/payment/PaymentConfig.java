@@ -20,7 +20,7 @@ public class PaymentConfig implements DisposableBean {
 
     @PostConstruct
     public void startRedis() throws IOException {
-        this.redisServer = new RedisServer(6379);
+        this.redisServer = new RedisServer(6380);
         this.redisServer.start();
     }
 
@@ -33,7 +33,7 @@ public class PaymentConfig implements DisposableBean {
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory("localhost", 6379);
+        return new LettuceConnectionFactory("localhost", 6380);
     }
 
     @Bean

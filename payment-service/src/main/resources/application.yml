@@ -2,5 +2,13 @@ spring:
   application:
     name: payment-service
 
+  thymeleaf:
+    enabled: true
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+    encoding: UTF-8
+    mode: HTML
+
   config:
     import: "optional:configserver:http://localhost:8088"

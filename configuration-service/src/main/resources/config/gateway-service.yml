@@ -79,6 +79,11 @@ spring:
           predicates:
             - Path=/api/stripe/**
 
+        - id: webPage-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/web/**
+
         # Rotte per Swagger GestioneOrdini Service
         - id: gestioneOrdini-service-api-docs
           uri: lb://gestioneOrdini-service

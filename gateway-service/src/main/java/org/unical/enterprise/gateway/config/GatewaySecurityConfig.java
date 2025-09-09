@@ -94,7 +94,8 @@ public class GatewaySecurityConfig {
                                 "/gestioneOrdini-service/v3/api-docs",
                                 "/mailSender-service/v3/api-docs",
                                 "/payment-service/v3/api-docs",
-                                "/authentication-server/v3/api-docs"
+                                "/authentication-server/v3/api-docs",
+                                "/web/**"
                         ).permitAll()
 
                         // Endpoint Registrazione, Autenticazione Stateless

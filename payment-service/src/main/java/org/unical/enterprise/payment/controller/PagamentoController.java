@@ -15,12 +15,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.payment.service.PagamentoService;
 import org.unical.enterprise.shared.clients.UtenteServiceClient;
 import org.unical.enterprise.shared.dto.BigliettoDto;
-import org.unical.enterprise.shared.dto.CheckoutRequest;
 import org.unical.enterprise.shared.dto.OrdineRequest;
+import org.unical.enterprise.shared.dto.OrdineTransferDto;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -72,18 +73,18 @@ public class PagamentoController {
     private final PagamentoService pagamentoService;
 
     @PostMapping("/checkout")
-    public ResponseEntity<?> checkout(@RequestBody CheckoutRequest request, Authentication auth) {
+    public ResponseEntity<?> checkout(@RequestBody OrdineTransferDto request, Authentication auth) {
         try {
             UUID user = pagamentoService.getUserIDByUsername(auth.getName());
-            UUID orderUser = request.getOrdine().utenteId();
+            UUID orderUser = request.utenteId();
 
             if (pagamentoService.checkUtente(user)){
                 if (pagamentoService.checkUtente(orderUser)){
                     if (user.equals(orderUser)) {
-                        for (BigliettoDto biglietto: request.getOrdine().biglietti()){
+                        for (BigliettoDto biglietto: request.biglietti()){
                             if(pagamentoService.findByData(biglietto.email(), biglietto.idEvento()))
                                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Esiste già un biglietto per evento " + biglietto.idEvento() + " per " + biglietto.nome() + " " + biglietto.cognome());
-                            if (pagamentoService.isAgeRestricted(biglietto.idEvento()) && !isMaggiorenne(biglietto.dataNascita()))
+                            if (pagamentoService.isAgeRestricted(biglietto.idEvento()) && !pagamentoService.isMaggiorenne(biglietto.dataNascita()))
                                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(biglietto.nome() + " " + biglietto.cognome() + " non ha l'età adatta per accedere all'evento.");
                             boolean cond1 = pagamentoService.needsName(biglietto.idEvento()) && (biglietto.nome()==null || biglietto.cognome()==null);
                             boolean cond2 = !pagamentoService.needsName(biglietto.idEvento()) && (biglietto.nome()!=null || biglietto.cognome()!=null);
@@ -94,10 +95,7 @@ public class PagamentoController {
                         //TODO se il numero di biglietti richiesti è più di quelli disponibili errore
                         logger.info("Iniziato Ordine da utente {}", user);
                         Session session = pagamentoService.createPaymentSession(
-                                request.getOrdine(),
-                                request.getSuccessUrl(),
-                                request.getCancelUrl()
-                        );
+                                request                        );
 
                         return ResponseEntity.ok(Map.of("url", session.getUrl()));
                     } else {
@@ -156,14 +154,4 @@ public class PagamentoController {
         return ResponseEntity.ok("Success");
     }
 
-    private boolean isMaggiorenne(Date dataNascita) {
-
-        LocalDate nascita = dataNascita.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-
-        LocalDate oggiMeno18 = LocalDate.now().minusYears(18);
-
-        return !nascita.isAfter(oggiMeno18);
-    }
 }

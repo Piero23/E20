@@ -12,12 +12,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.unical.enterprise.payment.OrdineServiceClient;
 import org.unical.enterprise.shared.clients.EventoServiceClient;
 import org.unical.enterprise.shared.clients.UtenteServiceClient;
 import org.unical.enterprise.shared.dto.*;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -36,12 +40,9 @@ public class PagamentoService {
 
     private final UtenteServiceClient utenteServiceClient;
 
-    public Session createPaymentSession(OrdineTransferDto ordineTransferDto,
-                                        String successUrl, String cancelUrl) throws StripeException {
+    public Session createPaymentSession(OrdineTransferDto ordineTransferDto) throws StripeException {
 
         Objects.requireNonNull(ordineTransferDto.valuta(), "valuta non può essere null");
-        Objects.requireNonNull(successUrl, "successUrl non può essere null");
-        Objects.requireNonNull(cancelUrl, "cancelUrl non può essere null");
 
         String sessionId = UUID.randomUUID().toString();
 
@@ -60,11 +61,22 @@ public class PagamentoService {
 
         EventoBasicDto datiEvento = eventoServiceClient.findById(ordineTransferDto.biglietti().getFirst().idEvento());
 
+
+        String successUrl = UriComponentsBuilder.fromHttpUrl("http://localhost:8060/web/success")
+                    .queryParam("eventName", datiEvento.getNome())
+                    .queryParam("customerEmail", utenteServiceClient.getById(ordineTransferDto.utenteId()).getEmail())
+                    .build()
+                    .toUriString();
+
+        String failUrl = UriComponentsBuilder.fromHttpUrl("http://localhost:8060/web/fail").build()
+                .toUriString();;
+
+
         SessionCreateParams params = SessionCreateParams.builder()
                 .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                 .setMode(SessionCreateParams.Mode.PAYMENT)
                 .setSuccessUrl(successUrl)
-                .setCancelUrl(cancelUrl)
+                .setCancelUrl(failUrl)
                 .putMetadata("session_id", sessionId)
                 .putMetadata("user_id", ordineTransferDto.utenteId().toString())
                 .addLineItem(
@@ -207,6 +219,17 @@ public class PagamentoService {
     }
     public boolean needsName(Long idEvento){
         return eventoServiceClient.findById(idEvento).isB_nominativo();
+    }
+
+    public boolean isMaggiorenne(Date dataNascita) {
+
+        LocalDate nascita = dataNascita.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+
+        LocalDate oggiMeno18 = LocalDate.now().minusYears(18);
+
+        return !nascita.isAfter(oggiMeno18);
     }
 
 

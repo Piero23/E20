@@ -97,7 +97,9 @@ public class GatewaySecurityConfig {
                                 "/authentication-server/v3/api-docs",
                                 "/web/**",
                                 "/api/evento/search/{string}",
-                                "/api/stripe/webhook"
+                                "/api/stripe/webhook",
+                                "/api/evento/{id}",
+                                "/api/evento"
                         ).permitAll()
 
                         // Endpoint Registrazione, Autenticazione Stateless

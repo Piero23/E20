@@ -51,7 +51,7 @@ spring:
             # Tolgo il Consenso per il Profile
             # require-authorization-consent: true
 
-
+## Eureka Configurations
 eureka:
   client:
     serviceUrl:
@@ -73,6 +73,7 @@ jwt:
   security:
     enabled: true
     publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /auth/register
+
 
 logging:
   level:

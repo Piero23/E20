@@ -9,12 +9,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Table(name = "biglietto",uniqueConstraints = {
-        @UniqueConstraint(
-                name = "uk_biglietto",
-                columnNames = { "id_evento", "email"}
-        )
-})
+@Table(name = "biglietto")
 @Setter
 @Getter
 @NoArgsConstructor

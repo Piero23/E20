@@ -82,8 +82,8 @@ public class PagamentoController {
                 if (pagamentoService.checkUtente(orderUser)){
                     if (user.equals(orderUser)) {
                         for (BigliettoDto biglietto: request.biglietti()){
-                            if(pagamentoService.findByData(biglietto.email(), biglietto.idEvento()))
-                                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Esiste già un biglietto per evento " + biglietto.idEvento() + " per " + biglietto.nome() + " " + biglietto.cognome());
+//                            if(pagamentoService.findByData(biglietto.email(), biglietto.idEvento()) && pagamentoService.needsName(biglietto.idEvento()))
+//                                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Esiste già un biglietto per evento " + biglietto.idEvento() + " per " + biglietto.nome() + " " + biglietto.cognome());
                             if (pagamentoService.isAgeRestricted(biglietto.idEvento()) && !pagamentoService.isMaggiorenne(biglietto.dataNascita()))
                                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(biglietto.nome() + " " + biglietto.cognome() + " non ha l'età adatta per accedere all'evento.");
                             boolean cond1 = pagamentoService.needsName(biglietto.idEvento()) && (biglietto.nome()==null || biglietto.cognome()==null);

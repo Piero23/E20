@@ -1,6 +1,7 @@
 
 server:
   port: 9000
+  address: 0.0.0.0
 
 spring:
   cloud:
@@ -39,9 +40,9 @@ spring:
                 - "authorization_code"
                 - "refresh_token"
               redirect-uris:
-                -  "http://localhost:8060/login/oauth2/code/gateway-client"
+                -  "http://192.168.1.212:8060/login/oauth2/code/gateway-client"
               post-logout-redirect-uris:
-                - "http://localhost:8060/"
+                - "http://192.168.1.212:8060/"
               scopes:
                 - "openid"
                 - "profile"
@@ -56,7 +57,7 @@ spring:
               redirect-uris:
                 - "com.example.myapp://oauth2redirect"
               post-logout-redirect-uris:
-                - "http://localhost:8060/"
+                - "http://192.168.1.212:8060/"
               scopes:
                 - "openid"
                 - "profile"
@@ -71,7 +72,7 @@ eureka:
 auth:
   token:
     scopes: openid, roles
-    issuer: "http://127.0.0.1:9000"
+    issuer: "http://192.168.1.212:9000"
     expiration: 3600
 
 

@@ -7,6 +7,7 @@ server:
     key-store-type: PKCS12
     enabled: true
     key-password: changeit
+  address: 0.0.0.0
 
 
 cors:
@@ -57,9 +58,9 @@ spring:
                 - "authorization_code"
                 - "refresh_token"
               redirect-uris:
-                - "https://localhost:8060/login/oauth2/code/gateway-client"
+                - "https://${ip_addr}:8060/login/oauth2/code/gateway-client"
               post-logout-redirect-uris:
-                - "https://localhost:8060/"
+                - "https://${ip_addr}:8060/"
               scopes:
                 - "openid"
                 - "profile"
@@ -74,7 +75,7 @@ spring:
               redirect-uris:
                 - "com.example.myapp://oauth2redirect"
               post-logout-redirect-uris:
-                - "http://localhost:8060/"
+                - "https://${ip_addr}:8060/"
               scopes:
                 - "openid"
                 - "profile"
@@ -94,7 +95,7 @@ eureka:
 auth:
   token:
     scopes: openid, roles
-    issuer: "https://localhost:9000"
+    issuer: "https://${ip_addr}:9000"
     expiration: 3600
 
 ## Internal Communication Key

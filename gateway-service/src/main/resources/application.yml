@@ -1,12 +1,20 @@
 spring:
   application:
     name: gateway-service
+  cloud:
+    vault:
+      token: ${VAULT_TOKEN}
+      uri: ${VAULT_ADDR}
+      application-name: application
+
   config:
-    import: "optional:configserver:http://localhost:8088"
+    import:
+      - "optional:configserver:http://localhost:8088"
+      - "optional:file:.env[.properties]"
+      - "vault://"
 
 server:
   port: 8060
-#  max-http-request-header-size: 48KB
   ssl:
     key-store: classpath:server.p12
     key-store-password: changeit
@@ -14,3 +22,4 @@ server:
     key-store-type: PKCS12
     enabled: true
     key-password: changeit
+  address: 0.0.0.0

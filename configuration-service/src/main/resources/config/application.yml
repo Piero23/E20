@@ -8,7 +8,7 @@ spring:
             client-secret: secret
             client-authentication-method: client_secret_basic
             authorization-grant-type: authorization_code
-            redirect-uri: https://localhost:8060/login/oauth2/code/gateway-client
+            redirect-uri: https://${ip_addr}:8060/login/oauth2/code/gateway-client
             scope: openid, profile
 
         provider:
@@ -30,7 +30,7 @@ logging:
 ## Common Token Properties
 auth:
   token:
-    issuer: "https://localhost:9000"
+    issuer: "https://${ip_addr}:9000"
     expiration: 3600
 
 

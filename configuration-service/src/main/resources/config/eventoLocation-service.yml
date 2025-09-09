@@ -66,6 +66,9 @@ jwt:
       - path: PUT:/api/location/{id}
         roles:
           - ROLE_MANAGER
+      - path: GET:/api/evento/myEvents
+        roles:
+          - ROLE_MANAGER
 
 logging:
   file:

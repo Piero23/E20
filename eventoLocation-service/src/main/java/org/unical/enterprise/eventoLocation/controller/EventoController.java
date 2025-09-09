@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.unical.enterprise.eventoLocation.data.dto.EventoDto;
 import org.unical.enterprise.shared.clients.UtenteServiceClient;
 import org.unical.enterprise.shared.dto.BigliettoDto;
 import org.unical.enterprise.shared.dto.EventoBasicDto;
@@ -102,6 +103,13 @@ public class EventoController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/myEvents")
+    public ResponseEntity<List<EventoDto>> getMyEvents(Authentication auth){
+        UUID user = Objects.requireNonNull(utenteServiceClient.getUtenteByUsername(auth.getName()).getBody()).getId();
+            return ResponseEntity.ok(eventoService.getEventiByManager(user));
+
     }
 }
 

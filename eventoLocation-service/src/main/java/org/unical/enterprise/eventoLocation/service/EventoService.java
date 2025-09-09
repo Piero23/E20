@@ -17,6 +17,7 @@ import org.unical.enterprise.eventoLocation.data.entities.Evento;
 import org.unical.enterprise.eventoLocation.data.entities.Location;
 import org.unical.enterprise.shared.dto.UtenteDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -122,10 +123,17 @@ public class EventoService {
 
 
     public Page<EventoBasicDto> searchPagable(Pageable pageable, String string) {
-        Page<Evento> eventos = eventoDao.findByNomeContainingIgnoreCase(string, pageable);
+        Page<Evento> eventos = eventoDao.findAllByNomeContainingIgnoreCase(string, pageable);
 
         Page<EventoBasicDto> basic = eventos.map(evento -> toDTO(evento));
 
         return basic;
+    }
+
+    public List<EventoDto> getEventiByManager(UUID manager){
+        List<EventoDto> eventi = new ArrayList<>();
+        for (Evento e: eventoDao.findAllByOrganizzatore(manager))
+            eventi.add(new EventoDto(e));
+        return eventi;
     }
 }

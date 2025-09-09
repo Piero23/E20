@@ -1,6 +1,7 @@
 package org.unical.enterprise.shared.security;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -35,7 +36,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class JwtSecurityAutoConfiguration {
 
-    private final JwtSecurityProperties securityProperties;
+    private JwtSecurityProperties securityProperties;
 
     @Bean
     public JwtAuthFilter jwtAuthFilter() {

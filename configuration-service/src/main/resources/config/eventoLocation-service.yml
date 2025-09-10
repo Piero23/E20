@@ -40,7 +40,8 @@ jwt:
       /api/location/{id},
       /api/location/test,
       /api/preferiti/test,
-      /api/evento/search/{string}
+      /api/evento/search/{string},
+      /api/evento/{id}/image
     protectedRoutes:
       - path: /api/preferiti/**
         roles:
@@ -54,7 +55,7 @@ jwt:
       - path: PUT:/api/evento/{id}
         roles:
           - ROLE_USER
-      - path: /api/evento/bookings
+      - path: /api/evento/{id}/bookings
         roles:
           - ROLE_MANAGER
       - path: DELETE:/api/location/{id}

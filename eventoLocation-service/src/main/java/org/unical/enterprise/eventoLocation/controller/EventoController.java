@@ -143,8 +143,8 @@ public class EventoController {
         }
     }
 
-    @GetMapping("/bookings")
-    public ResponseEntity<List<BigliettoDto>> getBookings(@RequestParam Long id, Authentication auth){
+    @GetMapping("{id}/bookings")
+    public ResponseEntity<List<BigliettoDto>> getBookings(@PathVariable Long id, Authentication auth){
         if (eventoService.getByIdNoLocation(id) != null) {
             String user = String.valueOf(Objects.requireNonNull(utenteServiceClient.getUtenteByUsername(auth.getName()).getBody()).getId());
             UUID eventoOrganizzatore=eventoService.getByIdNoLocation(id).getOrganizzatore();

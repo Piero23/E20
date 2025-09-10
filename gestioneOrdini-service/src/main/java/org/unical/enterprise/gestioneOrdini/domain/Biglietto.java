@@ -15,8 +15,7 @@ import java.util.UUID;
                 columnNames = { "id_evento", "email"}
         )
 })
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

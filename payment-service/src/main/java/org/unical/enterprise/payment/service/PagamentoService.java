@@ -34,6 +34,9 @@ public class PagamentoService {
     @Value("${stripe.api.secret}")
     private String stripeSecretKey;
 
+    @Value("${ip_addr}")
+    private String ip_addr;
+
     private final EventoServiceClient eventoServiceClient;
     private final RedisTemplate<String, Object> redisTemplate;
     private final OrdineServiceClient ordineServiceClient;
@@ -62,14 +65,14 @@ public class PagamentoService {
         EventoBasicDto datiEvento = eventoServiceClient.findById(ordineTransferDto.biglietti().getFirst().idEvento());
 
 
-        String successUrl = UriComponentsBuilder.fromHttpUrl("https://localhost:8060/web/success")
+        String successUrl = UriComponentsBuilder.fromHttpUrl("https://" + ip_addr + ":8060/web/success")
                     .queryParam("eventName", datiEvento.getNome())
                     .queryParam("customerEmail", utenteServiceClient.getById(ordineTransferDto.utenteId()).getEmail())
                     .build()
                     .toUriString();
 
-        String failUrl = UriComponentsBuilder.fromHttpUrl("https://localhost:8060/web/fail").build()
-                .toUriString();;
+        String failUrl = UriComponentsBuilder.fromHttpUrl("https://" + ip_addr + ":8060/web/fail").build()
+                .toUriString();
 
 
         SessionCreateParams params = SessionCreateParams.builder()

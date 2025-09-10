@@ -100,7 +100,8 @@ public class GatewaySecurityConfig {
                                 "/api/stripe/webhook",
                                 "/api/evento/{id}",
                                 "/api/evento",
-                                "/api/evento/{id}/image"
+                                "/api/evento/{id}/image",
+                                "/api/evento/{id}/spots"
                         ).permitAll()
 
                         // Endpoint Registrazione, Autenticazione Stateless

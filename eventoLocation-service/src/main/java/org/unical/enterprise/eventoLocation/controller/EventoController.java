@@ -116,7 +116,9 @@ public class EventoController {
     public Long getRemainingSpots(@PathVariable("id") Long id) {
 
         if (eventoService.getByIdNoLocation(id) != null) {
-            return  eventoService.getByIdNoLocation(id).getPosti()-eventoService.getBigliettiByEvento(id).size();
+            System.out.println(eventoService.getByIdNoLocation(id));
+            System.out.println("MUCCA");
+            return eventoService.getByIdNoLocation(id).getPosti()-eventoService.getBigliettiByEvento(id).size();
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

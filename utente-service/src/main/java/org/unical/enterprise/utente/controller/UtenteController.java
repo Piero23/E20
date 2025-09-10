@@ -2,11 +2,15 @@ package org.unical.enterprise.utente.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.unical.enterprise.shared.dto.UtenteDTO;
+import org.unical.enterprise.utente.service.SeguaceService;
 import org.unical.enterprise.utente.service.UtenteService;
 
 import java.util.List;
@@ -16,7 +20,9 @@ import java.util.UUID;
 @RequestMapping("/api/utente")
 @AllArgsConstructor
 public class UtenteController {
+
     private final UtenteService utenteService;
+    private final SeguaceService seguaceService;
 
     // TODO: Togli Admin
     @GetMapping
@@ -39,8 +45,30 @@ public class UtenteController {
         return ResponseEntity.ok(utenteService.updateUtenteByUsername(auth.getName(), utenteDTO));
     }
 
+
+    @GetMapping("/search/{usernameToSearch}")
+    public Page<UtenteDTO> search(@PathVariable String usernameToSearch, Pageable pageable) {
+        return utenteService.searchPageable(usernameToSearch, pageable);
+    }
+
+
     @GetMapping("/{username}")
-    public ResponseEntity<UtenteDTO> getUtenteByUsername(@PathVariable String username) {
+    public ResponseEntity<UtenteDTO> getUtenteByUsername(@RequestHeader(value = "X-Internal-Request", required = false) String internal,
+                                                         @PathVariable String username) {
+
+        // Se la Chiamata è interne (Feign), lascia passare
+        if (!"true".equals(internal)) {
+            System.out.println("No Feign --> Controllo Auth");
+            // Controlla lo Stato di Autenticazione
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+            System.out.println("Auth: " + auth.getName());
+
+            if (!auth.getName().equals(username) || seguaceService.areSeguaciAVicenda(username, auth.getName())
+            )
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         return ResponseEntity.ok(utenteService.getUtenteByUsername(username));
     }
 

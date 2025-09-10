@@ -35,11 +35,10 @@ jwt:
       /v3/api-docs/**, 
       /swagger-ui/**, 
       /swagger-ui.html,
-      /api/utente
+      /api/utente,
+      /api/utente/{username},
+      /api/utente/search/{usernameToSearch}
     protectedRoutes:
-      - path: /api/utente/{username}
-        roles:
-          - ROLE_USER
       - path: DELETE:/api/utente/{username}
         roles:
           - ROLE_USER

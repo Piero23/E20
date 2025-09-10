@@ -45,6 +45,11 @@ public class SeguaceService {
         return seguaceDAO.existsByUtenteSeguace_UsernameAndUtenteSeguito_Username(utenteTargetUsername, utenteTestUsername);
     }
 
+    public boolean areSeguaciAVicenda(String firstUsername, String secondUsername) {
+        return  seguaceDAO.existsByUtenteSeguace_UsernameAndUtenteSeguito_Username(firstUsername, secondUsername) &&
+                seguaceDAO.existsByUtenteSeguace_UsernameAndUtenteSeguito_Username(secondUsername, firstUsername);
+    }
+
     // Updating & Deleting Methods
     @Transactional
     public void deleteUtenteByUsername(String username) {

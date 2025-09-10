@@ -75,6 +75,7 @@ public class GatewaySecurityConfig {
 
                         // Endpoint Registrazione, Autenticazione Stateless
                         .pathMatchers("/auth/register", "/auth/login").permitAll()
+                        .pathMatchers("/api/utente/**").permitAll()
 
                         // Endpoint Stripe per Servizio Pagamenti
                         .pathMatchers("/stripe/**").permitAll()

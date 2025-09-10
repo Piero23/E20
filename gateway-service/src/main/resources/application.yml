@@ -17,9 +17,9 @@ server:
   port: 8060
   ssl:
     key-store: classpath:server.p12
-    key-store-password: changeit
+    key-store-password: ${ssl_password}
     key-alias: server
     key-store-type: PKCS12
     enabled: true
-    key-password: changeit
+    key-password: ${ssl_password}
   address: 0.0.0.0

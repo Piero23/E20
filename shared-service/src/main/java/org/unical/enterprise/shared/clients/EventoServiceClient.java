@@ -27,4 +27,7 @@ public interface EventoServiceClient {
 
     @GetMapping(value="api/evento/{id}")
     EventoBasicDto findById(@PathVariable("id") Long id);
+
+    @GetMapping(value="api/evento/{id}/spots")
+    Long getRemainingSpots(@PathVariable("id") Long id);
 }

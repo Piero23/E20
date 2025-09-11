@@ -8,6 +8,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.CorsWebFilter;
+import org.unical.enterprise.gateway.ratelimiter.service.RateLimiterService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,5 +42,9 @@ public class CorsWebFluxConfig {
         // Solo per necessità di Costruttore viene fatto il Casting,
         // ma UrlBasedCorsConfig implementa CorsConfig
         return new CorsWebFilter((CorsConfigurationSource) src);
+    }
+    @Bean
+    public RateLimiterService rateLimiterService(@Value("${rate.limiter.permits:10}") double permits) {
+        return new RateLimiterService(); // Uses default 10 permits/sec
     }
 }

@@ -34,3 +34,4 @@ build/
 
 *.env
 *.p12
+*.log

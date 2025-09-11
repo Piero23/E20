@@ -65,7 +65,8 @@ public class SecurityConfig {
                         "/api/evento/search/{string}",
                         "/api/stripe/webhook",
                         "/api/evento/{id}",
-                        "/api/evento"
+                        "/api/evento",
+                        "/api/evento/{id}/spots"
                 )
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> authorize

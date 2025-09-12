@@ -36,8 +36,8 @@ public class EventoPreferitoController {
         if (viewerUsername == null || viewerUsername.isBlank())
             throw new RuntimeException("Username non disponibile");
 
-        // TODO: seguire a vicenda
-        if (!viewerUsername.equals(username) && !seguaceService.isSeguaceDi(viewerUsername, username))
+
+        if (!viewerUsername.equals(username) && !seguaceService.areSeguaciAVicenda(viewerUsername, username))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
         UUID utenteId = utenteService.resolveIdFromUsername(username);

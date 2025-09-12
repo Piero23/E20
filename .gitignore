@@ -32,6 +32,10 @@ build/
 ### VS Code ###
 .vscode/
 
+## Not to Load
 *.env
 *.p12
 *.log
+
+## Vault Config
+!./docker-vault-config/**

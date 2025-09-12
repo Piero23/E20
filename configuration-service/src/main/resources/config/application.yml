@@ -31,7 +31,9 @@ logging:
 auth:
   token:
     issuer: "https://${ip_addr}:9000"
-    expiration: 3600
+    ## 2 Months
+    expiration: 5_184_000
+
 
 
 ## Internal Communication Key

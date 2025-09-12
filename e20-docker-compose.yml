@@ -2,6 +2,35 @@
 
 ## All Services
 services:
+  ## ------------------------------------------------------------------------------- Prerequisites
+  ## Vault
+  vault:
+    image: hashicorp/vault:latest
+    container_name: vault
+    ports:
+      - "8200:8200"
+    environment:
+      - VAULT_DEV_ROOT_TOKEN_ID=${VAULT_TOKEN}
+      - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200
+    cap_add:
+      - IPC_LOCK
+    command: server -dev
+    volumes:
+        - ./docker-vault-config/secrets-application.json:/vault/config/secrets-application.json
+        - ./docker-vault-config/secrets-evento.json:/vault/config/secrets-evento.json
+        - ./docker-vault-config/secrets-ordine.json:/vault/config/secrets-ordine.json
+        - ./docker-vault-config/secrets-pagamento.json:/vault/config/secrets-pagamento.json
+        - ./docker-vault-config/secrets-utente.json:/vault/config/secrets-utente.json
+        - ./docker-vault-config/secrets-mail.json:/vault/config/secrets-mail.json
+        - ./docker-vault-config/secrets-autenticazione.json:/vault/config/secrets-autenticazione.json
+        - ./docker-vault-config/secrets-certs.json:/vault/config/secrets-certs.json
+          ## Init File
+        - ./docker-vault-config/init-vault.sh:/docker-entrypoint-init.d/init-vault.sh
+    healthcheck:
+        test: [ "CMD", "wget", "--spider", "-q", "http://localhost:8200/v1/sys/health" ]
+        interval: 5s
+        timeout: 5s
+        retries: 10
 
   ## ------------------------------------------------------------------------------- Basic
   ## Discovery Service
@@ -34,13 +63,33 @@ services:
     container_name: authentication-server
     ports:
       - "9000:9000"
+    volumes:
+      - ./certs:/certs
     environment:
+        ## Vault Config
+      - VAULT_ADDR=http://vault:8200
+      - VAULT_TOKEN=${VAULT_TOKEN}
+      - SPRING_CLOUD_VAULT_APPLICATION_NAME=application,autenticazione,certs
+
+        ## Default Config
       - SERVER_PORT=9000
       - AUTH_TOKEN_ISSUER=http://authentication-server:9000
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
+
+        ## Database Info
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://auth-db:5432/e20-auth
+        ## - SPRING_DATASOURCE_USERNAME=autenticazione_user
+        ## - SPRING_DATASOURCE_PASSWORD=autenticazione_password
+
+        ## Certification Config
+      - SERVER_SSL_KEY_STORE=/certs/server.p12
     depends_on:
       discovery-service:
         condition: service_healthy
+      vault:
+        condition: service_healthy
+      auth-db:
+        condition: service_started
 
   ## ------------------------------------------------------------------------------- Internal Services
   ## Utente Service
@@ -50,16 +99,24 @@ services:
     expose:
       - "8080"
     environment:
+        ## Vault Config
+      - VAULT_ADDR=http://vault:8200
+      - VAULT_TOKEN=${VAULT_TOKEN}
+      - SPRING_CLOUD_VAULT_APPLICATION_NAME=application,utente
+
+        ## Default Config
       - SERVER_PORT=8080
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
       - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8088
 
         ## Database Info
       - SPRING_DATASOURCE_URL=jdbc:postgresql://utente-db:5432/e20-utenti
-      - SPRING_DATASOURCE_USERNAME=utenti_user
-      - SPRING_DATASOURCE_PASSWORD=utenti_password
+      ## - SPRING_DATASOURCE_USERNAME=utenti_user
+      ## - SPRING_DATASOURCE_PASSWORD=utenti_password
     depends_on:
       discovery-service:
+        condition: service_healthy
+      vault:
         condition: service_healthy
       configuration-service:
         condition: service_started
@@ -73,15 +130,24 @@ services:
     expose:
       - "8080"
     environment:
+        ## Vault Config
+      - VAULT_ADDR=http://vault:8200
+      - VAULT_TOKEN=${VAULT_TOKEN}
+      - SPRING_CLOUD_VAULT_APPLICATION_NAME=application,evento
+
+        ## Default Config
       - SERVER_PORT=8080
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
       - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8088
-      ## Database Info
+
+        ## Database Info
       - SPRING_DATASOURCE_URL=jdbc:postgresql://eventoLocation-db:5432/e20-eventi
-      - SPRING_DATASOURCE_USERNAME=eventi_user
-      - SPRING_DATASOURCE_PASSWORD=eventi_password
+        ## - SPRING_DATASOURCE_USERNAME=eventi_user
+        ## - SPRING_DATASOURCE_PASSWORD=eventi_password
     depends_on:
       discovery-service:
+        condition: service_healthy
+      vault:
         condition: service_healthy
       configuration-service:
         condition: service_started
@@ -95,15 +161,23 @@ services:
     expose:
       - "8080"
     environment:
+        ## Vault Config
+      - VAULT_ADDR=http://vault:8200
+      - VAULT_TOKEN=${VAULT_TOKEN}
+      - SPRING_CLOUD_VAULT_APPLICATION_NAME=application,ordine
+        ## Default Config
       - SERVER_PORT=8080
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
       - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8088
-      ## Database Info
+
+        ## Database Info
       - SPRING_DATASOURCE_URL=jdbc:postgresql://gestioneOrdini-db:5432/e20-ordini
-      - SPRING_DATASOURCE_USERNAME=ordini_user
-      - SPRING_DATASOURCE_PASSWORD=ordini_password
+        ## - SPRING_DATASOURCE_USERNAME=ordini_user
+        ## - SPRING_DATASOURCE_PASSWORD=ordini_password
     depends_on:
       discovery-service:
+        condition: service_healthy
+      vault:
         condition: service_healthy
       configuration-service:
         condition: service_started
@@ -117,15 +191,24 @@ services:
     expose:
       - "8080"
     environment:
+        ## Vault Config
+      - VAULT_ADDR=http://vault:8200
+      - VAULT_TOKEN=${VAULT_TOKEN}
+      - SPRING_CLOUD_VAULT_APPLICATION_NAME=application,pagamento
+
+        ## Default Config
       - SERVER_PORT=8080
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
       - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8088
-      ## Database Info
+
+        ## Database Info
       - SPRING_DATASOURCE_URL=jdbc:postgresql://payment-db:5432/e20-pagamenti
-      - SPRING_DATASOURCE_USERNAME=pagamenti_user
-      - SPRING_DATASOURCE_PASSWORD=pagamenti_password
+        ## - SPRING_DATASOURCE_USERNAME=pagamenti_user
+        ## - SPRING_DATASOURCE_PASSWORD=pagamenti_password
     depends_on:
       discovery-service:
+        condition: service_healthy
+      vault:
         condition: service_healthy
       configuration-service:
         condition: service_started
@@ -139,11 +222,19 @@ services:
     expose:
       - "8080"
     environment:
+        ## Vault Config
+      - VAULT_ADDR=http://vault:8200
+      - VAULT_TOKEN=${VAULT_TOKEN}
+      - SPRING_CLOUD_VAULT_APPLICATION_NAME=application,mail
+
+        ## Default Config
       - SERVER_PORT=8080
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
       - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8088
     depends_on:
       discovery-service:
+        condition: service_healthy
+      vault:
         condition: service_healthy
       configuration-service:
         condition: service_started
@@ -156,10 +247,21 @@ services:
     ports:
       - "8060:8060"
     environment:
+        ## Vault Config
+      - VAULT_ADDR=http://vault:8200
+      - VAULT_TOKEN=${VAULT_TOKEN}
+      - SPRING_CLOUD_VAULT_APPLICATION_NAME=application,certs
+
+        ## Default Config
       - SERVER_PORT=8060
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
+
+        ## Certification Config
+      - SERVER_SSL_KEY_STORE=/certs/server.p12
     depends_on:
       discovery-service:
+        condition: service_healthy
+      vault:
         condition: service_healthy
       configuration-service:
         condition: service_started
@@ -175,6 +277,20 @@ services:
         condition: service_started
 
   ## ------------------------------------------------------------------------------- Databases
+  ## Authentication Server DB
+  auth-db:
+    image: postgres:16
+    container_name: auth-db
+    restart: always
+    environment:
+      - POSTGRES_DB=e20-auth
+      - POSTGRES_USER=autenticazione_user
+      - POSTGRES_PASSWORD=autenticazione_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - auth_data:/var/lib/postgresql/data
+
   ## Utente Service DB
   utente-db:
     image: postgres:16
@@ -233,6 +349,7 @@ services:
 
 ## Volumes for Databases
 volumes:
+  auth_data:
   utente_data:
   eventoLocation_data:
   gestioneOrdini_data:

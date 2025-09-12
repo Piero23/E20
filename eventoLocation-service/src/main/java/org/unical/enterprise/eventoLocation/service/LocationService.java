@@ -3,11 +3,13 @@ package org.unical.enterprise.eventoLocation.service;
 import org.unical.enterprise.eventoLocation.ContentNotFoundException;
 import org.unical.enterprise.eventoLocation.data.dao.LocationDao;
 import org.unical.enterprise.eventoLocation.data.dto.LocationDto;
+import org.unical.enterprise.eventoLocation.data.entities.Evento;
 import org.unical.enterprise.eventoLocation.data.entities.Location;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.unical.enterprise.shared.dto.EventoBasicDto;
 
 
 @Service
@@ -23,6 +25,7 @@ public class LocationService {
     }
 
     public Location save(Location location){
+
         return locationDao.save(location);
     }
 
@@ -52,4 +55,13 @@ public class LocationService {
 
         return basic;
     }
+
+    public Page<LocationDto> searchPagable(Pageable pageable, String string) {
+        Page<Location> locations = locationDao.findAllByNomeContainingIgnoreCase(string, pageable);
+
+        Page<LocationDto> basic = locations.map(location -> new LocationDto(location));
+
+        return basic;
+    }
+
 }

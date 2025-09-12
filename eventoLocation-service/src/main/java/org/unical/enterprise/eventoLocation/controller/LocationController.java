@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.unical.enterprise.shared.dto.EventoBasicDto;
 
 @RestController
 @RequestMapping("/api/location")
@@ -45,6 +46,11 @@ public class LocationController {
     @PutMapping(path="/{id}", consumes = "application/json")
     public ResponseEntity<Location> replaceLocation(@PathVariable("id") Long id, @RequestBody Location location) {
         return new ResponseEntity<>(locationService.update(location, id), HttpStatus.OK);
+    }
+
+    @GetMapping("/search/{string}")
+    public Page<LocationDto> search(Pageable pageable, @PathVariable String string) {
+        return locationService.searchPagable(pageable, string);
     }
 
 

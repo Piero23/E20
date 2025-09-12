@@ -236,4 +236,7 @@ public class PagamentoService {
     }
 
 
+    public Long ticketsByOrder(Long evento) {
+        return eventoServiceClient.getRemainingSpots(evento);
+    }
 }

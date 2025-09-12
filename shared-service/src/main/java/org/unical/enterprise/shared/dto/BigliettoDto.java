@@ -16,7 +16,7 @@ public record BigliettoDto(
         @Email(message = "L'indirizzo email non è valido.")
         String email,
 
-        boolean eValido,
+        boolean e_valido,
 
         String nome,
 

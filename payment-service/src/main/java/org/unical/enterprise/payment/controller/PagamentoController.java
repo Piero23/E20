@@ -81,6 +81,9 @@ public class PagamentoController {
             if (pagamentoService.checkUtente(user)){
                 if (pagamentoService.checkUtente(orderUser)){
                     if (user.equals(orderUser)) {
+                        if (request.biglietti().size()>pagamentoService.ticketsByOrder(request.biglietti().getFirst().idEvento()))
+                            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Troppi biglietti, ne sono rimasti " + pagamentoService.ticketsByOrder(request.biglietti().getFirst().idEvento()));
+
                         for (BigliettoDto biglietto: request.biglietti()){
 //                            if(pagamentoService.findByData(biglietto.email(), biglietto.idEvento()) && pagamentoService.needsName(biglietto.idEvento()))
 //                                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Esiste già un biglietto per evento " + biglietto.idEvento() + " per " + biglietto.nome() + " " + biglietto.cognome());
@@ -92,7 +95,8 @@ public class PagamentoController {
                                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La richiesta presenta dei campi errati");
                             }
                         }
-                        //TODO se il numero di biglietti richiesti è più di quelli disponibili errore
+
+
                         logger.info("Iniziato Ordine da utente {}", user);
                         Session session = pagamentoService.createPaymentSession(
                                 request                        );

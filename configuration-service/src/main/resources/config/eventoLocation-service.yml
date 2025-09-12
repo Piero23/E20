@@ -42,7 +42,8 @@ jwt:
       /api/location/test,
       /api/preferiti/test,
       /api/evento/search/{string},
-      /api/evento/{id}/spots
+      /api/evento/{id}/spots,
+      /api/evento/{id}/image
     protectedRoutes:
       - path: /api/preferiti/**
         roles:

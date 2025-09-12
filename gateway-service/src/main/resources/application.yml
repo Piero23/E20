@@ -24,7 +24,3 @@ server:
     enabled: true
     key-password: ${ssl_password}
   address: 0.0.0.0
-
-rate:
-  limiter:
-    permits: 10

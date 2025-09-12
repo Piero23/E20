@@ -3,26 +3,21 @@ package org.unical.enterprise.gateway.ratelimiter.service;
 import com.google.common.util.concurrent.RateLimiter;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class RateLimiterService {
-    private final RateLimiter rateLimiter;
+    private final Map<String, RateLimiter> rateLimiters = new ConcurrentHashMap<>();
+    private final double permitsPerSecond = 5.0; // Default rate limit
 
     public RateLimiterService() {
-        this.rateLimiter = RateLimiter.create(10.0); // 10 permits per second
+        this.rateLimiters.computeIfAbsent("default",
+                k -> RateLimiter.create(permitsPerSecond));
     }
 
-    public boolean tryAcquire() {
+    public boolean tryAcquireNoWait() {
+        RateLimiter rateLimiter = this.rateLimiters.get("default");
         return rateLimiter.tryAcquire();
-    }
-
-    public boolean tryAcquire(Duration timeout) {
-        return rateLimiter.tryAcquire(timeout.toMillis(), TimeUnit.MILLISECONDS);
-    }
-
-    public void acquire() {
-        rateLimiter.acquire();
     }
 }

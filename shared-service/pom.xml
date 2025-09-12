@@ -27,10 +27,12 @@
         </dependency>
 
         <!-- Spring Starter AMPQ: Messaggistica (es. per DTO legati a RabbitMQ) -->
+        <!--
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
+        -->
 
         <!-- Spring Starter Security -->
         <dependency>

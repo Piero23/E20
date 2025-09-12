@@ -87,7 +87,8 @@ public class PagamentoController {
                         for (BigliettoDto biglietto: request.biglietti()){
 //                            if(pagamentoService.findByData(biglietto.email(), biglietto.idEvento()) && pagamentoService.needsName(biglietto.idEvento()))
 //                                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Esiste già un biglietto per evento " + biglietto.idEvento() + " per " + biglietto.nome() + " " + biglietto.cognome());
-                            if (pagamentoService.isAgeRestricted(biglietto.idEvento()) && !pagamentoService.isMaggiorenne(biglietto.dataNascita()))
+                            System.out.println("ODIO I FROCI " + biglietto.toString());
+                            if (pagamentoService.isAgeRestricted(biglietto.idEvento()) && !pagamentoService.isMaggiorenne(biglietto.data_nascita()))
                                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(biglietto.nome() + " " + biglietto.cognome() + " non ha l'età adatta per accedere all'evento.");
                             boolean cond1 = pagamentoService.needsName(biglietto.idEvento()) && (biglietto.nome()==null || biglietto.cognome()==null);
                             boolean cond2 = !pagamentoService.needsName(biglietto.idEvento()) && (biglietto.nome()!=null || biglietto.cognome()!=null);
@@ -98,8 +99,7 @@ public class PagamentoController {
 
 
                         logger.info("Iniziato Ordine da utente {}", user);
-                        Session session = pagamentoService.createPaymentSession(
-                                request                        );
+                        Session session = pagamentoService.createPaymentSession(request);
 
                         return ResponseEntity.ok(Map.of("url", session.getUrl()));
                     } else {

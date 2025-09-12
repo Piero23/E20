@@ -21,12 +21,17 @@ public class ApiController {
         this.rateLimiterService = rateLimiterService;
     }
 
-    @GetMapping
+    @GetMapping("/**")
     public Mono<ResponseEntity<String>> getData() {
+            if (!rateLimiterService.tryAcquire(Duration.ofSeconds(1))) {
+            return Mono.just(ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                    .body("Troppe richieste, riprova più tardi"));
+        }
+
         return Mono.just(ResponseEntity.ok("Richiesta GET processata con successo"));
     }
 
-    @PostMapping
+    @PostMapping("/**")
     public Mono<ResponseEntity<String>> processData() {
         if (!rateLimiterService.tryAcquire(Duration.ofSeconds(1))) {
             return Mono.just(ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)

@@ -76,6 +76,7 @@ public class BigliettoService {
         else return eventoServiceClient.findById(ticket.getIdEvento()).isB_riutilizzabile();
     }
 
+    @Transactional
     public boolean checkExists(UUID id){
         return bigliettoDao.existsById(id);
     }
@@ -85,7 +86,21 @@ public class BigliettoService {
         return utenteServiceClient.getUtenteByUsername(username).getBody().getId();
     }
 
+    @Transactional
     public UUID getOrganizzatoreEventoByTicket(UUID id) {
         return eventoServiceClient.findById(bigliettoDao.findById(id).get().getIdEvento()).getOrganizzatore();
+    }
+
+    @Transactional
+    public BigliettoDto findById(UUID id) {
+        Biglietto b=bigliettoDao.findById(id).get();
+        return BigliettoDto.builder()
+                .nome(b.getNome())
+                .cognome(b.getCognome())
+                .email(b.getEmail())
+                .idEvento(b.getIdEvento())
+                .data_nascita(b.getData_nascita())
+                .e_valido(b.isE_valido())
+                .build();
     }
 }

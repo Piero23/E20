@@ -68,7 +68,8 @@ public class SecurityConfig {
                         "/api/evento",
                         "/api/evento/{id}/spots",
                         "/api/evento/{id}/image",
-                        "/api/location/{id}"
+                        "/api/location/{id}",
+                        "/api/utente/search/{usernameToSearch}"
                 )
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> authorize

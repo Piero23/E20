@@ -58,6 +58,19 @@ public class BigliettoController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Impossibile validare biglietto per evento non proprietario");
     }
 
+    @GetMapping("/{id}")
+    private ResponseEntity<BigliettoDto> getById(@PathVariable UUID id, Authentication auth) {
+        UUID user = bigliettoService.getUserIDByUsername(auth.getName());
+        UUID eventoOrganizzatoreUUID = bigliettoService.getOrganizzatoreEventoByTicket(id);
+        if (user.equals(eventoOrganizzatoreUUID)) {
+            if (bigliettoService.checkExists(id)){
+                return ResponseEntity.ok(bigliettoService.findById(id));
+            }
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
     @GetMapping("/evento")
     public List<BigliettoDto> getBigliettoEvento(@RequestParam Long id) {
         return bigliettoService.findAllByEvento(id);

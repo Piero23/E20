@@ -7,42 +7,46 @@ services:
   vault:
     image: hashicorp/vault:latest
     container_name: vault
+    hostname: vault
     ports:
       - "8200:8200"
     environment:
-      - VAULT_DEV_ROOT_TOKEN_ID=${VAULT_TOKEN}
-      - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200
+      - VAULT_DEV_ROOT_TOKEN_ID=${VAULT_TOKEN_DOCKER}
+      - VAULT_DEV_LISTEN_ADDRESS=http://0.0.0.0:8200
     cap_add:
       - IPC_LOCK
-    command: server -dev
+    command: sh -c "vault server -dev -dev-root-token-id=root -dev-listen-address=0.0.0.0:8200 & sleep 5 && sh /vault/init-vault.sh && wait"
     volumes:
-        - ./docker-vault-config/secrets-application.json:/vault/config/secrets-application.json
-        - ./docker-vault-config/secrets-evento.json:/vault/config/secrets-evento.json
-        - ./docker-vault-config/secrets-ordine.json:/vault/config/secrets-ordine.json
-        - ./docker-vault-config/secrets-pagamento.json:/vault/config/secrets-pagamento.json
-        - ./docker-vault-config/secrets-utente.json:/vault/config/secrets-utente.json
-        - ./docker-vault-config/secrets-mail.json:/vault/config/secrets-mail.json
-        - ./docker-vault-config/secrets-autenticazione.json:/vault/config/secrets-autenticazione.json
-        - ./docker-vault-config/secrets-certs.json:/vault/config/secrets-certs.json
-          ## Init File
-        - ./docker-vault-config/init-vault.sh:/docker-entrypoint-init.d/init-vault.sh
+      ## Vault Secrets
+      - ./docker-setup/vault/secrets/secrets-application.json:/vault/config/secrets-application.json
+      - ./docker-setup/vault/secrets/secrets-autenticazione.json:/vault/config/secrets-autenticazione.json
+      - ./docker-setup/vault/secrets/secrets-certs.json:/vault/config/secrets-certs.json
+      - ./docker-setup/vault/secrets/secrets-utente.json:/vault/config/secrets-utente.json
+      - ./docker-setup/vault/secrets/secrets-evento.json:/vault/config/secrets-evento.json
+      - ./docker-setup/vault/secrets/secrets-ordine.json:/vault/config/secrets-ordine.json
+      - ./docker-setup/vault/secrets/secrets-pagamento.json:/vault/config/secrets-pagamento.json
+      - ./docker-setup/vault/secrets/secrets-mail.json:/vault/config/secrets-mail.json
+
+      ## Init File
+      - ./docker-setup/vault/init-vault.sh:/vault/init-vault.sh
     healthcheck:
-        test: [ "CMD", "wget", "--spider", "-q", "http://localhost:8200/v1/sys/health" ]
-        interval: 5s
-        timeout: 5s
-        retries: 10
+      test: [ "CMD-SHELL", "vault status -address=http://127.0.0.1:8200 >/dev/null 2>&1" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   ## ------------------------------------------------------------------------------- Basic
   ## Discovery Service
   discovery-service:
     build: ./discovery-service
     container_name: discovery-service
+    hostname: discovery-service
     ports:
       - "8061:8061"
     environment:
       - SERVER_PORT=8061
     healthcheck:
-      test: [ "CMD", "wget", "--spider", "-q", "http://localhost:8061/actuator/health" ]
+      test: [ "CMD", "wget", "--spider", "--timeout=5", "--quiet", "http://localhost:8061/actuator/health" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -51,42 +55,58 @@ services:
   configuration-service:
     build: ./configuration-service
     container_name: configuration-service
+    hostname: configuration-service
     expose:
       - "8088"
+    volumes:
+      - ./configuration-service/src/main/resources/config:/config
     environment:
+      ## Default Config
       - SERVER_PORT=8088
-      - AUTH_TOKEN_ISSUER=http://authentication-server:9000
+      - AUTH_TOKEN_ISSUER=https://${IP_ADDRESS}:9000
+      - SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS=file:/config
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "--timeout=5", "--quiet", "http://localhost:8088/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   ## Authentication Server
   authentication-server:
     build: ./authentication-server
     container_name: authentication-server
+    hostname: authentication-server
     ports:
       - "9000:9000"
     volumes:
       - ./certs:/certs
     environment:
-        ## Vault Config
+      ## Vault Config
       - VAULT_ADDR=http://vault:8200
-      - VAULT_TOKEN=${VAULT_TOKEN}
+      - VAULT_TOKEN=${VAULT_TOKEN_DOCKER}
       - SPRING_CLOUD_VAULT_APPLICATION_NAME=application,autenticazione,certs
 
-        ## Default Config
+      ## Default Config
       - SERVER_PORT=9000
-      - AUTH_TOKEN_ISSUER=http://authentication-server:9000
+      - AUTH_TOKEN_ISSUER=https://${IP_ADDRESS}:9000
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
+      - SPRING_SECURITY_OAUTH2_AUTHORIZATIONSERVER_ISSUER=https://${IP_ADDRESS}:9000
 
-        ## Database Info
+      ## Database Info
       - SPRING_DATASOURCE_URL=jdbc:postgresql://auth-db:5432/e20-auth
-        ## - SPRING_DATASOURCE_USERNAME=autenticazione_user
-        ## - SPRING_DATASOURCE_PASSWORD=autenticazione_password
 
-        ## Certification Config
+      ## Certificates Config
       - SERVER_SSL_KEY_STORE=/certs/server.p12
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "--timeout=5", "--quiet", "https://localhost:9000/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     depends_on:
-      discovery-service:
-        condition: service_healthy
       vault:
+        condition: service_healthy
+      discovery-service:
         condition: service_healthy
       auth-db:
         condition: service_started
@@ -96,91 +116,107 @@ services:
   utente-service:
     build: ./utente-service
     container_name: utente-service
+    hostname: utente-service
     expose:
       - "8080"
+    volumes:
+      - ./certs:/certs
+      - ./docker-setup/import-cert.sh:/docker-entrypoint-init.d/import-cert.sh
+    entrypoint: [ "/bin/sh", "-c", "/docker-entrypoint-init.d/import-cert.sh && java -jar /app/app.jar" ]
     environment:
-        ## Vault Config
+      ## Vault Config
       - VAULT_ADDR=http://vault:8200
-      - VAULT_TOKEN=${VAULT_TOKEN}
+      - VAULT_TOKEN=${VAULT_TOKEN_DOCKER}
       - SPRING_CLOUD_VAULT_APPLICATION_NAME=application,utente
 
-        ## Default Config
+      ## Default Config
       - SERVER_PORT=8080
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
-      - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8088
+      - CONFIG_SERVER_URL=http://configuration-service:8088
 
-        ## Database Info
+      ## Database Info
       - SPRING_DATASOURCE_URL=jdbc:postgresql://utente-db:5432/e20-utenti
-      ## - SPRING_DATASOURCE_USERNAME=utenti_user
-      ## - SPRING_DATASOURCE_PASSWORD=utenti_password
     depends_on:
-      discovery-service:
-        condition: service_healthy
       vault:
         condition: service_healthy
+      discovery-service:
+        condition: service_healthy
       configuration-service:
-        condition: service_started
+        condition: service_healthy
+      authentication-server:
+        condition: service_healthy
       utente-db:
         condition: service_started
 
   ## Evento Location Service
-  eventoLocation-service:
+  evento-location-service:
     build: ./eventoLocation-service
     container_name: eventoLocation-service
+    hostname: eventoLocation-service
     expose:
       - "8080"
+    volumes:
+      - ./certs:/certs
+      - ./docker-setup/import-cert.sh:/docker-entrypoint-init.d/import-cert.sh
+    entrypoint: [ "/bin/sh", "-c", "/docker-entrypoint-init.d/import-cert.sh && java -jar /app/app.jar" ]
     environment:
-        ## Vault Config
+      ## Vault Config
       - VAULT_ADDR=http://vault:8200
-      - VAULT_TOKEN=${VAULT_TOKEN}
+      - VAULT_TOKEN=${VAULT_TOKEN_DOCKER}
       - SPRING_CLOUD_VAULT_APPLICATION_NAME=application,evento
 
-        ## Default Config
+      ## Default Config
       - SERVER_PORT=8080
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
-      - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8088
+      - CONFIG_SERVER_URL=http://configuration-service:8088
 
-        ## Database Info
+      ## Database Info
       - SPRING_DATASOURCE_URL=jdbc:postgresql://eventoLocation-db:5432/e20-eventi
-        ## - SPRING_DATASOURCE_USERNAME=eventi_user
-        ## - SPRING_DATASOURCE_PASSWORD=eventi_password
     depends_on:
-      discovery-service:
-        condition: service_healthy
       vault:
         condition: service_healthy
+      discovery-service:
+        condition: service_healthy
       configuration-service:
-        condition: service_started
+        condition: service_healthy
+      authentication-server:
+        condition: service_healthy
       eventoLocation-db:
         condition: service_started
 
   ## Gestione Ordini Service
-  gestioneOrdini-service:
+  gestione-ordini-service:
     build: ./gestioneOrdini-service
     container_name: gestioneOrdini-service
+    hostname: gestioneOrdini-service
     expose:
       - "8080"
+    volumes:
+      - ./certs:/certs
+      - ./docker-setup/import-cert.sh:/docker-entrypoint-init.d/import-cert.sh
+    entrypoint: [ "/bin/sh", "-c", "/docker-entrypoint-init.d/import-cert.sh && java -jar /app/app.jar" ]
     environment:
-        ## Vault Config
+      ## Vault Config
       - VAULT_ADDR=http://vault:8200
-      - VAULT_TOKEN=${VAULT_TOKEN}
+      - VAULT_TOKEN=${VAULT_TOKEN_DOCKER}
       - SPRING_CLOUD_VAULT_APPLICATION_NAME=application,ordine
-        ## Default Config
+
+      ## Default Config
       - SERVER_PORT=8080
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
-      - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8088
+      - CONFIG_SERVER_URL=http://configuration-service:8088
 
-        ## Database Info
+      ## Database Info
       - SPRING_DATASOURCE_URL=jdbc:postgresql://gestioneOrdini-db:5432/e20-ordini
-        ## - SPRING_DATASOURCE_USERNAME=ordini_user
-        ## - SPRING_DATASOURCE_PASSWORD=ordini_password
     depends_on:
-      discovery-service:
-        condition: service_healthy
       vault:
         condition: service_healthy
+      discovery-service:
+        condition: service_healthy
       configuration-service:
-        condition: service_started
+        condition: service_healthy
+      authentication-server:
+        condition: service_healthy
       gestioneOrdini-db:
         condition: service_started
 
@@ -188,92 +224,113 @@ services:
   payment-service:
     build: ./payment-service
     container_name: payment-service
+    hostname: payment-service
     expose:
       - "8080"
+    volumes:
+      - ./certs:/certs
+      - ./docker-setup/import-cert.sh:/docker-entrypoint-init.d/import-cert.sh
+    entrypoint: [ "/bin/sh", "-c", "/docker-entrypoint-init.d/import-cert.sh && java -jar /app/app.jar" ]
     environment:
-        ## Vault Config
+      ## Vault Config
       - VAULT_ADDR=http://vault:8200
-      - VAULT_TOKEN=${VAULT_TOKEN}
+      - VAULT_TOKEN=${VAULT_TOKEN_DOCKER}
       - SPRING_CLOUD_VAULT_APPLICATION_NAME=application,pagamento
 
-        ## Default Config
+      ## Default Config
       - SERVER_PORT=8080
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
-      - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8088
+      - CONFIG_SERVER_URL=http://configuration-service:8088
 
-        ## Database Info
+      ## Database Info
       - SPRING_DATASOURCE_URL=jdbc:postgresql://payment-db:5432/e20-pagamenti
-        ## - SPRING_DATASOURCE_USERNAME=pagamenti_user
-        ## - SPRING_DATASOURCE_PASSWORD=pagamenti_password
     depends_on:
-      discovery-service:
-        condition: service_healthy
       vault:
         condition: service_healthy
+      discovery-service:
+        condition: service_healthy
       configuration-service:
-        condition: service_started
+        condition: service_healthy
+      authentication-server:
+        condition: service_healthy
       payment-db:
         condition: service_started
 
   ## Mail Sender Service
-  mailSender-service:
+  mail-sender-service:
     build: ./mailSender-service
     container_name: mailSender-service
+    hostname: mailSender-service
     expose:
       - "8080"
+    volumes:
+      - ./certs:/certs
+      - ./docker-setup/import-cert.sh:/docker-entrypoint-init.d/import-cert.sh
+    entrypoint: [ "/bin/sh", "-c", "/docker-entrypoint-init.d/import-cert.sh && java -jar /app/app.jar" ]
     environment:
-        ## Vault Config
+      ## Vault Config
       - VAULT_ADDR=http://vault:8200
-      - VAULT_TOKEN=${VAULT_TOKEN}
+      - VAULT_TOKEN=${VAULT_TOKEN_DOCKER}
       - SPRING_CLOUD_VAULT_APPLICATION_NAME=application,mail
 
-        ## Default Config
+      ## Default Config
       - SERVER_PORT=8080
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
-      - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8088
+      - CONFIG_SERVER_URL=http://configuration-service:8088
+
     depends_on:
-      discovery-service:
-        condition: service_healthy
       vault:
         condition: service_healthy
+      discovery-service:
+        condition: service_healthy
       configuration-service:
-        condition: service_started
+        condition: service_healthy
+      authentication-server:
+        condition: service_healthy
 
   ## ------------------------------------------------------------------------------- Gateway
   ## Gateway Service
   gateway-service:
     build: ./gateway-service
     container_name: gateway-service
+    hostname: gateway-service
     ports:
       - "8060:8060"
+    volumes:
+      - ./certs:/certs
+      - ./docker-setup/import-cert.sh:/docker-entrypoint-init.d/import-cert.sh
+    entrypoint: [ "/bin/sh", "-c", "/docker-entrypoint-init.d/import-cert.sh && java -jar /app/app.jar" ]
     environment:
-        ## Vault Config
+      ## Vault Config
       - VAULT_ADDR=http://vault:8200
-      - VAULT_TOKEN=${VAULT_TOKEN}
+      - VAULT_TOKEN=${VAULT_TOKEN_DOCKER}
       - SPRING_CLOUD_VAULT_APPLICATION_NAME=application,certs
 
-        ## Default Config
+      ## Default Config
       - SERVER_PORT=8060
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8061/eureka/
+      - CONFIG_SERVER_URL=http://configuration-service:8088
 
-        ## Certification Config
+      ## Certification Config
       - SERVER_SSL_KEY_STORE=/certs/server.p12
     depends_on:
-      discovery-service:
-        condition: service_healthy
       vault:
         condition: service_healthy
+      discovery-service:
+        condition: service_healthy
       configuration-service:
-        condition: service_started
+        condition: service_healthy
+      authentication-server:
+        condition: service_healthy
       utente-service:
         condition: service_started
-      eventoLocation-service:
+      evento-location-service:
         condition: service_started
-      gestioneOrdini-service:
+      gestione-ordini-service:
         condition: service_started
       payment-service:
         condition: service_started
-      mailSender-service:
+      mail-sender-service:
         condition: service_started
 
   ## ------------------------------------------------------------------------------- Databases
@@ -284,8 +341,8 @@ services:
     restart: always
     environment:
       - POSTGRES_DB=e20-auth
-      - POSTGRES_USER=autenticazione_user
-      - POSTGRES_PASSWORD=autenticazione_password
+      - POSTGRES_USER=auth_user
+      - POSTGRES_PASSWORD=auth_password
     ports:
       - "5432:5432"
     volumes:

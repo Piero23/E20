@@ -56,7 +56,7 @@ public class OrdineService {
                     .nome(bigliettoDto.nome())
                     .cognome(bigliettoDto.cognome())
                     .data_nascita(bigliettoDto.data_nascita())
-                    .e_valido(bigliettoDto.e_valido())
+                    .e_valido(true)
                     .idEvento(bigliettoDto.idEvento())
                     .build();
 

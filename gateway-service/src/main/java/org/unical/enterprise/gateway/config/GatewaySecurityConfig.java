@@ -88,7 +88,9 @@ public class GatewaySecurityConfig {
                                 "/api/evento/{id}",
                                 "/api/evento",
                                 "/api/evento/{id}/spots",
-                                "/api/evento/{id}/image"
+                                "/api/evento/{id}/image",
+                                "/api/location/{id}",
+                                "/api/utente/search/{usernameToSearch}"
                         ).permitAll()
 
                         // Endpoint Registrazione, Autenticazione Stateless

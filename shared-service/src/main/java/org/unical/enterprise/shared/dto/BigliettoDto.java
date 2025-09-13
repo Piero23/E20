@@ -22,5 +22,5 @@ public record BigliettoDto(
 
         String cognome,
 
-        Date dataNascita
+        Date data_nascita
 ) {}

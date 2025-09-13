@@ -72,6 +72,9 @@ jwt:
       - path: GET:/api/evento/myEvents
         roles:
           - ROLE_MANAGER
+      - path: GET:/api/location/search/{string}
+        roles:
+          - ROLE_MANAGER
 
 logging:
   file:

@@ -1,5 +1,6 @@
 package org.unical.enterprise.eventoLocation.data.dto;
 
+import lombok.Builder;
 import org.unical.enterprise.eventoLocation.data.entities.Location;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -64,6 +64,9 @@ jwt:
       - path: POST:/api/biglietto/{id}
         roles:
           - ROLE_MANAGER
+      - path: /api/biglietto/{id}
+        roles:
+          - ROLE_MANAGER
 
 
 logging:

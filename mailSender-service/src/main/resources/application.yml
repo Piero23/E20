@@ -3,7 +3,7 @@ spring:
     name: mailSender-service
   config:
     import:
-      - "optional:configserver:http://localhost:8088"
+      - "optional:configserver:${CONFIG_SERVER_URL:http://localhost:8088}"
       - "optional:file:.env[.properties]"
       - "vault://"
   cloud:

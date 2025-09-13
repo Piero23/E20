@@ -10,8 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "biglietto")
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

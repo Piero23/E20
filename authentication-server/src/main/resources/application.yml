@@ -8,6 +8,7 @@ server:
     enabled: true
     key-password: ${ssl_password}
   address: 0.0.0.0
+  forward-headers-strategy: framework
 
 
 cors:
@@ -47,6 +48,7 @@ spring:
   security:
     oauth2:
       authorizationserver: ## Clients
+        issuer: https://${ip_addr}:9000
         client:
           gateway-client:
             registration:

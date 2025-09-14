@@ -124,7 +124,7 @@ public class EventoController {
 
     // TODO: Non poter modificare prezzo, organizzatore, riutilizzabile, nominativo
     @PutMapping(path="/{id}", consumes = "application/json")
-    public ResponseEntity<Evento> replacePerson(@PathVariable("id") Long id, @RequestBody Evento evento, Authentication auth) {
+    public ResponseEntity<EventoBasicDto> replacePerson(@PathVariable("id") Long id, @RequestBody EventoBasicDto evento, Authentication auth) {
 
         if(evento.isAge_restricted() && !evento.isB_nominativo())
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

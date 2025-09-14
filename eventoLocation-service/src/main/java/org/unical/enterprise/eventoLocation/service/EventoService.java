@@ -86,15 +86,34 @@ public class EventoService {
         return toDTO(eventoDao.save(evento));
     }
 
-    public Evento update(Evento evento , Long id){
+    public EventoBasicDto update(EventoBasicDto evento , Long id){
 
         eventoDao.findById(id).orElseThrow(() ->
                 new ContentNotFoundException("location with id " + id + " not found")
         );
 
-        evento.setId(id);
+        Evento evento2 = new Evento();
 
-        return eventoDao.save(evento);
+        evento2.setNome(evento.getNome());
+        evento2.setDescrizione(evento.getDescrizione());
+
+        UtenteDTO u = utenteServiceClient.getById(evento.getOrganizzatore());
+        System.out.println(u);
+
+        evento2.setOrganizzatore(evento.getOrganizzatore());
+        evento2.setPosti(evento.getPosti());
+        evento2.setB_riutilizzabile(evento.isB_riutilizzabile());
+        evento2.setB_nominativo(evento.isB_nominativo());
+        evento2.setAge_restricted(evento.isAge_restricted());
+        evento2.setData(evento.getData());
+        evento2.setPrezzo(evento.getPrezzo());
+
+        Location location = locationDao.findById(evento.getLocationId())
+                .orElseThrow(() -> new ContentNotFoundException("location with id " + evento.getLocationId() + " not found"));
+
+        evento2.setLocation(location);
+        eventoDao.save(evento2);
+        return evento;
     }
 
     public void delete(Long id){

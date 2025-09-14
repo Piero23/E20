@@ -63,9 +63,14 @@ public class UtenteController {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
             System.out.println("Auth: " + auth.getName());
+            System.out.println("Auth is requested? " + auth.getName().equals(username));
+            System.out.println("Auth and requested are following each other?: " +
+                    seguaceService.areSeguaciAVicenda(username, auth.getName()));
 
-            if (!auth.getName().equals(username) || !seguaceService.areSeguaciAVicenda(username, auth.getName())
-            )
+            System.out.println("Is Auth seguace di requested? " + seguaceService.isSeguaceDi(auth.getName(), username));
+            System.out.println("Is Auth seguito da requested? " + seguaceService.isSeguitoDa(auth.getName(), username));
+
+            if (!auth.getName().equals(username) && !seguaceService.areSeguaciAVicenda(username, auth.getName()))
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 

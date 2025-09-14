@@ -64,7 +64,7 @@ public class UtenteController {
 
             System.out.println("Auth: " + auth.getName());
 
-            if (!auth.getName().equals(username) || seguaceService.areSeguaciAVicenda(username, auth.getName())
+            if (!auth.getName().equals(username) || !seguaceService.areSeguaciAVicenda(username, auth.getName())
             )
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }

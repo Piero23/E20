@@ -1,4 +1,4 @@
-
+name: e20-prova
 
 ## All Services
 services:
@@ -46,7 +46,7 @@ services:
     environment:
       - SERVER_PORT=8061
     healthcheck:
-      test: [ "CMD", "wget", "--spider", "--timeout=5", "--quiet", "http://localhost:8061/actuator/health" ]
+      test: [ "CMD", "wget","--spider", "--timeout=5", "--quiet", "http://localhost:8061/actuator/health" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -76,6 +76,8 @@ services:
     build: ./authentication-server
     container_name: authentication-server
     hostname: authentication-server
+    env_file:
+      - .env
     ports:
       - "9000:9000"
     volumes:
@@ -98,7 +100,11 @@ services:
       ## Certificates Config
       - SERVER_SSL_KEY_STORE=/certs/server.p12
     healthcheck:
-      test: [ "CMD", "wget", "--spider", "--timeout=5", "--quiet", "https://localhost:9000/actuator/health" ]
+      test:
+        [
+          "CMD-SHELL",
+          "wget --header='X-Internal-Communication: $INTERNAL_COMMUNICATIONKEY' --spider --timeout=5 --quiet https://localhost:9000/actuator/health --no-check-certificate"
+        ]
       interval: 10s
       timeout: 5s
       retries: 5

@@ -11,3 +11,12 @@ spring:
       token: ${VAULT_TOKEN}
       uri: ${VAULT_ADDR}
       application-name: application
+  datasource:
+    url: jdbc:postgresql://localhost:5454/e20
+    username: ${db_username}
+    password: ${db_password}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true

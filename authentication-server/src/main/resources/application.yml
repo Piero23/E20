@@ -9,9 +9,8 @@ server:
     key-password: ${ssl_password}
   address: 0.0.0.0
 
-
 cors:
-  allowed-origins: http://localhost:3000, http://localhost:8060
+  allowed-origins: http://localhost:3000, http://localhost:8060, http://localhost:4200
 
 spring:
   config:
@@ -80,6 +79,22 @@ spring:
               scopes:
                 - "openid"
                 - "profile"
+          angular-client:
+            registration:
+              client-id: "angular-client"
+              client-authentication-methods:
+                - "none" # PKCE -> public client (niente secret)
+              authorization-grant-types:
+                - "authorization_code"
+                - "refresh_token" # per poter rinnovare il token
+              redirect-uris:
+                - "https://localhost:4200"
+                - "https://localhost:4200/login/oauth2/code/angular-client"
+              post-logout-redirect-uris:
+                - "https://localhost:4200/connect/logout"
+              scopes:
+                - "openid"
+                - "profile"
 
 ## Eureka Configurations
 eureka:
@@ -104,13 +119,12 @@ auth:
 internal:
   communication-key: 308e813b6509dbef1efe8e673a5bc099
 
-
 jwt:
   security:
     enabled: true
     publicPaths: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /auth/register
 
-
 logging:
   level:
     org.springframework.security: trace
+

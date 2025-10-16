@@ -16,7 +16,6 @@ import org.unical.enterprise.eventoLocation.data.dto.EventoDto;
 import org.unical.enterprise.shared.clients.UtenteServiceClient;
 import org.unical.enterprise.shared.dto.BigliettoDto;
 import org.unical.enterprise.shared.dto.EventoBasicDto;
-import org.unical.enterprise.eventoLocation.data.entities.Evento;
 import org.unical.enterprise.eventoLocation.service.EventoService;
 
 import java.util.List;
@@ -85,13 +84,13 @@ public class EventoController {
         if(evento.isAge_restricted() && !evento.isB_nominativo())
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        String user = String.valueOf(Objects.requireNonNull(utenteServiceClient.getUtenteByUsername(auth.getName()).getBody()).getId());
-        UUID eventoOrganizzatore=evento.getOrganizzatore();
-        if (user.equals(eventoOrganizzatore.toString())) {
-            return new ResponseEntity<>(eventoService.save(evento), HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        UUID organizzatoreId = Objects.requireNonNull(utenteServiceClient
+                        .getUtenteByUsername(auth.getName())
+                        .getBody())
+                .getId();
+        evento.setOrganizzatore(organizzatoreId);
+        EventoBasicDto saved = eventoService.save(evento);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
     @DeleteMapping(path="/{id}")

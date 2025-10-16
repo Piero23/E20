@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.unical.enterprise.eventoLocation.ContentNotFoundException;
@@ -56,6 +57,7 @@ public class EventoService {
         ));
     }
 
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Transactional
     public EventoBasicDto save(EventoBasicDto dto){
         System.out.println("Palle ciao pure qua");

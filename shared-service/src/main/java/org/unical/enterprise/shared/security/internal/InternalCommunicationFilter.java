@@ -21,6 +21,15 @@ public class InternalCommunicationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+
+        String method = request.getMethod();
+
+        if ("OPTIONS".equalsIgnoreCase(method)) {
+            System.out.println("OPTIONS");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String internalHeader = request.getHeader("X-Internal-Communication");
 
         System.out.println("Sto controllando la comm Key");

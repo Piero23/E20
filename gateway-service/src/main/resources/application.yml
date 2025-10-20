@@ -24,3 +24,6 @@ server:
     enabled: true
     key-password: ${ssl_password}
   address: 0.0.0.0
+
+cors:
+  allowed-origins: https://localhost:8060,https://localhost:4200

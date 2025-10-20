@@ -163,6 +163,12 @@ public class EventoController {
             return ResponseEntity.ok(eventoService.getEventiByManager(user));
 
     }
+
+    @PostMapping("/testandolo")
+    public ResponseEntity<String> testandolo(@RequestBody String evento) {
+        System.out.println("Ciao a tutti" + evento);
+        return new ResponseEntity("Ciao a tutti" + evento, HttpStatus.OK);
+    }
 }
 
 /*

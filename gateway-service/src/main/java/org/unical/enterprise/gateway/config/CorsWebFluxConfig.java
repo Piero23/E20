@@ -19,19 +19,23 @@ import java.util.List;
 @Configuration
 public class CorsWebFluxConfig {
 
-    @Value("${cors.allowed-origins:http://localhost:3000,http://localhost:8060}")
+    @Value("${cors.allowed-origins:https://localhost:8060}")
     private String originsProperty;
 
     @Bean
     public CorsWebFilter corsWebFilter() {
+        System.out.println("=== CONFIGURING CORS ===");
+
         List<String> origins = Arrays.stream(originsProperty.split(","))
                 .map(String::trim)
                 .toList();
+        System.out.println("Allowed origins: " + origins);
 
         CorsConfiguration cfg = new CorsConfiguration();
         cfg.setAllowedOriginPatterns(origins); // meglio di setAllowedOrigins per gestire pattern
-        cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         cfg.setAllowedHeaders(List.of("*"));
+        cfg.setExposedHeaders(Arrays.asList("Authorization", "Content-Type", "Access-Control-Allow-Origin"));
         cfg.setAllowCredentials(true);
         cfg.setMaxAge(3600L);
 

@@ -2,6 +2,7 @@ package org.unical.enterprise.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -70,6 +71,7 @@ public class GatewaySecurityConfig {
         http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // Endpoint Tecnici
                         .pathMatchers(
                                 "/swagger-ui/**",
@@ -90,7 +92,9 @@ public class GatewaySecurityConfig {
                                 "/api/evento/{id}/spots",
                                 "/api/evento/{id}/image",
                                 "/api/location/{id}",
-                                "/api/utente/search/{usernameToSearch}"
+                                "/api/utente/search/{usernameToSearch}",
+                                "/api/evento/testandolo"
+
                         ).permitAll()
 
                         // Endpoint Registrazione, Autenticazione Stateless
@@ -143,9 +147,7 @@ public class GatewaySecurityConfig {
                 )
                 .oauth2ResourceServer(resourceServer -> resourceServer
                         .jwt(jwtSpec -> jwtSpec.jwtAuthenticationConverter(jwtAuthConverter))
-                )
-                .csrf(ServerHttpSecurity.CsrfSpec::disable);
-
+                );
         return http.build();
     }
 

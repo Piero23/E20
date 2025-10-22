@@ -3,6 +3,7 @@ package org.unical.enterprise.auth.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
@@ -40,12 +41,12 @@ public class SecurityConfig {
     }
 
 
-
     @Bean
     @Order(1)
     public SecurityFilterChain publicSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
                 .securityMatcher(
                         "/auth/register",
                         "/auth/login",
@@ -72,8 +73,8 @@ public class SecurityConfig {
                         "/api/utente/search/{usernameToSearch}",
                         "/api/evento/testandolo"
                 )
-                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().permitAll()
                 );
 
@@ -91,7 +92,8 @@ public class SecurityConfig {
                 // Paths Per OAuth2
                 .securityMatcher("/oauth2/**", "/login", "/logout", "/.well-known/**", "/userinfo")
                 .authorizeHttpRequests(authorize -> authorize
-                        // Endpoint Tecnici Pubblici (Congifuragioni)
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        // Endpoint Tecnici Pubblici (Configurazioni)
                         .requestMatchers("/.well-known/**").permitAll()
 
                         // Tutto il resto, Bloccato
@@ -134,6 +136,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .anonymous(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(resourceServer -> resourceServer

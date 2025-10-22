@@ -1,17 +1,13 @@
 package org.unical.enterprise.shared.security;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,8 +17,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.unical.enterprise.shared.security.internal.InternalCommunicationFilter;
 
 import java.util.List;
@@ -32,11 +26,10 @@ import java.util.stream.Collectors;
 @EnableWebSecurity
 @ConditionalOnProperty(name = "jwt.security.enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(JwtSecurityProperties.class)
-@Import(CorsConfiguration.class)
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class JwtSecurityAutoConfiguration {
 
-    private JwtSecurityProperties securityProperties;
+    private final JwtSecurityProperties securityProperties;
 
     @Bean
     public JwtAuthFilter jwtAuthFilter() {
@@ -44,19 +37,18 @@ public class JwtSecurityAutoConfiguration {
     }
 
     @Bean
-    public InternalCommunicationFilter internalCommunicationFilter() { return new InternalCommunicationFilter(); };
+    public InternalCommunicationFilter internalCommunicationFilter() {
+        return new InternalCommunicationFilter();
+    }
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
-                                                   @Qualifier("corsConfigurationSource") CorsConfigurationSource corsConfigSource,
                                                    JwtAuthFilter jwtAuthFilter,
                                                    InternalCommunicationFilter internalCommunicationFilter
     ) throws Exception {
 
         http
-                // Cors Configuration Source (Web - MVC)
-                .cors(cors -> cors.configurationSource(corsConfigSource))
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
@@ -74,9 +66,9 @@ public class JwtSecurityAutoConfiguration {
                 for (String path : securityProperties.getPublicPaths()) {
                     if (path.contains(":")) {
                         String[] parts = path.split(":", 2);
-                        String method = parts[0];
+                        String method = parts[0].toUpperCase();
                         String actualPath = parts[1];
-                        switch (method.toUpperCase()) {
+                        switch (method) {
                             case "GET" -> auth.requestMatchers(HttpMethod.GET, actualPath).permitAll();
                             case "POST" -> auth.requestMatchers(HttpMethod.POST, actualPath).permitAll();
                             case "PUT" -> auth.requestMatchers(HttpMethod.PUT, actualPath).permitAll();
@@ -93,10 +85,10 @@ public class JwtSecurityAutoConfiguration {
                     String path = route.getPath();
                     String[] roles = route.getRoles();
 
-                    if (path.contains("POST:") || path.contains("PUT:") || path.contains("DELETE:")) {
-                        String[] parts = path.split(":");
+                    if (path.contains(":")) {
+                        String[] parts = path.split(":", 2);
                         String actualPath = parts[1];
-                        String method = parts[0];
+                        String method = parts[0].toUpperCase();
 
                         switch (method) {
                             case "POST" -> auth.requestMatchers(HttpMethod.POST, actualPath).hasAnyAuthority(roles);
@@ -148,7 +140,7 @@ public class JwtSecurityAutoConfiguration {
                         .map(r -> {
                             String authority = "ROLE_" + r.toUpperCase();
                             System.out.println("Adding authority: " + authority);
-                            return (GrantedAuthority) new SimpleGrantedAuthority(authority);
+                            return new SimpleGrantedAuthority(authority);
                         })
                         .collect(Collectors.toList());
 

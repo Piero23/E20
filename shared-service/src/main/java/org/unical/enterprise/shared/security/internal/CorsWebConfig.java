@@ -17,7 +17,7 @@ import java.util.List;
 @Configuration
 public class CorsWebConfig {
 
-    @Value("${cors.allowed-origins:https://localhost:8060}")
+    @Value("${cors.allowed-origins:https://localhost:8060,https://localhost:4200}")
     private String originsProperty;
 
     @Bean
@@ -29,7 +29,6 @@ public class CorsWebConfig {
         CorsConfiguration cfg = new CorsConfiguration();
         cfg.setAllowedOriginPatterns(origins);
         cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        cfg.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
         cfg.setAllowCredentials(true);
         cfg.setMaxAge(3600L);
 

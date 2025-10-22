@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
@@ -63,12 +64,13 @@ public class GatewaySecurityConfig {
         return new WebSessionServerRequestCache();
     }
 
+    // WebFlux FilterChain
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http,
                                                          ServerRequestCache requestCache,
-                                                         ReactiveJwtAuthenticationConverterAdapter jwtAuthConverter)
-    {
+                                                         ReactiveJwtAuthenticationConverterAdapter jwtAuthConverter) {
         http
+                .cors(Customizer.withDefaults())
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
@@ -84,7 +86,11 @@ public class GatewaySecurityConfig {
                                 "/mailSender-service/v3/api-docs",
                                 "/payment-service/v3/api-docs",
                                 "/authentication-server/v3/api-docs",
-                                "/web/**",
+                                "/web/**"
+                        ).permitAll()
+
+                        // Endpoint pubblici
+                        .pathMatchers(
                                 "/api/evento/search/{string}",
                                 "/api/stripe/webhook",
                                 "/api/evento/{id}",
@@ -94,9 +100,7 @@ public class GatewaySecurityConfig {
                                 "/api/location/{id}",
                                 "/api/utente/search/{usernameToSearch}",
                                 "/api/evento/testandolo"
-
                         ).permitAll()
-
                         // Endpoint Registrazione, Autenticazione Stateless
                         .pathMatchers("/auth/register", "/auth/login").permitAll()
 
@@ -145,9 +149,12 @@ public class GatewaySecurityConfig {
                                     })
                         )
                 )
-                .oauth2ResourceServer(resourceServer -> resourceServer
-                        .jwt(jwtSpec -> jwtSpec.jwtAuthenticationConverter(jwtAuthConverter))
-                );
+                        .oauth2ResourceServer(resourceServer ->
+                                resourceServer.jwt(jwtSpec ->
+                                        jwtSpec.jwtAuthenticationConverter(jwtAuthConverter)
+                                )
+                        );
+
         return http.build();
     }
 

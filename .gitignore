@@ -39,3 +39,7 @@ build/
 
 ## Vault Config
 !./docker-vault-config/**
+
+docker-images/**
+docker-setup/**
+certs/**

@@ -17,9 +17,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new JSONObject(Map.of("error", e.getMessage())).toString(), HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(value={Exception.class})
-    public ResponseEntity<String> handleException(ContentNotFoundException e) {
-        return new ResponseEntity<>( new JSONObject(Map.of("error", e.getMessage())).toString(), HttpStatus.NOT_FOUND);
+
+    @ExceptionHandler(ContentNotFoundException.class)
+    public ResponseEntity<String> handleException(ContentNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
 }

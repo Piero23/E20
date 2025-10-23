@@ -24,6 +24,13 @@ public class LocationService {
         );
     }
 
+    public Location getByName(String nome) {
+    return locationDao.findByNomeIgnoreCase(nome)
+            .orElseThrow(() ->
+                    new ContentNotFoundException("Location with name '" + nome + "' not found")
+            );
+    }
+
     public Location save(Location location){
 
         return locationDao.save(location);

@@ -71,7 +71,8 @@ public class SecurityConfig {
                         "/api/evento/{id}/image",
                         "/api/location/{id}",
                         "/api/utente/search/{usernameToSearch}",
-                        "/api/evento/testandolo"
+                        "/api/evento/testandolo",
+                        "/api/location/**"
                 )
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()

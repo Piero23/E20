@@ -99,7 +99,8 @@ public class GatewaySecurityConfig {
                                 "/api/evento/{id}/image",
                                 "/api/location/{id}",
                                 "/api/utente/search/{usernameToSearch}",
-                                "/api/evento/testandolo"
+                                "/api/evento/testandolo",
+                                "/api/location/**"
                         ).permitAll()
                         // Endpoint Registrazione, Autenticazione Stateless
                         .pathMatchers("/auth/register", "/auth/login").permitAll()

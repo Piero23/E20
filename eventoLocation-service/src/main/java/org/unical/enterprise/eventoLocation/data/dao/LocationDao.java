@@ -6,8 +6,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface LocationDao extends JpaRepository<Location, Long> {
     Page<Location> findAll(Pageable pageable);
 
     Page<Location> findAllByNomeContainingIgnoreCase(String string, Pageable pageable);
+
+    Optional<Location> findByNomeIgnoreCase(String nome);
 }

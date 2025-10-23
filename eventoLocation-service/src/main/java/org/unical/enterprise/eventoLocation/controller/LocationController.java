@@ -26,9 +26,14 @@ public class LocationController {
 
 
 
-    @GetMapping(value="/{id}")
+    @GetMapping(value="/id/{id}")
     private ResponseEntity<Location> findById(@PathVariable("id") Long id){
         return new ResponseEntity<>(locationService.getById(id), HttpStatus.OK);
+    }
+
+    @GetMapping(value="/nome/{nome}")
+    private ResponseEntity<Location> findByName(@PathVariable("nome") String nome){
+        return new ResponseEntity<>(locationService.getByName(nome), HttpStatus.OK);
     }
 
     @PostMapping(consumes = "application/json")

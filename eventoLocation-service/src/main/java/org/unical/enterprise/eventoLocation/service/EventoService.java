@@ -60,7 +60,6 @@ public class EventoService {
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Transactional
     public EventoBasicDto save(EventoBasicDto dto){
-        System.out.println("Palle ciao pure qua");
         System.out.println("dto = " + dto);
 
         Evento evento = new Evento();

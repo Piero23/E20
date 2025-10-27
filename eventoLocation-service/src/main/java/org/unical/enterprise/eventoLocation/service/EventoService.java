@@ -89,17 +89,14 @@ public class EventoService {
 
     public EventoBasicDto update(EventoBasicDto evento , Long id){
 
-        eventoDao.findById(id).orElseThrow(() ->
+
+
+        Evento evento2 = eventoDao.findById(id).orElseThrow(() ->
                 new ContentNotFoundException("location with id " + id + " not found")
         );
 
-        Evento evento2 = new Evento();
-
         evento2.setNome(evento.getNome());
         evento2.setDescrizione(evento.getDescrizione());
-
-        UtenteDTO u = utenteServiceClient.getById(evento.getOrganizzatore());
-        System.out.println(u);
 
         evento2.setOrganizzatore(evento.getOrganizzatore());
         evento2.setPosti(evento.getPosti());
@@ -169,9 +166,7 @@ public class EventoService {
     public Page<EventoBasicDto> searchPagable(Pageable pageable, String string) {
         Page<Evento> eventos = eventoDao.findAllByNomeContainingIgnoreCase(string, pageable);
 
-        Page<EventoBasicDto> basic = eventos.map(evento -> toDTO(evento));
-
-        return basic;
+        return eventos.map(evento -> toDTO(evento));
     }
 
     public List<EventoDto> getEventiByManager(UUID manager){

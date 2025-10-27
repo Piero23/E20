@@ -91,7 +91,7 @@ spring:
                 - "https://localhost:4200"
                 - "https://localhost:4200/login/oauth2/code/angular-client"
               post-logout-redirect-uris:
-                - "https://localhost:4200/connect/logout"
+                - "https://localhost:4200"
               scopes:
                 - "openid"
                 - "profile"

@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class RateLimiterService {
     private final Map<String, RateLimiter> rateLimiters = new ConcurrentHashMap<>();
-    private final double permitsPerSecond = 5.0; // Default rate limit
+    private final double permitsPerSecond = 10.0; // Default rate limit
 
     public RateLimiterService() {
         this.rateLimiters.computeIfAbsent("default",
